@@ -1,0 +1,14 @@
+# homelab
+*.code-workspace
+*.kubeconfig
+*.talosconfig
+
+# Helm
+charts/
+
+# Terraform
+.terraform.lock.hcl
+
+# Terragrunt
+.terragrunt-cache/
+.terragrunt-stack/

@@ -1,0 +1,39 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-json
+      - id: check-toml
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+  - repo: https://github.com/adrienverge/yamllint.git
+    rev: v1.38.0
+    hooks:
+      - id: yamllint
+        args: ["-c=.yamllint"]
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.105.0
+    hooks:
+      - id: terraform_docs
+        args:
+          - --args=--config=.terraform-docs.yaml
+        files: '^terraform/_modules/.*\.tf$'
+      - id: terraform_fmt
+      - id: terraform_tflint
+      - id: terragrunt_fmt
+  - repo: local
+    hooks:
+      - id: check-generated-templates
+        name: Check generated templates
+        description: Verify generated templates are up to date.
+        entry: bash -c 'mise exec -- task template:check'
+        language: system
+        pass_filenames: false
+        stages: ["pre-commit"]
+      - id: trufflehog
+        name: TruffleHog
+        description: Detect secrets in your data.
+        entry: bash -c 'mise exec -- trufflehog git file://.'
+        language: system
+        stages: ["pre-commit", "pre-push"]
