@@ -17,8 +17,7 @@ spec:
           restartPolicy: OnFailure
           containers:
             - name: kubectl
-              # renovate: datasource=docker depName=bitnami/kubectl
-              image: bitnami/kubectl:1.35.0
+              image: bitnami/kubectl:latest   # TODO: Change from latest
               command:
                 - /bin/sh
                 - -c
