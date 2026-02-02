@@ -19,9 +19,6 @@ valuesInline:
     media:
       enabled: true
       existingClaim: jellyfin-media
-    cache:
-      enabled: true
-      existingClaim: jellyfin-cache
 
   volumes:
     - name: nfs-externaldrive
@@ -33,5 +30,3 @@ valuesInline:
   volumeMounts:
     - name: nfs-externaldrive
       mountPath: /nfs-externaldrive
-    - name: cache
-      mountPath: /cache
