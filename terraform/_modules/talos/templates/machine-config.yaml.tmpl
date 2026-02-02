@@ -1,0 +1,11 @@
+machine:
+  install:
+    disk: ${install_disk}
+  kubelet:
+    clusterDNS: [${cluster_dns}]
+    extraConfig:
+      serializeImagePulls: false
+      serverTLSBootstrap: true
+    nodeIP:
+      validSubnets:
+        - ${node_subnet}

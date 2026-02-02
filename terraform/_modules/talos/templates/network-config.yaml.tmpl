@@ -1,0 +1,27 @@
+# Hostname
+apiVersion: v1alpha1
+kind: HostnameConfig
+%{ if hostname != "" ~}
+hostname: ${hostname}
+auto: off
+%{ else ~}
+auto: stable
+%{ endif ~}
+---
+# Physical Link
+apiVersion: v1alpha1
+kind: LinkConfig
+name: ${network_interface}
+up: true
+addresses:
+  - address: ${node_ip}/24
+routes:
+  - gateway: ${gateway}
+---
+# DNS Resolvers
+apiVersion: v1alpha1
+kind: ResolverConfig
+nameservers:
+  - address: ${dns_server}
+searchDomains:
+  disableDefault: true

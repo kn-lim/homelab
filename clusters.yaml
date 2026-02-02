@@ -1,0 +1,71 @@
+clusters:
+  - ## -- Cluster Name
+    ##    (REQUIRED)
+    name: "homelab"
+
+    ## -- Talos Version
+    ##    (OPTIONAL)
+    # talos_version: "v1.12"
+
+    ## -- Cluster Endpoint IP
+    ##    (REQUIRED)
+    endpoint: "https://talos.homelab.knlim.dev:6443"
+
+    ## -- Cluster DNS Server IP
+    ##    (REQUIRED)
+    dns_server: "1.1.1.3"
+
+    ## -- Cluster DNS Gateway IP
+    ##    (REQUIRED)
+    gateway: "10.1.2.1"
+
+    ## -- Cluster Network Interface Name
+    ##    (OPTIONAL)
+    # network_interface: "ens18"
+
+    ## -- Control Plane Nodes
+    ##    (REQUIRED)
+    controlplanes:
+      - ## -- Node IP Address
+        ##    (REQUIRED)
+        ip: "10.1.2.11"
+
+        ## -- Node Install Disk
+        ##    (OPTIONAL)
+        # install_disk: "/dev/sda"
+
+        ## -- Node Hostname
+        ##    (OPTIONAL)
+        # hostname: ""
+
+    ## -- Node Subnet CIDR
+    ##    (REQUIRED)
+    node_subnet: "10.1.2.0/24"
+
+    ## -- Service Subnet CIDR
+    ##    (REQUIRED)
+    service_subnet: "10.96.0.0/16"
+
+    ## -- Pod Subnet CIDR
+    ##    (REQUIRED)
+    pod_subnet: "10.244.0.0/16"
+
+    ## -- 1Password Vault Name
+    ##    (REQUIRED)
+    vault_name: "Homelab"
+
+    ## -- Tailscale Tailnet Name
+    ##    (REQUIRED)
+    tailscale_tailnet_name: "neon-wyrm"
+
+    ## -- Tailscale Nameserver IP
+    ##    (REQUIRED)
+    tailscale_nameserver_ip: "10.96.98.142"
+
+    ## -- CoreDNS Cluster IP
+    ##    (REQUIRED)
+    coredns_cluster_ip: "10.96.0.10"
+
+    ## -- Proxmox URL
+    ##    (REQUIRED)
+    proxmox_url: "proxmox.knlim.dev"

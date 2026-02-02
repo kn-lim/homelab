@@ -1,0 +1,27 @@
+cluster:
+  network:
+    cni:
+      name: none
+    dnsDomain: cluster.local
+    podSubnets:
+      - ${pod_subnet}
+    serviceSubnets:
+      - ${service_subnet}
+  proxy:
+    disabled: true
+  apiServer:
+    extraArgs:
+      enable-aggregator-routing: "true"
+  controllerManager:
+    extraArgs:
+      bind-address: 0.0.0.0
+  scheduler:
+    extraArgs:
+      bind-address: 0.0.0.0
+  discovery:
+    enabled: false
+  etcd:
+    extraArgs:
+      listen-metrics-urls: http://0.0.0.0:2381
+    advertisedSubnets:
+      - ${node_subnet}

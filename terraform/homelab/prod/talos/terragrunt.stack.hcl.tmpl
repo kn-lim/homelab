@@ -1,0 +1,52 @@
+{{- $config := (datasource "config") -}}
+{{- range $config.clusters -}}
+{{- if eq .name "homelab" -}}
+stack "talos" {
+  source = "${find_in_parent_folders("_stacks/talos")}"
+
+  path = "talos"
+
+  values = {
+    talos = {
+      name       = "{{ .name }}"
+      endpoint   = "{{ .endpoint }}"
+      dns_server = "{{ .dns_server }}"
+      gateway    = "{{ .gateway }}"
+{{- if (index . "network_interface") }}
+      network_interface = "{{ .network_interface }}"
+{{- end }}
+
+      node_data = {
+        controlplanes = {
+{{- range .controlplanes }}
+          "{{ .ip }}" = {
+{{- if (index . "install_disk") }}
+            install_disk = "{{ .install_disk }}"
+{{- end }}
+{{- if (index . "hostname") }}
+            hostname = "{{ .hostname }}"
+{{- end }}
+          }
+{{- end }}
+        }
+      }
+      node_subnet    = "{{ .node_subnet }}"
+      service_subnet = "{{ .service_subnet }}"
+      pod_subnet     = "{{ .pod_subnet }}"
+{{- if (index . "talos_version") }}
+      talos_version = "{{ .talos_version }}"
+{{- end }}
+    }
+
+    cluster-bootstrap = {
+      namespace = "cluster-services"
+
+      vault_name  = "{{ .vault_name }}"
+      secret_name = "op-sa-kubernetes-token"
+
+      token_secret_name = "onepassword-token"
+    }
+  }
+}
+{{- end }}
+{{- end }}

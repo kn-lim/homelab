@@ -1,0 +1,3 @@
+locals {
+  unit = "onepassword-secret"
+}
