@@ -1,71 +1,53 @@
 clusters:
-  - ## -- Cluster Name
-    ##    (REQUIRED)
+  - ## Cluster Name
     name: "homelab"
 
-    ## -- Talos Version
-    ##    (OPTIONAL)
+    ## Talos Version
     # talos_version: "v1.12"
 
-    ## -- Cluster Endpoint IP
-    ##    (REQUIRED)
+    ## Cluster Endpoint IP
     endpoint: "https://talos.homelab.knlim.dev:6443"
 
-    ## -- Cluster DNS Server IP
-    ##    (REQUIRED)
+    ## Cluster DNS Server IP
     dns_server: "1.1.1.3"
 
-    ## -- Cluster DNS Gateway IP
-    ##    (REQUIRED)
+    ## Cluster DNS Gateway IP
     gateway: "10.1.2.1"
 
-    ## -- Cluster Network Interface Name
-    ##    (OPTIONAL)
+    ## Cluster Network Interface Name
     # network_interface: "ens18"
 
-    ## -- Control Plane Nodes
-    ##    (REQUIRED)
+    ## Control Plane Nodes
     controlplanes:
-      - ## -- Node IP Address
-        ##    (REQUIRED)
+      - ## Node IP Address
         ip: "10.1.2.11"
 
-        ## -- Node Install Disk
-        ##    (OPTIONAL)
+        ## Node Install Disk
         # install_disk: "/dev/sda"
 
-        ## -- Node Hostname
-        ##    (OPTIONAL)
+        ## Node Hostname
         # hostname: ""
 
-    ## -- Node Subnet CIDR
-    ##    (REQUIRED)
+    ## Node Subnet CIDR
     node_subnet: "10.1.2.0/24"
 
-    ## -- Service Subnet CIDR
-    ##    (REQUIRED)
+    ## Service Subnet CIDR
     service_subnet: "10.96.0.0/16"
 
-    ## -- Pod Subnet CIDR
-    ##    (REQUIRED)
+    ## Pod Subnet CID
     pod_subnet: "10.244.0.0/16"
 
-    ## -- 1Password Vault Name
-    ##    (REQUIRED)
+    ## 1Password Vault Name
     vault_name: "Homelab"
 
-    ## -- Tailscale Tailnet Name
-    ##    (REQUIRED)
+    ## Tailscale Tailnet Name
     tailscale_tailnet_name: "neon-wyrm"
 
-    ## -- Tailscale Nameserver IP
-    ##    (REQUIRED)
+    ## Tailscale Nameserver IP
     tailscale_nameserver_ip: "10.96.98.142"
 
-    ## -- CoreDNS Cluster IP
-    ##    (REQUIRED)
+    ## CoreDNS Cluster IP
     coredns_cluster_ip: "10.96.0.10"
 
-    ## -- Proxmox URL
-    ##    (REQUIRED)
+    ## Proxmox URL
     proxmox_url: "proxmox.knlim.dev"
