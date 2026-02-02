@@ -1,0 +1,31 @@
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+
+metadata:
+  name: argo-workflows
+
+name: argo-workflows
+# renovate: datasource=helm depName=argo-workflows repository=https://argoproj.github.io/argo-helm
+version: 0.47.2
+releaseName: argo-workflows
+namespace: argo-workflows
+repo: https://argoproj.github.io/argo-helm
+includeCRDs: true
+valuesInline:
+  controller:
+    podAnnotations:
+      secret.reloader.stakater.com/auto: "true"
+      configmap.reloader.stakater.com/auto: "true"
+    workflowDefaults:
+      spec:
+        ttlStrategy:
+          secondsAfterCompletion: 86400
+          secondsAfterSuccess: 86400
+          secondsAfterFailure: 604800
+    workflowNamespaces:
+      - argo-workflows
+
+  server:
+    podAnnotations:
+      secret.reloader.stakater.com/auto: "true"
+      configmap.reloader.stakater.com/auto: "true"

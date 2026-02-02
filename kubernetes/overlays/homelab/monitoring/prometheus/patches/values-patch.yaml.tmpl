@@ -1,0 +1,37 @@
+{{- $config := (datasource "config") -}}
+{{- range $config.clusters -}}
+{{- if eq .name "homelab" -}}
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+
+metadata:
+  name: prometheus
+
+valuesInline:
+  server:
+    persistentVolume:
+      enabled: true
+      size: 20Gi
+      storageClass: local-path
+
+  alertmanager:
+    enabled: false
+
+  extraScrapeConfigs: |
+    - job_name: 'pve-exporter'
+      static_configs:
+        - targets: ['{{ .proxmox_url }}']
+      metrics_path: /pve
+      params:
+        module: [default]
+        cluster: ['1']
+        node: ['1']
+      relabel_configs:
+        - source_labels: [__address__]
+          target_label: __param_target
+        - source_labels: [__param_target]
+          target_label: instance
+        - target_label: __address__
+          replacement: prometheus-pve-exporter.monitoring.svc.cluster.local:9221
+{{- end }}
+{{- end }}

@@ -1,0 +1,25 @@
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+
+metadata:
+  name: argocd
+
+name: argo-cd
+# renovate: datasource=helm depName=argo-cd repository=https://argoproj.github.io/argo-helm
+version: 9.3.7
+releaseName: argocd
+namespace: argocd
+repo: https://argoproj.github.io/argo-helm
+includeCRDs: true
+valuesInline:
+  global:
+    podAnnotations:
+      secret.reloader.stakater.com/auto: "true"
+      configmap.reloader.stakater.com/auto: "true"
+
+  configs:
+    cm:
+      kustomize.buildOptions: "--enable-helm"
+
+  redis:
+    enabled: true

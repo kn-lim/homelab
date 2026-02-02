@@ -1,0 +1,9 @@
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+
+metadata:
+  name: argo-workflows
+
+valuesInline:
+  server:
+    authModes: ["server"]

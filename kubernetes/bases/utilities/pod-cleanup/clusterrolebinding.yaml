@@ -1,0 +1,15 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+
+metadata:
+  name: pod-cleanup
+
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: pod-cleanup
+
+subjects:
+  - kind: ServiceAccount
+    name: pod-cleanup
+    namespace: utilities

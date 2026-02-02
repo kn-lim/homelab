@@ -1,0 +1,16 @@
+{{- $config := (datasource "config") -}}
+{{- range $config.clusters -}}
+{{- if eq .name "homelab" -}}
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+
+metadata:
+  name: jellyfin
+
+valuesInline:
+  jellyfin:
+    env:
+      - name: JELLYFIN_PublishedServerUrl
+        value: "https://jellyfin.{{ .tailscale_tailnet_name }}.ts.net"
+{{- end }}
+{{- end }}

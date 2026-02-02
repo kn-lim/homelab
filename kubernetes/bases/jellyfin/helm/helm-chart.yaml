@@ -1,0 +1,37 @@
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+
+metadata:
+  name: jellyfin
+
+name: jellyfin
+# renovate: datasource=helm depName=jellyfin repository=https://jellyfin.github.io/jellyfin-helm
+version: 2.7.0
+releaseName: jellyfin
+namespace: selfhosted
+repo: https://jellyfin.github.io/jellyfin-helm
+includeCRDs: true
+valuesInline:
+  persistence:
+    config:
+      enabled: true
+      existingClaim: jellyfin-config
+    media:
+      enabled: true
+      existingClaim: jellyfin-media
+    cache:
+      enabled: true
+      existingClaim: jellyfin-cache
+
+  volumes:
+    - name: nfs-externaldrive
+      nfs:
+        server: nfs.knlim.dev
+        path: /mnt/media
+        readOnly: false
+
+  volumeMounts:
+    - name: nfs-externaldrive
+      mountPath: /nfs-externaldrive
+    - name: cache
+      mountPath: /cache

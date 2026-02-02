@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: tsidp
+  namespace: tailscale
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tsidp
+  template:
+    metadata:
+      labels:
+        app: tsidp
+      annotations:
+        secret.reloader.stakater.com/auto: "true"
+    spec:
+      containers:
+        - name: tsidp
+          image: ghcr.io/tailscale/tsidp
+          env:
+            - name: TS_STATE_DIR  # Legacy - Will change in the future
+              value: "/app/data"
+            - name: TS_HOSTNAME   # Legacy - Will change in the future
+              value: "idp"
+            - name: TSIDP_ENABLE_STS
+              value: "1"
+            - name: TSIDP_PORT
+              value: "443"
+          envFrom:
+            - secretRef:
+                name: tsidp-secret
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
+          volumeMounts:
+            - name: tsidp-data
+              mountPath: /app/data
+      volumes:
+        - name: tsidp-data
+          persistentVolumeClaim:
+            claimName: tsidp-data

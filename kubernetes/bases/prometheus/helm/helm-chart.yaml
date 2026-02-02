@@ -1,0 +1,18 @@
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+
+metadata:
+  name: prometheus
+
+name: prometheus
+# renovate: datasource=helm depName=prometheus repository=https://prometheus-community.github.io/helm-charts
+version: 28.7.0
+releaseName: prometheus
+namespace: monitoring
+repo: https://prometheus-community.github.io/helm-charts
+includeCRDs: true
+valuesInline:
+  server:
+    podAnnotations:
+      secret.reloader.stakater.com/auto: "true"
+      configmap.reloader.stakater.com/auto: "true"

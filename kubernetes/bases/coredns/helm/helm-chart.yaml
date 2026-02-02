@@ -1,0 +1,48 @@
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+
+metadata:
+  name: coredns
+
+name: coredns
+# renovate: datasource=helm depName=coredns repository=https://coredns.github.io/helm
+version: 1.45.2
+releaseName: coredns
+namespace: kube-system
+repo: https://coredns.github.io/helm
+includeCRDs: true
+valuesInline:
+  # https://github.com/siderolabs/talos/discussions/10012
+  isClusterService: true
+
+  prometheus:
+    service:
+      enabled: true
+
+  serviceType: ClusterIP
+
+  serviceAccount:
+    create: true
+
+  k8sAppLabelOverride: kube-dns
+
+  replicaCount: 2
+
+  podDisruptionBudget:
+    maxUnavailable: 1   # For HA
+
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: node-role.kubernetes.io/control-plane
+                operator: Exists
+
+  tolerations:
+    - key: node-role.kubernetes.io/control-plane
+      operator: Exists
+      effect: NoSchedule
+    - key: node.cloudprovider.kubernetes.io/uninitialized
+      operator: Exists
+      effect: NoSchedule

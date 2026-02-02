@@ -1,0 +1,25 @@
+{{- $config := (datasource "config") -}}
+{{- range $config.clusters -}}
+{{- if eq .name "homelab" -}}
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+
+metadata:
+  name: cilium
+
+valuesInline:
+  ipv4NativeRoutingCIDR: {{ .pod_subnet }}
+
+  # https://docs.siderolabs.com/kubernetes-guides/cni/deploying-cilium#method-1:-helm-install
+  ipam:
+    mode: kubernetes
+
+  operator:
+    replicas: 1
+
+  # https://tailscale.com/kb/1236/kubernetes-operator#cilium-in-kube-proxy-replacement-mode
+  # routingMode: native
+  # socketLB:
+  #   hostNamespaceOnly: true
+{{- end }}
+{{- end }}

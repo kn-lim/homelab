@@ -1,0 +1,74 @@
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+
+metadata:
+  name: argocd
+
+valuesInline:
+  global:
+    domain: argocd.neon-wyrm.ts.net
+
+  configs:
+    cm:
+      url: https://argocd.neon-wyrm.ts.net
+      dex.config: |
+        connectors:
+          - type: oidc
+            id: tsidp
+            name: tsidp
+            config:
+              issuer: https://idp.neon-wyrm.ts.net
+              clientID: ${TSIDP_CLIENT_ID}
+              clientSecret: ${TSIDP_CLIENT_SECRET}
+              redirectURI: https://argocd.neon-wyrm.ts.net/api/dex/callback
+              scopes:
+                - openid
+                - email
+                - profile
+              getUserInfo: true
+              insecureSkipEmailVerified: true
+
+    repositories:
+      homelab:
+        url: git@github.com:kn-lim/homelab.git
+      infrastructure:
+        url: git@github.com:kn-lim/infrastructure.git
+
+    rbac:
+      create: false
+
+  dex:
+    initContainers:
+      - name: wait-for-tsidp
+        # renovate: datasource=docker depName=busybox
+        image: busybox:1.37
+        command:
+          - sh
+          - -c
+          - |
+            echo "Waiting for tsidp to be available..."
+            until wget -q --spider --timeout=5 https://idp.neon-wyrm.ts.net/.well-known/openid-configuration; do
+              echo "tsidp not ready, retrying in 5 seconds..."
+              sleep 5
+            done
+            echo "tsidp is available!"
+    env:
+      - name: TSIDP_CLIENT_ID
+        valueFrom:
+          secretKeyRef:
+            name: argocd-tsidp-secret
+            key: client_id
+      - name: TSIDP_CLIENT_SECRET
+        valueFrom:
+          secretKeyRef:
+            name: argocd-tsidp-secret
+            key: client_secret
+
+  controller:
+    replicas: 1
+
+  server:
+    replicas: 1
+
+  repoServer:
+    replicas: 1

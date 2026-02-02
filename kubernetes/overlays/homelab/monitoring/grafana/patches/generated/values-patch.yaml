@@ -1,0 +1,36 @@
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+
+metadata:
+  name: grafana
+
+valuesInline:
+  envValueFrom:
+    GF_AUTH_GENERIC_OAUTH_CLIENT_ID:
+      secretKeyRef:
+        name: grafana-tsidp-secret
+        key: client_id
+    GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET:
+      secretKeyRef:
+        name: grafana-tsidp-secret
+        key: client_secret
+
+  grafana.ini:
+    server:
+      root_url: "https://grafana.neon-wyrm.ts.net"
+    auth.generic_oauth:
+      name: "tsidp"
+      enabled: true
+      allow_sign_up: true
+      scopes: openid email profile
+      auth_url: "https://idp.neon-wyrm.ts.net/authorize"
+      token_url: "https://idp.neon-wyrm.ts.net/token"
+      api_url: "https://idp.neon-wyrm.ts.net/userinfo"
+
+  persistence:
+    enabled: true
+    size: 10Gi
+    storageClassName: local-path
+
+  initChownData:
+    enabled: false

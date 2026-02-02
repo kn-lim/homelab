@@ -1,0 +1,41 @@
+{{- $config := (datasource "config") -}}
+{{- range $config.clusters -}}
+{{- if eq .name "homelab" -}}
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+
+metadata:
+  name: grafana
+
+valuesInline:
+  envValueFrom:
+    GF_AUTH_GENERIC_OAUTH_CLIENT_ID:
+      secretKeyRef:
+        name: grafana-tsidp-secret
+        key: client_id
+    GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET:
+      secretKeyRef:
+        name: grafana-tsidp-secret
+        key: client_secret
+
+  grafana.ini:
+    server:
+      root_url: "https://grafana.{{ .tailscale_tailnet_name }}.ts.net"
+    auth.generic_oauth:
+      name: "tsidp"
+      enabled: true
+      allow_sign_up: true
+      scopes: openid email profile
+      auth_url: "https://idp.{{ .tailscale_tailnet_name }}.ts.net/authorize"
+      token_url: "https://idp.{{ .tailscale_tailnet_name }}.ts.net/token"
+      api_url: "https://idp.{{ .tailscale_tailnet_name }}.ts.net/userinfo"
+
+  persistence:
+    enabled: true
+    size: 10Gi
+    storageClassName: local-path
+
+  initChownData:
+    enabled: false
+{{- end }}
+{{- end }}

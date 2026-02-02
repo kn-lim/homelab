@@ -1,0 +1,11 @@
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+
+metadata:
+  name: jellyfin
+
+valuesInline:
+  jellyfin:
+    env:
+      - name: JELLYFIN_PublishedServerUrl
+        value: "https://jellyfin.neon-wyrm.ts.net"

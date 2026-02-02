@@ -1,0 +1,13 @@
+apiVersion: tailscale.com/v1alpha1
+kind: DNSConfig
+
+metadata:
+  name: ts-dns
+  namespace: tailscale
+
+spec:
+  nameserver:
+    image:
+      repo: tailscale/k8s-nameserver
+      # renovate: datasource=docker depName=tailscale/k8s-nameserver
+      tag: v1.92.5

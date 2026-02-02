@@ -1,0 +1,26 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmCharts:
+  - name: reloader
+    repo: https://stakater.github.io/stakater-charts
+    version: 2.2.7
+    releaseName: reloader
+    namespace: cluster-services
+    includeCRDs: true
+    valuesInline:
+      reloader:
+        reloadOnCreate: true
+        syncAfterRestart: true
+
+        # TODO: Setup Discord alert webhook
+        # logLevel: debug
+        # deployment:
+        #   env:
+        #     existing:
+        #       reloader-alert-webhook:
+        #         ALERT_WEBHOOK_URL: url
+        #     secret:
+        #       ALERT_ON_RELOAD: "true"
+        #       ALERT_SINK: "slack"
+        #       ALERT_ADDITIONAL_INFO: "test123"
