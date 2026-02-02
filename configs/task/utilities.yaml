@@ -1,0 +1,19 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: '3'
+
+tasks:
+  clean:
+    desc: Deletes all ignored directories
+    vars:
+      DIRS: [charts, .terragrunt-stack]
+    cmds:
+      - for:
+          var: DIRS
+        cmd: 'find . -type d -name "{{ .ITEM }}" -prune -printf "Deleting: %p\n" -exec rm -rf {} +'
+    dir: "{{ .ROOT_DIR }}"
+
+  pre-commit:
+    desc: Runs pre-commit on all files
+    aliases: [pc]
+    cmd: 'pre-commit run --all-files'

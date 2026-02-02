@@ -1,0 +1,84 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: '3'
+
+tasks:
+  check:
+    desc: Verify generated templates are up to date
+    vars:
+      BEFORE_MD5_FILE:
+        sh: mktemp -t before_md5_file.XXXXXX
+      AFTER_MD5_FILE:
+        sh: mktemp -t after_md5_file.XXXXXX
+    cmds:
+      - defer: rm -f {{ .BEFORE_MD5_FILE }} {{ .AFTER_MD5_FILE }}
+      - find . -type f -not -path "./.git/*" -print0 | xargs -0 md5sum | sort > {{ .BEFORE_MD5_FILE }}
+      - task: generate
+      - find . -type f -not -path "./.git/*" -print0 | xargs -0 md5sum | sort > {{ .AFTER_MD5_FILE }}
+      - |
+        DIFF=$(diff {{ .BEFORE_MD5_FILE }} {{ .AFTER_MD5_FILE }} || true)
+        if [ -n "$DIFF" ]; then
+          echo "ERROR: Detected changes in the following files:"
+          echo "$DIFF" | grep "^>" | sed 's/^> [a-f0-9]*  /  /'
+          exit 1
+        fi
+        echo "Generated templates are up to date."
+    dir: "{{ .ROOT_DIR }}"
+
+  clean:
+    desc: Deletes all generated directories
+    vars:
+      DIRS: [generated]
+    cmds:
+      - for:
+          var: DIRS
+        cmd: 'find . -type d -name "{{ .ITEM }}" -prune -printf "Deleting: %p\n" -exec rm -rf {} +'
+    dir: "{{ .ROOT_DIR }}"
+
+  generate:
+    desc: Generate all templates
+    aliases: [all]
+    deps:
+      - kubernetes
+      - terraform
+
+  kubernetes:
+    desc: Generate all Kubernetes templates
+    aliases: [k8s]
+    cmds:
+      - |
+        find ./kubernetes/ -name "*.tmpl" -type f \
+          ! -path "*/charts/*" \
+          | while read TMPLFILE; do
+          DIR=$(dirname "$TMPLFILE")
+          FILENAME=$(basename "$TMPLFILE" .tmpl)
+          mkdir -p "$DIR/generated"
+          echo "Generating: $DIR/generated/$FILENAME"
+          gomplate \
+            -f "$TMPLFILE" \
+            -o "$DIR/generated/$FILENAME" \
+            -d config="./clusters.yaml"
+        done
+    dir: "{{ .ROOT_DIR }}"
+
+  terraform:
+    desc: Generate all Terraform/Terragrunt templates
+    aliases: [tf, tg]
+    cmds:
+      - |
+        find ./terraform/ -name "*.tmpl" -type f \
+          ! -path "*/.terragrunt-stack/*" \
+          ! -path "*/_modules/*" \
+          ! -path "*/_stacks/*" \
+          ! -path "*/_units/*" \
+          | while read TMPLFILE; do
+          DIR=$(dirname "$TMPLFILE")
+          FILENAME=$(basename "$TMPLFILE" .tmpl)
+          mkdir -p "$DIR/generated"
+          echo "Generating: $DIR/generated/$FILENAME"
+          gomplate \
+            -f "$TMPLFILE" \
+            -o "$DIR/generated/$FILENAME" \
+            -d config="./clusters.yaml"
+        done
+    dir: "{{ .ROOT_DIR }}"

@@ -1,0 +1,28 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: '3'
+
+tasks:
+  build:
+    desc: Returns output from kustomize
+    aliases: [kb]
+    cmd: kustomize build --enable-helm
+    dir: '{{.USER_WORKING_DIR}}'
+
+  build-apply:
+    desc: Returns output from kustomize and applies the output using kubectl
+    aliases: [kba]
+    cmd: kustomize build --enable-helm | kubectl apply -f -
+    dir: '{{.USER_WORKING_DIR}}'
+
+  build-apply-server-side:
+    desc: Returns output from kustomize and applies the output using kubectl
+    aliases: [kbas]
+    cmd: kustomize build --enable-helm | kubectl apply --server-side -f -
+    dir: '{{.USER_WORKING_DIR}}'
+
+  build-delete:
+    desc: Returns output from kustomize and deletes the output using kubectl
+    aliases: [kbd]
+    cmd: kustomize build --enable-helm | kubectl delete -f -
+    dir: '{{.USER_WORKING_DIR}}'
