@@ -1,8 +1,8 @@
-data "onepassword_vault" "this" {
+data "onepassword_vault" "default" {
   name = var.vault_name
 }
 
-data "onepassword_item" "this" {
-  vault = data.onepassword_vault.this.uuid
+data "onepassword_item" "default" {
+  vault = data.onepassword_vault.default.uuid
   title = var.secret_name
 }
