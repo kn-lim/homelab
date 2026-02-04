@@ -93,24 +93,25 @@ As Tailscale can be used to authenticate users, [tsidp](https://github.com/tails
 This repository uses the following directory structure that are strictly followed:
 
 ```
-configs/                        # reusable config files
-docs/                           # documentation
+configs/                            # reusable config files
+docs/                               # documentation
 kubernetes/
-├─ bases/                       # kustomize bases
+├─ bases/                           # kustomize bases
 │  ├─ applications/
-├─ overlays/                    # kustomize overlays
+├─ overlays/                        # kustomize overlays
 │  ├─ cluster/
-│  │  ├─ namespace/
-│  │  │  ├─ applications/
-│  │  │  │  ├─ generated/       # generated files
+│  │  ├─ environment/
+│  │  │  ├─ namespace/
+│  │  │  │  ├─ applications/
+│  │  │  │  │  ├─ generated/        # generated files
 terraform/
-├─ _modules/                    # terraform modules
-├─ _stacks/                     # terragrunt stacks
-├─ _units/                      # terragrunt units
+├─ _modules/                        # terraform modules
+├─ _stacks/                         # terragrunt stacks
+├─ _units/                          # terragrunt units
 ├─ platform/
 │  ├─ region/
 │  │  ├─ applications/
-│  │  │  ├─ generated/          # generated files
+│  │  │  ├─ generated/              # generated files
 ```
 
 ## Hardware
