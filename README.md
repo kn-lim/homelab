@@ -1,5 +1,8 @@
 # Homelab
 
+![Talos](https://img.shields.io/badge/talos-v1.12.2-FF7300?logo=talos&logoColor=white)
+![Kubernetes](https://img.shields.io/badge/kubernetes-v1.35.0-326CE5?logo=kubernetes&logoColor=white)
+
 A definitely over-engineered, but good enough homelab that handles my home infrastructure and Kubernetes cluster.
 
 ## Purpose
@@ -93,7 +96,8 @@ As Tailscale can be used to authenticate users, [tsidp](https://github.com/tails
 7. Run `task kubernetes:build-apply` in `kubernetes/overlays/homelab/prod/cluster-services/external-secrets` to install External Secrets.
 8. Run `task kubernetes:build-apply` in `kubernetes/overlays/homelab/prod/tailscale/tailscale-operator` to install Tailscale Kubernetes Operator.
 9. Run `task kubernetes:build-apply` in `kubernetes/overlays/homelab/prod/tailscale/tsidp` to install tsidp.
-10. Run `task kubernetes:build-apply` in `kubernetes/overlays/homelab/prod/argo/argocd` to install ArgoCD and all other applications.
+10. Update `clusters.yaml` with the new `ts-dns` nameserver IP address.
+11. Run `task kubernetes:build-apply` in `kubernetes/overlays/homelab/prod/argo/argocd` to install ArgoCD and all other applications.
 
 ## Directories
 
