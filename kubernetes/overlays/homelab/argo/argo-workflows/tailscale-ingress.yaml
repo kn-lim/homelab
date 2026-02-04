@@ -2,16 +2,16 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 
 metadata:
-  name: argocd-server-tailscale-ingress
-  namespace: argocd
+  name: argo-workflows-server-tailscale-ingress
+  namespace: argo
 
 spec:
   ingressClassName: tailscale
   defaultBackend:
     service:
-      name: argocd-server
+      name: argo-workflows-server
       port:
-        number: 443
+        number: 2746
   tls:
     - hosts:
-        - argocd
+        - argo-workflows

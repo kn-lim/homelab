@@ -8,7 +8,7 @@ name: argo-cd
 # renovate: datasource=helm depName=argo-cd repository=https://argoproj.github.io/argo-helm
 version: 9.4.0
 releaseName: argocd
-namespace: argocd
+namespace: argo
 repo: https://argoproj.github.io/argo-helm
 includeCRDs: true
 valuesInline:

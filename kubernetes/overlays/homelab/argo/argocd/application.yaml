@@ -3,17 +3,17 @@ kind: Application
 
 metadata:
   name: argocd
-  namespace: argocd
+  namespace: argo
 
 spec:
   project: default
   source:
     repoURL: git@github.com:kn-lim/homelab.git
     targetRevision: main
-    path: kubernetes/overlays/homelab/argocd/argocd
+    path: kubernetes/overlays/homelab/argo/argocd
   destination:
     server: https://kubernetes.default.svc
-    namespace: argocd
+    namespace: argo
   syncPolicy:
     automated:
       prune: true

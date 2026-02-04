@@ -2,16 +2,16 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 
 metadata:
-  name: homelab-applications
-  namespace: argocd
+  name: homelab-applicationset
+  namespace: argo
 
 spec:
   goTemplate: true
   generators:
     - list:
         elements:
-          # argo-workflows
-          - path: argo-workflows/argo-workflows
+          # argo
+          - path: argo/argo-workflows
           # cluster-services
           - path: cluster-services/external-secrets
             serverSideApply: true

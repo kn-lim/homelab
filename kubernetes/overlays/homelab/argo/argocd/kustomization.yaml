@@ -7,8 +7,8 @@ generators:
 resources:
   - ../../../../bases/argocd
   - application.yaml
-  - applicationset.yaml
   - argocd-rbac-cm.yaml
+  - homelab-applicationset.yaml
   - ssh-secret.yaml
   - tsidp-secret.yaml
   - tailscale-ingress.yaml

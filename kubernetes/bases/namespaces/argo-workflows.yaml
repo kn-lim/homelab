@@ -1,0 +1,6 @@
+# NOTE: argo-workflows worker pods will be located in this namespace
+apiVersion: v1
+kind: Namespace
+
+metadata:
+  name: argo-workflows    
