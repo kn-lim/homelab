@@ -81,12 +81,19 @@ As Tailscale can be used to authenticate users, [tsidp](https://github.com/tails
 ### Procedure
 
 0. Fill out `clusters.yaml` and run `task template:generate` to generate all templated files.
-1. Run `terragrunt stack generate` and `terragrunt stack run apply` in `terraform/homelab/prod/talos` to a Talos Linux instance waiting to be bootstrapped.
+1. Run `terragrunt stack generate` in `terraform/homelab/prod/talos` to generate the stack files.
+2. Run `terragrunt apply` in `terraform/homelab/prod/talos/generated/.terragrunt-stack/talos/.terragrunt-stack/talos` once the Talos Linux instance is waiting to be bootstrapped.
     - This will create a `homelab-prod.kubeconfig` and `homelab-prod.talosconfig` in the repository's root level.
-2. Run `task kubernetes:build-apply` in `kubernetes/bases/namespaces` to create the required namespaces.
+3. Once the Talos Linux instance reboots, run `task kubernetes:build-apply` in `kubernetes/bases/namespaces` to create the required namespaces.
+4. Run `terragrunt stack run apply` in `terraform/homelab/prod/talos` to finish the rest of the Talos Linux deployment.
 3. Run `task kubernetes:build-apply` in `kubernetes/overlays/homelab/prod/kube-system/coredns` to install CoreDNS.
 4. Run `task kubernetes:build-apply` in `kubernetes/overlays/homelab/prod/kube-system/cilium` to install Cilium.
-5. Run `task kubernetes:build-apply` in `kubernetes/overlays/homelab/prod/argo/argocd` to install ArgoCD and all other applications.
+5. Run `task kubernetes:build-apply` in `kubernetes/overlays/homelab/prod/cluster-services/kubelet-serving-cert-approver` to install kubelet-serving-cert-approver.
+6. Run `task kubernetes:build-apply` in `kubernetes/overlays/homelab/prod/cluster-services/local-path-provisioner` to install local-path-provisioner.
+7. Run `task kubernetes:build-apply` in `kubernetes/overlays/homelab/prod/cluster-services/external-secrets` to install External Secrets.
+8. Run `task kubernetes:build-apply` in `kubernetes/overlays/homelab/prod/tailscale/tailscale-operator` to install Tailscale Kubernetes Operator.
+9. Run `task kubernetes:build-apply` in `kubernetes/overlays/homelab/prod/tailscale/tsidp` to install tsidp.
+10. Run `task kubernetes:build-apply` in `kubernetes/overlays/homelab/prod/argo/argocd` to install ArgoCD and all other applications.
 
 ## Directories
 
