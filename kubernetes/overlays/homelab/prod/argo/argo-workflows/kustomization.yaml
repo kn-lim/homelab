@@ -1,0 +1,27 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+generators:
+  - patches
+
+resources:
+  # - ../../../../../bases/argo-workflows
+  - serviceaccount.yaml
+  - tailscale-ingress.yaml
+
+patches:
+  # NOTE: The following patches exist since workflows would always run in the argo-workflows namespace
+  - patch: |-
+      $patch: delete
+      apiVersion: rbac.authorization.k8s.io/v1
+      kind: Role
+      metadata:
+        name: argo-workflows-workflow
+        namespace: argo
+  - patch: |-
+      $patch: delete
+      apiVersion: rbac.authorization.k8s.io/v1
+      kind: RoleBinding
+      metadata:
+        name: argo-workflows-workflow
+        namespace: argo

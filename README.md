@@ -36,7 +36,7 @@ This repository is managed by [mise](https://github.com/jdx/mise) and [pre-commi
 
 [ArgoCD](https://github.com/argoproj/argo-cd) is the GitOps platform for my homelab and is deployed using Kustomize and Helm.
 
-The ApplicationSet in [`kubernetes/overlays/homelab/argocd/argocd/applicationset.yaml`](https://github.com/kn-lim/homelab/blob/main/kubernetes/overlays/homelab/argocd/argocd/applicationset.yaml) generates all ArgoCD Applications and must be defined there.
+The ApplicationSet in [`kubernetes/overlays/homelab/prod/argo/argocd/homelab-applicationset.yaml`](https://github.com/kn-lim/homelab/blob/main/kubernetes/overlays/homelab/prod/argo/argocd/homelab-applicationset.yaml) generates all ArgoCD Applications and must be defined there.
 
 ### Terragrunt
 
@@ -84,9 +84,9 @@ As Tailscale can be used to authenticate users, [tsidp](https://github.com/tails
 1. Run `terragrunt stack generate` and `terragrunt stack run apply` in `terraform/homelab/prod/talos` to a Talos Linux instance waiting to be bootstrapped.
     - This will create a `homelab-prod.kubeconfig` and `homelab-prod.talosconfig` in the repository's root level.
 2. Run `task kubernetes:build-apply` in `kubernetes/bases/namespaces` to create the required namespaces.
-3. Run `task kubernetes:build-apply` in `kubernetes/overlays/homelab/kube-system/coredns` to install CoreDNS.
-4. Run `task kubernetes:build-apply` in `kubernetes/overlays/homelab/kube-system/cilium` to install Cilium.
-5. Run `task kubernetes:build-apply` in `kubernetes/overlays/homelab/argocd/argocd` to install ArgoCD and all other applications.
+3. Run `task kubernetes:build-apply` in `kubernetes/overlays/homelab/prod/kube-system/coredns` to install CoreDNS.
+4. Run `task kubernetes:build-apply` in `kubernetes/overlays/homelab/prod/kube-system/cilium` to install Cilium.
+5. Run `task kubernetes:build-apply` in `kubernetes/overlays/homelab/prod/argo/argocd` to install ArgoCD and all other applications.
 
 ## Directories
 
