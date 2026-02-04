@@ -6,7 +6,7 @@ metadata:
 
 name: cilium
 # renovate: datasource=helm depName=cilium repository=https://helm.cilium.io/
-version: 1.18.6
+version: 1.19.0
 releaseName: cilium
 namespace: kube-system
 repo: https://helm.cilium.io/
