@@ -3,7 +3,7 @@ clusters:
     name: "homelab"
 
     ## Talos Version
-    # talos_version: "v1.12"
+    # talos_version: "v1.12.2"
 
     ## Cluster Endpoint IP
     endpoint: "https://talos.homelab.knlim.dev:6443"
