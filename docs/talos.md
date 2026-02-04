@@ -34,3 +34,16 @@ https://docs.siderolabs.com/talos/v1.10/platform-specific-installations/virtuali
 ## Cilium
 
 https://docs.siderolabs.com/kubernetes-guides/cni/deploying-cilium
+
+## Upgrading Talos
+
+Replace `v1.12.2` with the latest version:
+
+
+```sh
+talosctl upgrade --nodes 10.20.30.40 --image ghcr.io/siderolabs/installer:v1.12.2
+
+talosctl upgrade --nodes 10.20.30.40 --image ghcr.io/siderolabs/installer:v1.12.2 --force   # single node clusters
+```
+
+https://docs.siderolabs.com/talos/v1.12/configure-your-talos-cluster/lifecycle-management/upgrading-talos
