@@ -47,7 +47,7 @@ Talos Linux is managed with [Terragrunt](https://github.com/gruntwork-io/terragr
 
 The [talos](https://github.com/kn-lim/homelab/tree/main/terraform/_modules/talos) Terraform module contains config patches that are taken from either the official [Talos Linux documentation](https://docs.siderolabs.com/talos/), [onedr0p/cluster-template](https://github.com/onedr0p/cluster-template), [ajaykumar4/cluster-template](https://github.com/ajaykumar4/cluster-template) or specifically added for my homelab.
 
-The [talos stack](https://github.com/kn-lim/homelab/blob/main/terraform/homelab/_stacks/talos/terragrunt.stack.hcl) bootstraps the Talos Linux instance, saves the `kubeconfig` and `talosconfig` files using [hooks](https://terragrunt.gruntwork.io/docs/features/hooks/), then creates resources to prepare the kubernetes cluster for deployments.
+The [talos stack](https://github.com/kn-lim/homelab/blob/main/terraform/_stacks/talos/terragrunt.stack.hcl) bootstraps the Talos Linux instance, saves the `kubeconfig` and `talosconfig` files using [hooks](https://terragrunt.gruntwork.io/docs/features/hooks/), then creates resources to prepare the kubernetes cluster for deployments.
 
 ### Tailscale
 
@@ -77,8 +77,10 @@ As Tailscale can be used to authenticate users, [tsidp](https://github.com/tails
 | Name | Description |
 | - | - |
 | `argocd-ssh` | ArgoCD SSH Credentials for GitHub Access |
-| `op-sa-kubernetes-token` | 1Password Kubernetes Service Account Token |
+| `discord` | Discord Configurations |
+| `op-sa-*` | 1Password Service Account Credentials |
 | `tailscale-kubernetes-operator` | Tailscale Kubernetes Operator Credentials |
+| `terraform-*` | Credentials for Terraform Providers |
 | `tsidp-*` | Tailscale IDP Client Credentials |
 
 ### Procedure
@@ -96,8 +98,9 @@ As Tailscale can be used to authenticate users, [tsidp](https://github.com/tails
 7. Run `task kubernetes:build-apply` in `kubernetes/overlays/homelab/prod/cluster-services/external-secrets` to install External Secrets.
 8. Run `task kubernetes:build-apply` in `kubernetes/overlays/homelab/prod/tailscale/tailscale-operator` to install Tailscale Kubernetes Operator.
 9. Run `task kubernetes:build-apply` in `kubernetes/overlays/homelab/prod/tailscale/tsidp` to install tsidp.
-10. Update `clusters.yaml` with the new `ts-dns` nameserver IP address.
-11. Run `task kubernetes:build-apply` in `kubernetes/overlays/homelab/prod/argo/argocd` to install ArgoCD and all other applications.
+10. Update `clusters.yaml` with the new `ts-dns` nameserver IP address and run `task template:generate`
+11. Run `task kubernetes:build-apply` in `kubernetes/overlays/homelab/prod/kube-system/coredns` to update CoreDNS.
+12. Run `task kubernetes:build-apply` in `kubernetes/overlays/homelab/prod/argo/argocd` to install ArgoCD and all other applications.
 
 ## Directories
 

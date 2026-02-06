@@ -25,7 +25,7 @@ stack "talos" {
       namespace = "cluster-services"
 
       vault_name  = "Homelab"
-      secret_name = "op-sa-kubernetes-token"
+      secret_name = "op-sa-kubernetes"
 
       token_secret_name = "onepassword-token"
     }
