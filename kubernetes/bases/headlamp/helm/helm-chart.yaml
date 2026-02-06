@@ -6,7 +6,7 @@ metadata:
 
 name: headlamp
 # renovate: datasource=helm depName=headlamp repository=https://kubernetes-sigs.github.io/headlamp/
-version: 0.39.0
+version: 0.40.0
 releaseName: headlamp
 namespace: selfhosted
 repo: https://kubernetes-sigs.github.io/headlamp/
