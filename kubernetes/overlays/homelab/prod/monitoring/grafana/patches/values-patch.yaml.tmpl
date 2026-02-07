@@ -11,11 +11,11 @@ valuesInline:
   envValueFrom:
     GF_AUTH_GENERIC_OAUTH_CLIENT_ID:
       secretKeyRef:
-        name: grafana-tsidp-secret
+        name: grafana-tsidp
         key: client_id
     GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET:
       secretKeyRef:
-        name: grafana-tsidp-secret
+        name: grafana-tsidp
         key: client_secret
 
   grafana.ini:

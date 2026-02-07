@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 
 metadata:
-  name: homelab-applicationset
+  name: homelab
   namespace: argo
 
 spec:

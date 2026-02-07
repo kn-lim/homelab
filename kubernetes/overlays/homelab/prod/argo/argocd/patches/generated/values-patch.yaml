@@ -56,12 +56,12 @@ valuesInline:
       - name: TSIDP_CLIENT_ID
         valueFrom:
           secretKeyRef:
-            name: argocd-tsidp-secret
+            name: argocd-tsidp
             key: client_id
       - name: TSIDP_CLIENT_SECRET
         valueFrom:
           secretKeyRef:
-            name: argocd-tsidp-secret
+            name: argocd-tsidp
             key: client_secret
 
   controller:

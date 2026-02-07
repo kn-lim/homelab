@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 
 metadata:
-  name: argocd-server-tailscale-ingress
+  name: argocd-server-tailscale
   namespace: argo
 
 spec:
