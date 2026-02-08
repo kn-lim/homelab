@@ -31,7 +31,7 @@ spec:
     - name: main
       dag:
         tasks:
-          - name: clone
+          - name: git-clone
             templateRef:
               name: git-clone
               template: clone
@@ -41,7 +41,7 @@ spec:
                   value: "{{workflow.parameters.repo}}"
                 - name: revision
                   value: "{{workflow.parameters.revision}}"
-          - name: plan
+          - name: terragrunt-plan
             dependencies: [clone]
             templateRef:
               name: terragrunt
@@ -53,7 +53,7 @@ spec:
           - name: approve
             dependencies: [plan]
             template: approve
-          - name: apply
+          - name: terragrunt-apply
             dependencies: [approve]
             templateRef:
               name: terragrunt
@@ -67,6 +67,8 @@ spec:
       suspend: {}
 
     - name: status
-      templateRef:
-        name: discord
-        template: status
+      steps:
+        - - name: send-status
+            templateRef:
+              name: discord
+              template: status
