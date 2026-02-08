@@ -13,6 +13,6 @@ images:
   - name: curlimages/curl
     newTag: "8.17.0"
   - name: alpine/terragrunt
-    newTag: "1.13.5"
+    newTag: "1.14.4"
   - name: alpine/git
     newTag: "2.49.1"
