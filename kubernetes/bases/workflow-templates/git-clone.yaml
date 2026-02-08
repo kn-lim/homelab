@@ -24,3 +24,6 @@ spec:
         image: alpine
         command: [sh, -c]
         args: ["ls /workdir/src"]
+        volumeMounts:
+          - name: workdir
+            mountPath: /workdir
