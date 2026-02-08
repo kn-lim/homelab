@@ -1,6 +1,6 @@
 clusters:
-  - ## Cluster Name
-    name: "homelab"
+    ## Cluster Name
+  - name: "homelab"
 
     ## Talos Version
     # talos_version: ""
@@ -19,8 +19,8 @@ clusters:
 
     ## Control Plane Nodes
     controlplanes:
-      - ## Node IP Address
-        ip: "10.1.2.11"
+        ## Node IP Address
+      - ip: "10.1.2.11"
 
         ## Node Install Disk
         # install_disk: "/dev/sda"
