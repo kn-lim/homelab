@@ -5,5 +5,5 @@ generators:
   - patches
 
 resources:
-  - tailscale-ingress.yaml
+  - ingress.yaml
   - generated/tsidp-secret.yaml

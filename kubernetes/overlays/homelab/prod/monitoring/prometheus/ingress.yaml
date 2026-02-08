@@ -2,16 +2,16 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 
 metadata:
-  name: jellyfin-tailscale
-  namespace: selfhosted
+  name: prometheus
+  namespace: monitoring
 
 spec:
   ingressClassName: tailscale
   defaultBackend:
     service:
-      name: jellyfin
+      name: prometheus-server
       port:
-        number: 8096
+        number: 80
   tls:
     - hosts:
-        - jellyfin
+        - prometheus

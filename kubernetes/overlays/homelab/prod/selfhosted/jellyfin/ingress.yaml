@@ -2,16 +2,16 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 
 metadata:
-  name: argocd-server-tailscale
-  namespace: argo
+  name: jellyfin
+  namespace: selfhosted
 
 spec:
   ingressClassName: tailscale
   defaultBackend:
     service:
-      name: argocd-server
+      name: jellyfin
       port:
-        number: 443
+        number: 8096
   tls:
     - hosts:
-        - argocd
+        - jellyfin

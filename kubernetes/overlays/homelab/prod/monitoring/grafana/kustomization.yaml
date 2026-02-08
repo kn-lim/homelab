@@ -6,5 +6,5 @@ generators:
 
 resources:
   # - ../../../../../bases/grafana
-  - tailscale-ingress.yaml
+  - ingress.yaml
   - tsidp-secret.yaml

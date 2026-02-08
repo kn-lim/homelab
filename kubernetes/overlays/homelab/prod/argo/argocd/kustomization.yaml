@@ -11,4 +11,4 @@ resources:
   - homelab-applicationset.yaml
   - ssh-secret.yaml
   - tsidp-secret.yaml
-  - tailscale-ingress.yaml
+  - ingress.yaml
