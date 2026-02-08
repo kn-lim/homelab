@@ -44,7 +44,7 @@ clusters:
     tailscale_tailnet_name: "neon-wyrm"
 
     ## Tailscale Nameserver IP
-    tailscale_nameserver_ip: "10.96.156.95"
+    tailscale_nameserver_ip: "10.96.191.241"
 
     ## CoreDNS Cluster IP
     coredns_cluster_ip: "10.96.0.10"
