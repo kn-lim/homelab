@@ -15,4 +15,4 @@ images:
   - name: alpine/terragrunt
     newTag: "1.13.5"
   - name: alpine/git
-    newTag: "2.49.1"
+    newTag: "v2.52.0"
