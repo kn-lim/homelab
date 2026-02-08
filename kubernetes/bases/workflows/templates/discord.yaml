@@ -1,0 +1,56 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+
+metadata:
+  name: discord
+  namespace: argo-workflows
+
+spec:
+  templates:
+    - name: status
+      inputs:
+        parameters:
+          - name: status
+            default: "{{workflow.status}}"
+          - name: workflow-name
+            default: "{{workflow.name}}"
+          - name: duration
+            default: "{{workflow.duration}}"
+          - name: failures
+            default: "{{workflow.failures}}"
+      container:
+        image: curlimages/curl
+        envFrom:
+          - secretRef:
+              name: environment-variables
+        command: [sh, -c]
+        args:
+          - |
+            if [ "{{inputs.parameters.status}}" = "Succeeded" ]; then
+              COLOR=65280
+              EMOJI=":white_check_mark:"
+              FAILURES_FIELD=""
+            else
+              COLOR=16711680
+              EMOJI=":x:"
+              FAILURES=$(printf '%s' '{{inputs.parameters.failures}}' | \
+                sed 's/},{/}\n{/g' | \
+                sed -n 's/.*"displayName":"\([^"]*\)".*"message":"\([^"]*\)".*/\1: \2/p' | \
+                awk '{printf "%s\\n", $0}' | sed 's/\\n$//')
+              FAILURES_FIELD=",{\"name\": \"Failures\", \"value\": \"${FAILURES}\", \"inline\": false}"
+            fi
+
+            curl -X POST "$DISCORD_WEBHOOK_URL" \
+              -H "Content-Type: application/json" \
+              -d "{
+                \"embeds\": [{
+                  \"title\": \"$EMOJI Workflow {{inputs.parameters.status}}\",
+                  \"color\": $COLOR,
+                  \"fields\": [
+                    {\"name\": \"Workflow\", \"value\": \"{{inputs.parameters.workflow-name}}\", \"inline\": true},
+                    {\"name\": \"Status\", \"value\": \"{{inputs.parameters.status}}\", \"inline\": true},
+                    {\"name\": \"Duration\", \"value\": \"{{inputs.parameters.duration}}\", \"inline\": true}
+                    ${FAILURES_FIELD}
+                  ]
+                }]
+              }"

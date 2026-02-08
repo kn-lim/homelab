@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+
+metadata:
+  name: terragrunt
+  namespace: argo-workflows
+
+spec:
+  templates:
+    - name: run
+      inputs:
+        parameters:
+          - name: command
+          - name: workdir
+            default: /workdir/src/terraform
+      container:
+        image: alpine/terragrunt
+        command: [sh, -c]
+        args: ["{{inputs.parameters.command}}"]
+        workingDir: "{{inputs.parameters.workdir}}"
+        envFrom:
+          - secretRef:
+              name: environment-variables
+        volumeMounts:
+          - name: workdir
+            mountPath: /workdir

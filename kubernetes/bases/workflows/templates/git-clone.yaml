@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+
+metadata:
+  name: git-clone
+  namespace: argo-workflows
+
+spec:
+  templates:
+    - name: clone
+      inputs:
+        parameters:
+          - name: repo
+          - name: revision
+            default: main
+          - name: depth
+            default: "1"
+        artifacts:
+          - name: source
+            path: /workdir/src
+            git:
+              repo: "{{inputs.parameters.repo}}"
+              revision: "{{inputs.parameters.revision}}"
+              depth: "{{inputs.parameters.depth}}"
+      container:
+        image: alpine
+        command: [sh, -c]
+        args: ["ls /workdir/src"]

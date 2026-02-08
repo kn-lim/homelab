@@ -1,0 +1,72 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+
+metadata:
+  name: terragrunt
+  generateName: terragrunt-
+  namespace: argo-workflows
+
+spec:
+  entrypoint: main
+  onExit: status
+  activeDeadlineSeconds: 3600
+  serviceAccountName: argo-workflow
+  arguments:
+    parameters:
+      - name: repo
+        value: https://github.com/kn-lim/homelab.git
+      - name: revision
+        value: main
+
+  volumeClaimTemplates:
+    - metadata:
+        name: workdir
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 2Gi
+
+  templates:
+    - name: main
+      dag:
+        tasks:
+          - name: clone
+            templateRef:
+              name: git-clone
+              template: clone
+            arguments:
+              parameters:
+                - name: repo
+                  value: "{{workflow.parameters.repo}}"
+                - name: revision
+                  value: "{{workflow.parameters.revision}}"
+          - name: plan
+            dependencies: [clone]
+            templateRef:
+              name: terragrunt
+              template: run
+            arguments:
+              parameters:
+                - name: command
+                  value: terragrunt stack run plan
+          - name: approve
+            dependencies: [plan]
+            template: approve
+          - name: apply
+            dependencies: [approve]
+            templateRef:
+              name: terragrunt
+              template: run
+            arguments:
+              parameters:
+                - name: command
+                  value: terragrunt stack run apply --auto-approve
+
+    - name: approve
+      suspend: {}
+
+    - name: status
+      templateRef:
+        name: discord
+        template: status

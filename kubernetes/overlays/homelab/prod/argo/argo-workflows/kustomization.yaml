@@ -6,8 +6,11 @@ generators:
 
 resources:
   # - ../../../../../bases/argo-workflows
+  - environment-secret.yaml
+  - ingress.yaml
   - serviceaccount.yaml
-  - tailscale-ingress.yaml
+  # Workflows
+  - ../../../../../bases/workflows
 
 patches:
   # NOTE: The following patches exist since workflows would always run in the argo-workflows namespace
