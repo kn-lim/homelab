@@ -4,7 +4,7 @@ kind: Kustomization
 namespace: cluster-services
 
 resources:
-  - github.com/alex1989hu/kubelet-serving-cert-approver/deploy/standalone?ref=v0.10.2
+  - github.com/alex1989hu/kubelet-serving-cert-approver/deploy/standalone?ref=v0.10.3
 
 patches:
   - patch: |-
