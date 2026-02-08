@@ -11,5 +11,5 @@ images:
     newTag: "8.17.0"
   - name: alpine
     newTag: "3.23.3"
-  - name: alpine/terragrunt
-    newTag: "1.13.5"
+  - name: debian
+    newTag: "bookworm-slim"

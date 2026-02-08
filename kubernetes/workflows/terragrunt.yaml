@@ -17,6 +17,11 @@ spec:
         value: https://github.com/kn-lim/homelab.git
       - name: revision
         value: main
+      - name: directory
+      - name: terraform-version
+        value: "1.14.4"
+      - name: terragrunt-version
+        value: "0.99.1"
 
   volumeClaimTemplates:
     - metadata:
@@ -41,8 +46,18 @@ spec:
                   value: "{{workflow.parameters.repo}}"
                 - name: revision
                   value: "{{workflow.parameters.revision}}"
+          - name: setup
+            templateRef:
+              name: terragrunt
+              template: setup
+            arguments:
+              parameters:
+                - name: terraform-version
+                  value: "{{workflow.parameters.terraform-version}}"
+                - name: terragrunt-version
+                  value: "{{workflow.parameters.terragrunt-version}}"
           - name: terragrunt-plan
-            dependencies: [git-clone]
+            dependencies: [git-clone, setup]
             templateRef:
               name: terragrunt
               template: run
@@ -50,6 +65,8 @@ spec:
               parameters:
                 - name: command
                   value: terragrunt stack run plan
+                - name: workdir
+                  value: "/workdir/src/terraform/{{workflow.parameters.directory}}"
           - name: approve
             dependencies: [terragrunt-plan]
             template: approve
@@ -62,6 +79,8 @@ spec:
               parameters:
                 - name: command
                   value: terragrunt stack run apply --auto-approve
+                - name: workdir
+                  value: "/workdir/src/terraform/{{workflow.parameters.directory}}"
 
     - name: approve
       suspend: {}
