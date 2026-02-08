@@ -17,7 +17,7 @@ spec:
         command: [sh, -c]
         args:
           - |
-            apt-get update && apt-get install -y --no-install-recommends curl unzip ca-certificates &&
+            apt-get update && apt-get install -y --no-install-recommends ca-certificates curl git unzip &&
             curl -fsSL https://releases.hashicorp.com/terraform/{{inputs.parameters.terraform-version}}/terraform_{{inputs.parameters.terraform-version}}_linux_amd64.zip -o /tmp/terraform.zip &&
             unzip /tmp/terraform.zip -d /workdir/bin &&
             curl -fsSL https://github.com/gruntwork-io/terragrunt/releases/download/v{{inputs.parameters.terragrunt-version}}/terragrunt_linux_amd64 -o /workdir/bin/terragrunt &&
