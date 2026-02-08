@@ -10,7 +10,7 @@ variable "network_interface" {
 variable "talos_version" {
   description = "Talos version for machine configuration schema"
   type        = string
-  default     = "v1.12.2"
+  default     = "v1.12.3"
 }
 
 # Required Variables
