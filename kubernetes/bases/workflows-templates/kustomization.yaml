@@ -2,17 +2,14 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  # Workflows
+  - discord.yaml
+  - git-clone.yaml
   - terragrunt.yaml
-  # Workflow Templates
-  - templates/discord.yaml
-  - templates/git-clone.yaml
-  - templates/terragrunt.yaml
 
 images:
   - name: curlimages/curl
     newTag: "8.17.0"
+  - name: alpine
+    newTag: "3.23.3"
   - name: alpine/terragrunt
     newTag: "1.13.5"
-  - name: alpine/git
-    newTag: "2.49.1"
