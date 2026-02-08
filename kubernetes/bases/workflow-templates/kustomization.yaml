@@ -8,7 +8,7 @@ resources:
 
 images:
   - name: curlimages/curl
-    newTag: "8.17.0"
+    newTag: "8.18.0"
   - name: alpine
     newTag: "3.23.3"
   - name: alpine/terragrunt
