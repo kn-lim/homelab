@@ -42,7 +42,7 @@ spec:
                 - name: revision
                   value: "{{workflow.parameters.revision}}"
           - name: terragrunt-plan
-            dependencies: [clone]
+            dependencies: [git-clone]
             templateRef:
               name: terragrunt
               template: run
@@ -51,7 +51,7 @@ spec:
                 - name: command
                   value: terragrunt stack run plan
           - name: approve
-            dependencies: [plan]
+            dependencies: [terragrunt-plan]
             template: approve
           - name: terragrunt-apply
             dependencies: [approve]
