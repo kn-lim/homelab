@@ -9,6 +9,6 @@ resources:
   - application.yaml
   - argocd-rbac-cm.yaml
   - homelab-applicationset.yaml
+  - ingress.yaml
   - ssh-secret.yaml
   - tsidp-secret.yaml
-  - ingress.yaml
