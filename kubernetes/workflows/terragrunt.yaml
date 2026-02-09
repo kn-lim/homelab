@@ -8,6 +8,8 @@ metadata:
 spec:
   entrypoint: main
   onExit: status
+  ttlStrategy:
+    secondsAfterCompletion: 86400
   activeDeadlineSeconds: 3600
   serviceAccountName: argo-workflow
   arguments:
