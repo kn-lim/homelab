@@ -35,10 +35,8 @@ spec:
             else
               COLOR=16711680
               EMOJI=":x:"
-              echo "DEBUG raw failures: {{inputs.parameters.failures}}"
               FAILURES=$(printf '%s' '{{inputs.parameters.failures}}' | \
-                jq -r '[.[] | select(.message | length > 0) | "\(.displayName): \(.message)"] | join("\\n")')
-              echo "DEBUG parsed failures: $FAILURES"
+                jq -r 'fromjson | [.[] | select(.message | length > 0) | "\(.displayName): \(.message)"] | join("\\n")')
               if [ -n "$FAILURES" ]; then
                 FAILURES_FIELD=",{\"name\": \"Failures\", \"value\": \"${FAILURES}\", \"inline\": false}"
               else
