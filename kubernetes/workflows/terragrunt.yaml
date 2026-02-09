@@ -19,10 +19,6 @@ spec:
       - name: revision
         value: main
       - name: directory
-      - name: terraform-version
-        value: "1.14.4"
-      - name: terragrunt-version
-        value: "0.99.1"
 
   volumeClaimTemplates:
     - metadata:
@@ -56,10 +52,6 @@ spec:
               parameters:
                 - name: command
                   value: terragrunt stack run apply --non-interactive
-                - name: terraform-version
-                  value: "{{workflow.parameters.terraform-version}}"
-                - name: terragrunt-version
-                  value: "{{workflow.parameters.terragrunt-version}}"
                 - name: workdir
                   value: "/workdir/src/terraform/{{workflow.parameters.directory}}"
 
