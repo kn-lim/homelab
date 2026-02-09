@@ -41,7 +41,7 @@ spec:
         command: [sh, -c]
         args:
           - |
-            apt-get update && apt-get install -y --no-install-recommends ca-certificates git &&
+            apt-get update && apt-get install -y --no-install-recommends git &&
             {{inputs.parameters.command}}
         workingDir: "{{inputs.parameters.workdir}}"
         env:

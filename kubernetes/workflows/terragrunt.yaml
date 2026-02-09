@@ -56,20 +56,6 @@ spec:
                   value: "{{workflow.parameters.terraform-version}}"
                 - name: terragrunt-version
                   value: "{{workflow.parameters.terragrunt-version}}"
-          - name: terragrunt-plan
-            dependencies: [git-clone, setup]
-            templateRef:
-              name: terragrunt
-              template: run
-            arguments:
-              parameters:
-                - name: command
-                  value: terragrunt stack run plan
-                - name: workdir
-                  value: "/workdir/src/terraform/{{workflow.parameters.directory}}"
-          - name: approve
-            dependencies: [terragrunt-plan]
-            template: approve
           - name: terragrunt-apply
             dependencies: [approve]
             templateRef:
@@ -81,9 +67,6 @@ spec:
                   value: terragrunt stack run apply --auto-approve
                 - name: workdir
                   value: "/workdir/src/terraform/{{workflow.parameters.directory}}"
-
-    - name: approve
-      suspend: {}
 
     - name: status
       steps:
