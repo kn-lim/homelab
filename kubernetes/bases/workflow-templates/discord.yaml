@@ -19,14 +19,14 @@ spec:
           - name: failures
             default: "{{workflow.failures}}"
       container:
-        image: curlimages/curl
+        image: alpine
         envFrom:
           - secretRef:
               name: environment-variables
         command: [sh, -c]
         args:
           - |
-            echo "DEBUG failures: {{inputs.parameters.failures}}"
+            apk add --no-cache curl jq
 
             if [ "{{inputs.parameters.status}}" = "Succeeded" ]; then
               COLOR=65280
@@ -36,9 +36,7 @@ spec:
               COLOR=16711680
               EMOJI=":x:"
               FAILURES=$(printf '%s' '{{inputs.parameters.failures}}' | \
-                sed 's/},{/}\n{/g' | \
-                sed -n 's/.*"displayName" *: *"\([^"]*\)".*"message" *: *"\([^"]*\)".*/\1: \2/p' | \
-                awk '{printf "%s\\n", $0}' | sed 's/\\n$//')
+                jq -r '[.[] | select(.message | length > 0) | "\(.displayName): \(.message)"] | join("\\n")' 2>/dev/null)
               if [ -n "$FAILURES" ]; then
                 FAILURES_FIELD=",{\"name\": \"Failures\", \"value\": \"${FAILURES}\", \"inline\": false}"
               else
