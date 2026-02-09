@@ -1,0 +1,15 @@
+terraform:
+  run:
+    - application: talos
+      whenModified:
+        - terraform/_modules/cluster-bootstrap
+        - terraform/_modules/onepassword-secret
+        - terraform/_modules/talos
+        - terraform/_stacks/talos
+        - terraform/_units/cluster-bootstrap
+        - terraform/_units/onepassword-secret
+        - terraform/_units/talos
+    - application: grafana
+      whenModified:
+        - terraform/_modules/grafana
+        - terraform/_units/grafana
