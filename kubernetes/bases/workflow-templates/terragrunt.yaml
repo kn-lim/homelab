@@ -39,9 +39,10 @@ spec:
       container:
         image: debian:bookworm-slim
         command: [sh, -c]
-        args: |
-          apt-get update && apt-get install -y --no-install-recommends ca-certificates git &&
-          {{inputs.parameters.command}}
+        args:
+          - |
+            apt-get update && apt-get install -y --no-install-recommends ca-certificates git &&
+            {{inputs.parameters.command}}
         workingDir: "{{inputs.parameters.workdir}}"
         env:
           - name: PATH
