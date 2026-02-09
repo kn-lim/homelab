@@ -11,6 +11,8 @@ spec:
       inputs:
         parameters:
           - name: command
+          - name: terraform-version
+          - name: terragrunt-version
           - name: workdir
             default: /workdir/src/terraform
       container:
