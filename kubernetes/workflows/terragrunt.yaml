@@ -38,7 +38,7 @@ spec:
         tasks:
           - name: git-clone
             templateRef:
-              name: git-clone
+              name: git
               template: clone
             arguments:
               parameters:
@@ -46,25 +46,19 @@ spec:
                   value: "{{workflow.parameters.repo}}"
                 - name: revision
                   value: "{{workflow.parameters.revision}}"
-          - name: setup
-            templateRef:
-              name: terragrunt
-              template: setup
-            arguments:
-              parameters:
-                - name: terraform-version
-                  value: "{{workflow.parameters.terraform-version}}"
-                - name: terragrunt-version
-                  value: "{{workflow.parameters.terragrunt-version}}"
           - name: terragrunt-apply
-            dependencies: [approve]
+            dependencies: [git-clone]
             templateRef:
               name: terragrunt
               template: run
             arguments:
               parameters:
                 - name: command
-                  value: terragrunt stack run apply --auto-approve
+                  value: terragrunt stack run apply --non-interactive
+                - name: terraform-version
+                  value: "{{workflow.parameters.terraform-version}}"
+                - name: terragrunt-version
+                  value: "{{workflow.parameters.terragrunt-version}}"
                 - name: workdir
                   value: "/workdir/src/terraform/{{workflow.parameters.directory}}"
 

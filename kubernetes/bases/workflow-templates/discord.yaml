@@ -35,9 +35,13 @@ spec:
               EMOJI=":x:"
               FAILURES=$(printf '%s' '{{inputs.parameters.failures}}' | \
                 sed 's/},{/}\n{/g' | \
-                sed -n 's/.*"displayName":"\([^"]*\)".*"message":"\([^"]*\)".*/\1: \2/p' | \
+                sed -n 's/.*"displayName" *: *"\([^"]*\)".*"message" *: *"\([^"]*\)".*/\1: \2/p' | \
                 awk '{printf "%s\\n", $0}' | sed 's/\\n$//')
-              FAILURES_FIELD=",{\"name\": \"Failures\", \"value\": \"${FAILURES}\", \"inline\": false}"
+              if [ -n "$FAILURES" ]; then
+                FAILURES_FIELD=",{\"name\": \"Failures\", \"value\": \"${FAILURES}\", \"inline\": false}"
+              else
+                FAILURES_FIELD=""
+              fi
             fi
 
             curl -X POST "$DISCORD_WEBHOOK_URL" \
