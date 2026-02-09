@@ -26,6 +26,8 @@ spec:
         command: [sh, -c]
         args:
           - |
+            echo "DEBUG failures: {{inputs.parameters.failures}}"
+
             if [ "{{inputs.parameters.status}}" = "Succeeded" ]; then
               COLOR=65280
               EMOJI=":white_check_mark:"
