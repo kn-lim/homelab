@@ -3,7 +3,7 @@ kind: Kustomization
 
 resources:
   - discord.yaml
-  - git-clone.yaml
+  - git.yaml
   - terragrunt.yaml
 
 images:
