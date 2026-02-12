@@ -10,4 +10,4 @@ images:
   - name: alpine
     newTag: "3.23.3"
   - name: ghcr.io/jdx/mise
-    newTag: "2026.2.8"
+    newTag: "2026.2.10"
