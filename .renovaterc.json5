@@ -6,6 +6,12 @@
   "pre-commit": {
     "enabled": true
   },
+  "packageRules": [
+    {
+      "matchDepNames": ["aqua:kubernetes-sigs/kustomize"],
+      "extractVersion": "^kustomize\\/v(?<version>\\d+\\.\\d+\\.\\d+)$"
+    },
+  ],
   "argocd": {
     // Modified for gomplate
     "managerFilePatterns": ["/(^|/)kubernetes/.+\\.ya?ml(?:\\.tmpl)?$/"]
