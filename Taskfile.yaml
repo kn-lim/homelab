@@ -6,6 +6,8 @@ includes:
   kubernetes:
     taskfile: ./configs/task/kubernetes.yaml
     aliases: [k8s]
+  talos:
+    taskfile: ./configs/task/talos.yaml
   template:
     taskfile: ./configs/task/template.yaml
     aliases: [tmpl]

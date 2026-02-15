@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: '3'
+
+vars:
+  IMAGE: ghcr.io/siderolabs/installer
+
+tasks:
+  # TODO: Remove --force if no longer a single node cluster
+  upgrade:*:*:
+    desc: Upgrade talos to specified version
+    vars:
+      NODE_IP: '{{index .MATCH 0}}'
+      VERSION: '{{index .MATCH 1}}'
+    cmd: 'talosctl upgrade --nodes {{.NODE_IP}} --image {{.IMAGE}}:v{{.VERSION}} --force'
