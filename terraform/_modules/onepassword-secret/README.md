@@ -6,13 +6,13 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.14 |
-| <a name="requirement_onepassword"></a> [onepassword](#requirement\_onepassword) | 3.2.0 |
+| <a name="requirement_onepassword"></a> [onepassword](#requirement\_onepassword) | 3.2.1 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_onepassword"></a> [onepassword](#provider\_onepassword) | 3.2.0 |
+| <a name="provider_onepassword"></a> [onepassword](#provider\_onepassword) | 3.2.1 |
 
 ## Modules
 
@@ -22,8 +22,8 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [onepassword_item.default](https://registry.terraform.io/providers/1Password/onepassword/3.2.0/docs/data-sources/item) | data source |
-| [onepassword_vault.default](https://registry.terraform.io/providers/1Password/onepassword/3.2.0/docs/data-sources/vault) | data source |
+| [onepassword_item.default](https://registry.terraform.io/providers/1Password/onepassword/3.2.1/docs/data-sources/item) | data source |
+| [onepassword_vault.default](https://registry.terraform.io/providers/1Password/onepassword/3.2.1/docs/data-sources/vault) | data source |
 
 ## Inputs
 
