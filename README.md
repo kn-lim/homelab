@@ -118,7 +118,7 @@ kubernetes/
 │  │  │  ├─ namespace/
 │  │  │  │  ├─ applications/
 │  │  │  │  │  ├─ generated/        # generated files
-├─ workflows/                       # argo workflows
+├─ workflows/                       # argo-workflows manifests
 terraform/
 ├─ _modules/                        # terraform modules
 ├─ _stacks/                         # terragrunt stacks
