@@ -27,7 +27,7 @@ spec:
             arguments:
               parameters:
                 - name: command
-                  value: argocd app sync {{workflow.parameters.application}} --grpc-web --wait
+                  value: argocd app sync {{workflow.parameters.application}} --grpc-web
 
     - name: status
       steps:
