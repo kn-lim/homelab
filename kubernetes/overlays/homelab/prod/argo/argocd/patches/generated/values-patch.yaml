@@ -10,6 +10,7 @@ valuesInline:
 
   configs:
     cm:
+      accounts.ci: apiKey
       url: https://argocd.neon-wyrm.ts.net
       dex.config: |
         connectors:
