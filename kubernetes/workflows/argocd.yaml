@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+
+metadata:
+  generateName: argocd-
+  namespace: argo-workflows
+
+spec:
+  entrypoint: main
+  onExit: status
+  ttlStrategy:
+    secondsAfterCompletion: 86400
+  activeDeadlineSeconds: 3600
+  serviceAccountName: argo-workflow
+  arguments:
+    parameters:
+      - name: application
+
+  templates:
+    - name: main
+      dag:
+        tasks:
+          - name: sync
+            templateRef:
+              name: argocd
+              template: run
+            arguments:
+              parameters:
+                - name: command
+                  value: argocd app sync {{workflow.parameters.application}} --grpc-web --wait
+
+    - name: status
+      steps:
+        - - name: send-status
+            templateRef:
+              name: discord
+              template: status

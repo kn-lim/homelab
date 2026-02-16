@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+
+metadata:
+  name: argocd
+  namespace: argo-workflows
+
+spec:
+  templates:
+    - name: run
+      inputs:
+        parameters:
+          - name: command
+      container:
+        image: quay.io/argoproj/argocd
+        command: [bash, -c]
+        args:
+          - |
+            {{inputs.parameters.command}}
+        envFrom:
+          - secretRef:
+              name: environment-variables
