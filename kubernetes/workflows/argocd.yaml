@@ -27,7 +27,7 @@ spec:
             arguments:
               parameters:
                 - name: command
-                  value: argocd app sync {{workflow.parameters.application}} --grpc-web
+                  value: argocd app sync {{workflow.parameters.application}} --grpc-web --insecure
 
     - name: status
       steps:
