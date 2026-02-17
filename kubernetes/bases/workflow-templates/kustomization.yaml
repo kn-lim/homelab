@@ -11,6 +11,6 @@ images:
   - name: alpine
     newTag: "3.23.3"
   - name: ghcr.io/jdx/mise
-    newTag: "2026.2.13"
+    newTag: "2026.2.15"
   - name: quay.io/argoproj/argocd
     newTag: "v3.3.0"
