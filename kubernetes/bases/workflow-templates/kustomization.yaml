@@ -13,4 +13,4 @@ images:
   - name: ghcr.io/jdx/mise
     newTag: "2026.2.16"
   - name: quay.io/argoproj/argocd
-    newTag: "v3.3.0"
+    newTag: "v3.3.1"
