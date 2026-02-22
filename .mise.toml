@@ -3,7 +3,7 @@ KUBECONFIG = "{{config_root}}/homelab-prod.kubeconfig"
 TALOSCONFIG = "{{config_root}}/homelab-prod.talosconfig"
 
 [tools]
-"aqua:argoproj/argo-cd" = "3.3.1"
+"aqua:argoproj/argo-cd" = "3.3.2"
 "aqua:argoproj/argo-workflows" = "4.0.1"
 "aqua:aws/aws-cli" = "2.33.27"
 "aqua:go-task/task" = "3.48.0"
