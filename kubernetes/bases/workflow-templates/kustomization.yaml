@@ -13,4 +13,4 @@ images:
   - name: alpine/git
     newTag: "2.52.0"
   - name: ghcr.io/jdx/mise
-    newTag: "2026.2.16"
+    newTag: "2026.2.20"
