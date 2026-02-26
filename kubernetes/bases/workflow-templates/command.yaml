@@ -6,12 +6,6 @@ metadata:
   namespace: argo-workflows
 
 spec:
-  volumes:
-    - name: ssh-key
-      secret:
-        secretName: argo-workflows-ssh-key
-        defaultMode: 0400
-
   templates:
     - name: run
       inputs:

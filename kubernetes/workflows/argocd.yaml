@@ -20,6 +20,12 @@ spec:
         value: main
       - name: application
 
+  volumes:
+    - name: ssh-key
+      secret:
+        secretName: argo-workflows-ssh-key
+        defaultMode: 0400
+
   volumeClaimTemplates:
     - metadata:
         name: workdir
