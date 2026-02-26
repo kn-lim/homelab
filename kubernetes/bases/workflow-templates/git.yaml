@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+
+metadata:
+  name: git
+  namespace: argo-workflows
+
+spec:
+  templates:
+    - name: clone
+      inputs:
+        parameters:
+          - name: repo
+          - name: revision
+            default: main
+        artifacts:
+          - name: source
+            path: /workdir/src
+            git:
+              repo: "{{inputs.parameters.repo}}"
+              revision: "{{inputs.parameters.revision}}"
+              depth: 1
+              sshPrivateKeySecret:
+                name: argo-workflows-ssh-key
+                key: sshPrivateKey
+              insecureIgnoreHostKey: true
+      container:
+        image: alpine/git
+        command: [sh, -c]
+        args: ["ls -lh /workdir/src"]
+        volumeMounts:
+          - name: workdir
+            mountPath: /workdir

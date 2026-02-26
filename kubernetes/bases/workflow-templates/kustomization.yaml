@@ -4,10 +4,13 @@ kind: Kustomization
 resources:
   - command.yaml
   - discord.yaml
+  - git.yaml
   - setup.yaml
 
 images:
   - name: alpine
     newTag: "3.23.3"
+  - name: alpine/git
+    newTag: "2.52.0"
   - name: ghcr.io/jdx/mise
     newTag: "2026.2.16"
