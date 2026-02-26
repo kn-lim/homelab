@@ -6,6 +6,12 @@ metadata:
   namespace: argo-workflows
 
 spec:
+  volumes:
+    - name: ssh-key
+      secret:
+        secretName: argo-workflows-ssh-key
+        defaultMode: 0400
+
   templates:
     - name: run
       inputs:
@@ -27,9 +33,14 @@ spec:
             value: /workdir/.cache/mise
           - name: MISE_DATA_DIR
             value: /workdir/.mise
+          - name: GIT_SSH_COMMAND
+            value: "ssh -i /ssh/sshPrivateKey -o StrictHostKeyChecking=no"
         envFrom:
           - secretRef:
               name: environment-variables
         volumeMounts:
           - name: workdir
             mountPath: /workdir
+          - name: ssh-key
+            mountPath: /ssh
+            readOnly: true
