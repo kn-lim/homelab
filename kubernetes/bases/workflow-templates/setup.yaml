@@ -14,7 +14,12 @@ spec:
         args:
           - |
             mise trust &&
-            mise install
+            mise install \
+              aqua:argoproj/argo-cd \
+              aqua:go-task/task \
+              aqua:gruntwork-io/terragrunt \
+              aqua:hashicorp/terraform \
+              aqua:mikefarah/yq
         workingDir: "/workdir/src"
         env:
           - name: MISE_CACHE_DIR
