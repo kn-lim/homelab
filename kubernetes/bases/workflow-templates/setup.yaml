@@ -20,6 +20,9 @@ spec:
               repo: "{{inputs.parameters.repo}}"
               revision: "{{inputs.parameters.revision}}"
               depth: 1
+              sshPrivateKeySecret:
+                name: argo-workflows-ssh-key
+                key: sshPrivateKey
       container:
         image: ghcr.io/jdx/mise
         command: [bash, -c]

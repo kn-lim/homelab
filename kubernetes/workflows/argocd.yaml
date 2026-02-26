@@ -15,7 +15,7 @@ spec:
   arguments:
     parameters:
       - name: repo
-        value: https://github.com/kn-lim/homelab.git
+        value: git@github.com/kn-lim/homelab.git
       - name: revision
         value: main
       - name: application

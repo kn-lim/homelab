@@ -9,6 +9,7 @@ resources:
   - environment-secret.yaml
   - ingress.yaml
   - serviceaccount.yaml
+  - ssh-secret.yaml
   # Workflow Templates
   - ../../../../../bases/workflow-templates
 
