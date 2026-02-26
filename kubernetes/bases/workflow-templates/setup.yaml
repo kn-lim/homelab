@@ -2,12 +2,12 @@ apiVersion: argoproj.io/v1alpha1
 kind: WorkflowTemplate
 
 metadata:
-  name: git
+  name: setup
   namespace: argo-workflows
 
 spec:
   templates:
-    - name: clone
+    - name: setup
       inputs:
         parameters:
           - name: repo
@@ -21,9 +21,18 @@ spec:
               revision: "{{inputs.parameters.revision}}"
               depth: 1
       container:
-        image: alpine
-        command: [sh, -c]
-        args: ["ls /workdir/src"]
+        image: ghcr.io/jdx/mise
+        command: [bash, -c]
+        args:
+          - |
+            mise trust &&
+            mise install
+        workingDir: "/workdir/src"
+        env:
+          - name: MISE_CACHE_DIR
+            value: /workdir/.cache/mise
+          - name: MISE_DATA_DIR
+            value: /workdir/.mise
         volumeMounts:
           - name: workdir
             mountPath: /workdir

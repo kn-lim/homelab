@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: WorkflowTemplate
 
 metadata:
-  name: terragrunt
+  name: command
   namespace: argo-workflows
 
 spec:
@@ -12,16 +12,20 @@ spec:
         parameters:
           - name: command
           - name: workdir
-            default: /workdir/src/terraform
+            default: /workdir/src
       container:
         image: ghcr.io/jdx/mise
         command: [bash, -c]
         args:
           - |
             mise trust &&
-            mise install aqua:hashicorp/terraform aqua:gruntwork-io/terragrunt &&
             {{inputs.parameters.command}}
         workingDir: "{{inputs.parameters.workdir}}"
+        env:
+          - name: MISE_CACHE_DIR
+            value: /workdir/.cache/mise
+          - name: MISE_DATA_DIR
+            value: /workdir/.mise
         envFrom:
           - secretRef:
               name: environment-variables

@@ -33,10 +33,10 @@ spec:
     - name: main
       dag:
         tasks:
-          - name: git-clone
+          - name: setup
             templateRef:
-              name: git
-              template: clone
+              name: setup
+              template: setup
             arguments:
               parameters:
                 - name: repo
@@ -44,9 +44,9 @@ spec:
                 - name: revision
                   value: "{{workflow.parameters.revision}}"
           - name: terragrunt-apply
-            dependencies: [git-clone]
+            dependencies: [setup]
             templateRef:
-              name: terragrunt
+              name: command
               template: run
             arguments:
               parameters:

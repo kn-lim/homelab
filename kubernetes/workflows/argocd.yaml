@@ -14,15 +14,39 @@ spec:
   serviceAccountName: argo-workflow
   arguments:
     parameters:
+      - name: repo
+        value: https://github.com/kn-lim/homelab.git
+      - name: revision
+        value: main
       - name: application
+
+  volumeClaimTemplates:
+    - metadata:
+        name: workdir
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 2Gi
 
   templates:
     - name: main
       dag:
         tasks:
-          - name: sync
+          - name: setup
             templateRef:
-              name: argocd
+              name: setup
+              template: setup
+            arguments:
+              parameters:
+                - name: repo
+                  value: "{{workflow.parameters.repo}}"
+                - name: revision
+                  value: "{{workflow.parameters.revision}}"
+          - name: argocd-sync
+            dependencies: [setup]
+            templateRef:
+              name: command
               template: run
             arguments:
               parameters:
