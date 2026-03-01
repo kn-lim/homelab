@@ -56,7 +56,9 @@ tasks:
             if [ -n "$override" ]; then
               for dir in terraform/[!_]*/*/*; do
                 echo "[debug]    checking dir=$dir" >&2
-                [ -d "$dir" ] && [ "${dir##*/}" = "$override" ] && echo "task ci:terraform DIRECTORY=$dir"
+                if [ -d "$dir" ] && [ "${dir##*/}" = "$override" ]; then
+                  echo "task ci:terraform DIRECTORY=$dir"
+                fi
               done
             fi
             ;;
