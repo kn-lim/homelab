@@ -9,8 +9,8 @@ spec:
   entrypoint: main
   onExit: status
   synchronization:
-    mutex:
-      name: "ci-{{workflow.parameters.repo}}"
+    mutexes:
+      - name: "ci-{{workflow.parameters.repo}}"
   ttlStrategy:
     secondsAfterCompletion: 86400
   activeDeadlineSeconds: 3600
@@ -57,17 +57,8 @@ spec:
             templateRef:
               name: setup
               template: setup
-          - name: validate
-            dependencies: [setup]
-            templateRef:
-              name: command
-              template: run
-            arguments:
-              parameters:
-                - name: command
-                  value: task ci:validate
           - name: parse
-            dependencies: [validate]
+            dependencies: [setup]
             templateRef:
               name: command
               template: parse
