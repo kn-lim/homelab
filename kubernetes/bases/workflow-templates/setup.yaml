@@ -19,7 +19,8 @@ spec:
               aqua:go-task/task \
               aqua:gruntwork-io/terragrunt \
               aqua:hashicorp/terraform \
-              aqua:mikefarah/yq
+              aqua:mikefarah/yq \
+              aqua:pre-commit/pre-commit
         workingDir: "/workdir/src"
         env:
           - name: MISE_CACHE_DIR

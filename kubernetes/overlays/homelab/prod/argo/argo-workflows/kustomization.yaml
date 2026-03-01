@@ -10,8 +10,6 @@ resources:
   - ingress.yaml
   - serviceaccount.yaml
   - ssh-secret.yaml
-  # Workflow Templates
-  - ../../../../../bases/workflow-templates
 
 patches:
   # NOTE: The following patches exist since workflows would always run in the argo-workflows namespace

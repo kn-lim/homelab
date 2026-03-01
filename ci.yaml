@@ -1,5 +1,9 @@
 terraform:
   run:
+    - application: grafana
+      whenModified:
+        - terraform/_modules/grafana
+        - terraform/_units/grafana
     - application: talos
       whenModified:
         - terraform/_modules/cluster-bootstrap
@@ -9,7 +13,3 @@ terraform:
         - terraform/_units/cluster-bootstrap
         - terraform/_units/onepassword-secret
         - terraform/_units/talos
-    - application: grafana
-      whenModified:
-        - terraform/_modules/grafana
-        - terraform/_units/grafana

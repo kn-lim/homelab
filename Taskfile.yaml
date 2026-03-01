@@ -3,6 +3,8 @@
 version: '3'
 
 includes:
+  ci:
+    taskfile: ./configs/task/ci.yaml
   kubernetes:
     taskfile: ./configs/task/kubernetes.yaml
     aliases: [k8s]

@@ -2,12 +2,15 @@ apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 
 metadata:
-  generateName: argocd-
+  generateName: ci-
   namespace: argo-workflows
 
 spec:
   entrypoint: main
   onExit: status
+  synchronization:
+    mutex:
+      name: "ci-{{workflow.parameters.repo}}"
   ttlStrategy:
     secondsAfterCompletion: 86400
   activeDeadlineSeconds: 3600
@@ -18,7 +21,7 @@ spec:
         value: git@github.com:kn-lim/homelab.git
       - name: revision
         value: main
-      - name: application
+      - name: paths
 
   volumes:
     - name: ssh-key
@@ -63,15 +66,25 @@ spec:
               parameters:
                 - name: command
                   value: task ci:validate
-          - name: argocd-sync
+          - name: parse
             dependencies: [validate]
+            templateRef:
+              name: command
+              template: parse
+            arguments:
+              parameters:
+                - name: paths
+                  value: "{{workflow.parameters.paths}}"
+          - name: apply
+            dependencies: [parse]
+            withParam: "{{tasks.parse.outputs.result}}"
             templateRef:
               name: command
               template: run
             arguments:
               parameters:
                 - name: command
-                  value: argocd app sync {{workflow.parameters.application}} --grpc-web --insecure
+                  value: "{{item.command}}"
 
     - name: status
       steps:

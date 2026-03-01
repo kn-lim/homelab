@@ -1,0 +1,70 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: '3'
+
+tasks:
+  argo:
+    desc: Runs the ArgoCD CI task
+    requires:
+      vars: [APPLICATION]
+    cmd: 'argocd app sync {{.APPLICATION}} --grpc-web --insecure'
+
+  terraform:
+    desc: Runs the Terraform CI task
+    requires:
+      vars: [DIRECTORY]
+    dir: "{{.DIRECTORY}}"
+    cmd: 'terragrunt stack run apply --non-interactive'
+
+  validate:
+    desc: Validates the repo
+    cmd: task utilities:pre-commit
+
+  parse:
+    desc: Parses comma-separated folder paths and outputs CI commands as JSON
+    requires:
+      vars: [PATHS]
+    cmd: |
+      lookup_ci() {
+        LOOKUP_PATH="$2" yq e "
+          .${1}.run[]
+          | select(.whenModified | any_c(
+              . as \$p | ((strenv(LOOKUP_PATH) == \$p) or (strenv(LOOKUP_PATH) | test(\"^\" + \$p + \"/\")))
+            ))
+          | .application
+        " ci.yaml 2>/dev/null | head -1
+      }
+
+      echo "{{.PATHS}}" | tr ',' '\n' | while IFS= read -r path; do
+        path=$(echo "$path" | tr -d ' \t')
+        [ -z "$path" ] && continue
+        case "$path" in
+          kubernetes/overlays/*/*/*/*)
+            echo "task ci:argo APPLICATION=$(echo "$path" | cut -d'/' -f6)"
+            ;;
+          kubernetes/bases/*)
+            override=$(lookup_ci kubernetes "$path")
+            base=$(echo "$path" | cut -d'/' -f3)
+            echo "task ci:argo APPLICATION=${override:-$base}"
+            ;;
+          terraform/_*)
+            override=$(lookup_ci terraform "$path")
+            if [ -n "$override" ]; then
+              for dir in terraform/[!_]*/*/*; do
+                [ -d "$dir" ] && [ "${dir##*/}" = "$override" ] && echo "task ci:terraform DIRECTORY=$dir"
+              done
+            fi
+            ;;
+          terraform/*/*/*)
+            echo "task ci:terraform DIRECTORY=$(echo "$path" | cut -d'/' -f1-4)"
+            ;;
+        esac
+      done | awk '!seen[$0]++' | (
+        printf '['
+        separator=''
+        while IFS= read -r c; do
+          printf '%s{"command":"%s"}' "$separator" "$c"
+          separator=','
+        done
+        printf ']'
+      )

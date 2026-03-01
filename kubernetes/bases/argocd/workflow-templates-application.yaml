@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+
+metadata:
+  name: workflow-templates
+  namespace: argo
+
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:kn-lim/homelab.git
+    targetRevision: main
+    path: kubernetes/bases/workflow-templates
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argo-workflows
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
