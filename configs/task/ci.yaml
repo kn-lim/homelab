@@ -38,25 +38,34 @@ tasks:
       echo "{{.PATHS}}" | tr ',' '\n' | while IFS= read -r path; do
         path=$(echo "$path" | tr -d ' \t')
         [ -z "$path" ] && continue
+        echo "[debug] processing: $path" >&2
         case "$path" in
           kubernetes/overlays/*/*/*/*)
+            echo "[debug] -> k8s overlays match" >&2
             echo "task ci:argo APPLICATION=$(echo "$path" | cut -d'/' -f6)"
             ;;
           kubernetes/bases/*)
             override=$(lookup_ci kubernetes "$path")
             base=$(echo "$path" | cut -d'/' -f3)
+            echo "[debug] -> k8s bases match override=$override" >&2
             echo "task ci:argo APPLICATION=${override:-$base}"
             ;;
           terraform/_*)
             override=$(lookup_ci terraform "$path")
+            echo "[debug] -> terraform _* match override=$override" >&2
             if [ -n "$override" ]; then
               for dir in terraform/[!_]*/*/*; do
+                echo "[debug]    checking dir=$dir" >&2
                 [ -d "$dir" ] && [ "${dir##*/}" = "$override" ] && echo "task ci:terraform DIRECTORY=$dir"
               done
             fi
             ;;
           terraform/*/*/*)
+            echo "[debug] -> terraform direct match" >&2
             echo "task ci:terraform DIRECTORY=$(echo "$path" | cut -d'/' -f1-4)"
+            ;;
+          *)
+            echo "[debug] -> NO MATCH" >&2
             ;;
         esac
       done | awk '!seen[$0]++' | (
