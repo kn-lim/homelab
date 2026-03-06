@@ -46,6 +46,7 @@ spec:
               -d "{
                 \"embeds\": [{
                   \"title\": \"$EMOJI Workflow {{inputs.parameters.status}}\",
+                  \"url\": \"${ARGO_WORKFLOWS_URL}/workflows/argo-workflows/{{inputs.parameters.workflow-name}}\",
                   \"color\": $COLOR,
                   \"fields\": [
                     {\"name\": \"Workflow\", \"value\": \"{{inputs.parameters.workflow-name}}\", \"inline\": true},
