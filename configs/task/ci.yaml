@@ -9,13 +9,6 @@ tasks:
       vars: [APPLICATION]
     cmd: 'argocd app sync {{.APPLICATION}} --grpc-web --insecure'
 
-  terraform:
-    desc: Runs the Terraform CI task
-    requires:
-      vars: [DIRECTORY]
-    dir: "{{.DIRECTORY}}"
-    cmd: 'terragrunt stack run apply --non-interactive'
-
   parse:
     desc: Parses comma-separated folder paths and outputs CI commands as JSON
     requires:
@@ -66,3 +59,10 @@ tasks:
         done
         printf ']'
       )
+
+  terraform:
+    desc: Runs the Terraform CI task
+    requires:
+      vars: [DIRECTORY]
+    dir: "{{.DIRECTORY}}"
+    cmd: 'terragrunt stack run apply --non-interactive'
