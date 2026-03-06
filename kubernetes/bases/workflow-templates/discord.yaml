@@ -19,15 +19,13 @@ spec:
           - name: failures
             default: "{{workflow.failures}}"
       container:
-        image: alpine
+        image: ghcr.io/kn-lim/toolbox
         envFrom:
           - secretRef:
               name: environment-variables
         command: [sh, -c]
         args:
           - |
-            apk add --no-cache curl jq
-
             if [ "{{inputs.parameters.status}}" = "Succeeded" ]; then
               COLOR=65280
               EMOJI=":white_check_mark:"

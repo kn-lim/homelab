@@ -52,13 +52,8 @@ spec:
                   value: "{{workflow.parameters.repo}}"
                 - name: revision
                   value: "{{workflow.parameters.revision}}"
-          - name: setup
-            dependencies: [git-clone]
-            templateRef:
-              name: setup
-              template: setup
           - name: parse
-            dependencies: [setup]
+            dependencies: [git-clone]
             templateRef:
               name: command
               template: parse

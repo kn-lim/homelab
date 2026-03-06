@@ -16,10 +16,6 @@ tasks:
     dir: "{{.DIRECTORY}}"
     cmd: 'terragrunt stack run apply --non-interactive'
 
-  validate:
-    desc: Validates the repo
-    cmd: task utilities:pre-commit
-
   parse:
     desc: Parses comma-separated folder paths and outputs CI commands as JSON
     requires:
@@ -63,10 +59,10 @@ tasks:
         esac
       done | awk '!seen[$0]++' | (
         printf '['
-        separator=''
+        delimiter=''
         while IFS= read -r c; do
-          printf '%s{"command":"%s"}' "$separator" "$c"
-          separator=','
+          printf '%s{"command":"%s"}' "$delimiter" "$c"
+          delimiter=','
         done
         printf ']'
       )

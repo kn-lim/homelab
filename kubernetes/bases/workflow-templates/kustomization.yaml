@@ -5,12 +5,10 @@ resources:
   - command.yaml
   - discord.yaml
   - git.yaml
-  - setup.yaml
+
+configurations:
+  - configurations.yaml
 
 images:
-  - name: alpine
-    newTag: "3.23.3"
-  - name: alpine/git
-    newTag: "2.52.0"
-  - name: ghcr.io/jdx/mise
-    newTag: "2026.2.23"
+  - name: ghcr.io/kn-lim/toolbox
+    newTag: "1.0.0"

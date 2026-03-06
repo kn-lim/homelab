@@ -14,19 +14,12 @@ spec:
           - name: workdir
             default: /workdir/src
       container:
-        image: ghcr.io/jdx/mise
+        image: ghcr.io/kn-lim/toolbox
         command: [bash, -c]
         args:
           - |
-            mise trust &&
-            eval "$(mise activate bash)" &&
             {{inputs.parameters.command}}
         workingDir: "{{inputs.parameters.workdir}}"
-        env:
-          - name: MISE_CACHE_DIR
-            value: /workdir/.cache/mise
-          - name: MISE_DATA_DIR
-            value: /workdir/.mise
         envFrom:
           - secretRef:
               name: environment-variables
@@ -39,18 +32,11 @@ spec:
         parameters:
           - name: paths
       script:
-        image: ghcr.io/jdx/mise
+        image: ghcr.io/kn-lim/toolbox
         command: [bash]
         source: |
-          mise trust > /dev/null &&
-          eval "$(mise activate bash)" &&
           task ci:parse PATHS="{{inputs.parameters.paths}}"
         workingDir: /workdir/src
-        env:
-          - name: MISE_CACHE_DIR
-            value: /workdir/.cache/mise
-          - name: MISE_DATA_DIR
-            value: /workdir/.mise
         envFrom:
           - secretRef:
               name: environment-variables

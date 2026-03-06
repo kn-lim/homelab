@@ -25,7 +25,7 @@ spec:
                 key: sshPrivateKey
               insecureIgnoreHostKey: true
       container:
-        image: alpine/git
+        image: ghcr.io/kn-lim/toolbox
         command: [sh, -c]
         args: ["ls -lh /workdir/src"]
         volumeMounts:
