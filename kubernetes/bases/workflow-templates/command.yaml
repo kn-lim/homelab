@@ -12,7 +12,7 @@ spec:
         parameters:
           - name: command
           - name: workdir
-            default: /workdir
+            default: /workdir/src
       container:
         image: ghcr.io/kn-lim/toolbox
         command: [bash, -c]
@@ -41,7 +41,7 @@ spec:
         source: |
           task --yes --list > /dev/null
           task ci:parse PATHS="{{inputs.parameters.paths}}"
-        workingDir: /workdir
+        workingDir: /workdir/src
         env:
           - name: TASK_X_REMOTE_TASKFILES
             value: "1"
