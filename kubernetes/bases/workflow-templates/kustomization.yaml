@@ -11,4 +11,4 @@ configurations:
 
 images:
   - name: ghcr.io/kn-lim/toolbox
-    newTag: "1.1.0"
+    newTag: "1.2.0"
