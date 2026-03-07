@@ -29,25 +29,25 @@ tasks:
         [ -z "$path" ] && continue
         case "$path" in
           kubernetes/overlays/*/*/*/*)
-            echo "task ci:argo APPLICATION=$(echo "$path" | cut -d'/' -f6)"
+            echo "task --yes ci:argo APPLICATION=$(echo "$path" | cut -d'/' -f6)"
             ;;
           kubernetes/bases/*)
             override=$(lookup_ci kubernetes "$path")
             base=$(echo "$path" | cut -d'/' -f3)
-            echo "task ci:argo APPLICATION=${override:-$base}"
+            echo "task --yes ci:argo APPLICATION=${override:-$base}"
             ;;
           terraform/_*)
             override=$(lookup_ci terraform "$path")
             if [ -n "$override" ]; then
               for dir in terraform/[!_]*/*/*; do
                 if [ -d "$dir" ] && [ "${dir##*/}" = "$override" ]; then
-                  echo "task ci:terraform DIRECTORY=$dir"
+                  echo "task --yes ci:terraform DIRECTORY=$dir"
                 fi
               done
             fi
             ;;
           terraform/*/*/*)
-            echo "task ci:terraform DIRECTORY=$(echo "$path" | cut -d'/' -f1-4)"
+            echo "task --yes ci:terraform DIRECTORY=$(echo "$path" | cut -d'/' -f1-4)"
             ;;
         esac
       done | awk '!seen[$0]++' | (
