@@ -22,8 +22,8 @@ inputs = {
   ignore_source_code_hash = true
 
   s3_existing_package = {
-    bucket = get_env("TG_BUCKET", "")
-    key    = "lambda/webhook/bootstrap.zip"
+    bucket = values.s3_bucket
+    key    = values.s3_key
   }
 
   environment_variables = {

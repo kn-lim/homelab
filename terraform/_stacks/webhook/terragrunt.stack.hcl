@@ -26,6 +26,9 @@ unit "lambda" {
 
   values = {
     name = values.name
+
+    s3_bucket = values.s3_bucket
+    s3_key    = values.s3_key
   }
 }
 
