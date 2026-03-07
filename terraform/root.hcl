@@ -18,7 +18,17 @@ generate "provider" {
   if_exists = "overwrite_terragrunt"
   contents  = <<EOT
 %{if local.platform == "aws"}
-provider "aws" {}
+provider "aws" {
+  default_tags {
+    tags = {
+      path   = "${get_path_from_repo_root()}"
+      repo   = "homelab"
+      source = "terraform"
+    }
+  }
+
+  region = "${local.region}"
+}
 %{endif}
 
 %{if local.unit == "cluster-bootstrap"}
