@@ -5,5 +5,8 @@ stack "webhook" {
 
   values = {
     name = "homelab"
+
+    vault_name  = "Homelab"
+    secret_name = "github"
   }
 }
