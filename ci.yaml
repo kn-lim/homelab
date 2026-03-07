@@ -13,3 +13,12 @@ terraform:
         - terraform/_units/cluster-bootstrap
         - terraform/_units/onepassword-secret
         - terraform/_units/talos
+    - application: webhook
+      whenModified:
+        - terraform/_modules/aws/lambda-permission
+        - terraform/_stacks/webhook
+        - terraform/_units/aws/apigateway
+        - terraform/_units/aws/lambda
+        - terraform/_units/aws/lambda-permission
+        - terraform/_units/aws/sqs
+        - terraform/_units/onepassword-secret
