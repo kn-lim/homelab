@@ -7,8 +7,9 @@ locals {
 }
 
 inputs = {
-  name          = "${values.name}-apigateway"
-  protocol_type = "HTTP"
+  name               = "${values.name}-apigateway"
+  protocol_type      = "HTTP"
+  create_domain_name = false
 
   routes = {
     "POST /" = {
