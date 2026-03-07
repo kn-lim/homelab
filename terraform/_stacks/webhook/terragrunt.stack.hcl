@@ -4,8 +4,8 @@ unit "onepassword-secret" {
   path = "onepassword-secret"
 
   values = {
-    vault_name  = "Homelab"
-    secret_name = "github"
+    vault_name  = values.vault_name
+    secret_name = values.secret_name
   }
 }
 
