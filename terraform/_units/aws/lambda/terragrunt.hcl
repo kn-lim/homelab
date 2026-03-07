@@ -15,7 +15,7 @@ inputs = {
   function_name = "${values.name}-lambda"
   handler       = "bootstrap"
   runtime       = "provided.al2023"
-  architectures = ["x86_64"]
+  architectures = ["arm64"]
   timeout       = 30
 
   create_package          = false
