@@ -17,6 +17,10 @@ generate "provider" {
   path      = "provider.tf"
   if_exists = "overwrite_terragrunt"
   contents  = <<EOT
+%{if local.platform == "aws"}
+provider "aws" {}
+%{endif}
+
 %{if local.unit == "cluster-bootstrap"}
 provider "kubernetes" {
   config_path = "${local.kubeconfig_path}"
