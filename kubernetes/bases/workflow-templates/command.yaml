@@ -38,7 +38,7 @@ spec:
         image: ghcr.io/kn-lim/toolbox
         command: [bash]
         source: |
-          task ci:parse PATHS="{{inputs.parameters.paths}}"
+          task --yes ci:parse PATHS="{{inputs.parameters.paths}}"
         workingDir: /workdir/src
         env:
           - name: TASK_X_REMOTE_TASKFILES
