@@ -11,6 +11,10 @@ inputs = {
   protocol_type      = "HTTP"
   create_domain_name = false
 
+  stage_access_log_settings = {
+    log_group_retention_in_days = 1
+  }
+
   routes = {
     "POST /" = {
       integration = {
