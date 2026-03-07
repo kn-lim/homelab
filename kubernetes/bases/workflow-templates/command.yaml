@@ -20,6 +20,9 @@ spec:
           - |
             {{inputs.parameters.command}}
         workingDir: "{{inputs.parameters.workdir}}"
+        env:
+          - name: TASK_X_REMOTE_TASKFILES
+            value: "1"
         envFrom:
           - secretRef:
               name: environment-variables
@@ -37,6 +40,9 @@ spec:
         source: |
           task ci:parse PATHS="{{inputs.parameters.paths}}"
         workingDir: /workdir/src
+        env:
+          - name: TASK_X_REMOTE_TASKFILES
+            value: "1"
         envFrom:
           - secretRef:
               name: environment-variables
