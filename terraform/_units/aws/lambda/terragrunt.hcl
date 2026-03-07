@@ -27,8 +27,9 @@ inputs = {
   }
 
   environment_variables = {
-    GITHUB_WEBHOOK_SECRET = dependency.onepassword_secret.outputs.fields["webhook_secret"]
-    AWS_SQS_URL           = dependency.sqs.outputs.queue_url
+    AWS_SQS_URL = dependency.sqs.outputs.queue_url
+    # TODO: Replace with custom label when possible
+    GITHUB_WEBHOOK_SECRET = dependency.onepassword_secret.outputs.fields["password"]
   }
 
   attach_policy_json = true
