@@ -60,6 +60,15 @@ tasks:
         printf ']'
       )
 
+  start:
+    desc: Wrapper to start the CI workflow
+    requires:
+      vars: [PATHS]
+    vars:
+      NAMESPACE: '{{.NAMESPACE | default "argo-workflows"}}'
+      REPO: '{{.REPO | default "git@github.com:kn-lim/homelab.git"}}'
+    cmd: 'argo submit kubernetes/workflows/ci.yaml -n {{.NAMESPACE}} -p repo={{.REPO}} -p paths={{.PATHS}}'
+
   terraform:
     desc: Runs the Terraform CI task
     requires:
