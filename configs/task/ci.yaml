@@ -9,18 +9,35 @@ tasks:
       vars: [APPLICATION]
     cmd: 'argocd app sync {{.APPLICATION}} --grpc-web --insecure'
 
+  lambda:
+    desc: Builds and deploys a Lambda function
+    requires:
+      vars: [DIRECTORY, FUNCTION_NAME, S3_KEY]
+    dir: "{{.DIRECTORY}}"
+    env:
+      GOOS: linux
+      GOARCH: arm64
+    cmds:
+      - defer: rm -f bootstrap bootstrap.zip
+      - |
+        go build -o bootstrap .
+        zip bootstrap.zip bootstrap
+        aws s3 cp bootstrap.zip s3://$TG_BUCKET/{{.S3_KEY}}
+        aws lambda update-function-code --function-name {{.FUNCTION_NAME}} --s3-bucket $TG_BUCKET --s3-key {{.S3_KEY}}
+
   parse:
     desc: Parses comma-separated folder paths and outputs CI commands as JSON
     requires:
       vars: [PATHS]
     cmd: |
       lookup_ci() {
+        field="${3:-application}"
         LOOKUP_PATH="$2" yq e "
           .${1}.run[]
           | select(.whenModified | any_c(
               . as \$p | ((strenv(LOOKUP_PATH) == \$p) or (strenv(LOOKUP_PATH) | test(\"^\" + \$p + \"/\")))
             ))
-          | .application
+          | .${field}
         " ci.yaml 2>/dev/null | head -1
       }
 
@@ -28,6 +45,15 @@ tasks:
         path=$(echo "$path" | tr -d ' \t')
         [ -z "$path" ] && continue
         case "$path" in
+          apps/*/*)
+            app_dir="$(echo "$path" | cut -d'/' -f1-2)"
+            app_name="$(echo "$path" | cut -d'/' -f2)"
+            function_name=$(APP="$app_name" yq e '.apps.run[] | select(.application == strenv(APP)) | .functionName' ci.yaml 2>/dev/null | head -1)
+            s3_key=$(APP="$app_name" yq e '.apps.run[] | select(.application == strenv(APP)) | .s3Key' ci.yaml 2>/dev/null | head -1)
+            if [ -n "$function_name" ] && [ -n "$s3_key" ]; then
+              echo "task ci:lambda DIRECTORY=$app_dir FUNCTION_NAME=$function_name S3_KEY=$s3_key"
+            fi
+            ;;
           kubernetes/overlays/*/*/*/*)
             echo "task ci:argo APPLICATION=$(echo "$path" | cut -d'/' -f6)"
             ;;
@@ -65,9 +91,10 @@ tasks:
     requires:
       vars: [PATHS]
     vars:
+      BRANCH: '{{.BRANCH | default "main"}}'
       NAMESPACE: '{{.NAMESPACE | default "argo-workflows"}}'
       REPO: '{{.REPO | default "git@github.com:kn-lim/homelab.git"}}'
-    cmd: 'argo submit kubernetes/workflows/ci.yaml -n {{.NAMESPACE}} -p repo={{.REPO}} -p paths={{.PATHS}}'
+    cmd: 'argo submit kubernetes/workflows/ci.yaml -n {{.NAMESPACE}} -p repo={{.REPO}} -p branch={{.BRANCH}} -p paths={{.PATHS}}'
 
   terraform:
     desc: Runs the Terraform CI task

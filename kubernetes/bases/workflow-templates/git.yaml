@@ -11,15 +11,14 @@ spec:
       inputs:
         parameters:
           - name: repo
-          - name: revision
+          - name: branch
             default: main
         artifacts:
           - name: source
             path: /workdir/src
             git:
               repo: "{{inputs.parameters.repo}}"
-              revision: "{{inputs.parameters.revision}}"
-              depth: 1
+              revision: "{{inputs.parameters.branch}}"
               sshPrivateKeySecret:
                 name: argo-workflows-ssh-key
                 key: sshPrivateKey

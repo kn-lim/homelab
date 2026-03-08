@@ -17,11 +17,16 @@ spec:
   serviceAccountName: argo-workflow
   arguments:
     parameters:
+      - name: branch
+        value: main
       - name: repo
         value: git@github.com:kn-lim/homelab.git
-      - name: revision
-        value: main
+      - name: before
+        value: ""
+      - name: after
+        value: ""
       - name: paths
+        value: ""
 
   volumes:
     - name: ssh-key
@@ -50,17 +55,30 @@ spec:
               parameters:
                 - name: repo
                   value: "{{workflow.parameters.repo}}"
-                - name: revision
-                  value: "{{workflow.parameters.revision}}"
-          - name: parse
+                - name: branch
+                  value: "{{workflow.parameters.branch}}"
+          - name: changes
             dependencies: [git-clone]
+            templateRef:
+              name: command
+              template: changes
+            arguments:
+              parameters:
+                - name: before
+                  value: "{{workflow.parameters.before}}"
+                - name: after
+                  value: "{{workflow.parameters.after}}"
+                - name: paths
+                  value: "{{workflow.parameters.paths}}"
+          - name: parse
+            dependencies: [changes]
             templateRef:
               name: command
               template: parse
             arguments:
               parameters:
                 - name: paths
-                  value: "{{workflow.parameters.paths}}"
+                  value: "{{tasks.changes.outputs.result}}"
           - name: apply
             dependencies: [parse]
             withParam: "{{tasks.parse.outputs.result}}"

@@ -1,3 +1,9 @@
+apps:
+  run:
+    - application: webhook
+      functionName: homelab-lambda
+      s3Key: lambda/webhook/bootstrap.zip
+
 terraform:
   run:
     - application: grafana

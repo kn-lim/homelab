@@ -51,3 +51,26 @@ spec:
         volumeMounts:
           - name: workdir
             mountPath: /workdir
+
+    - name: changes
+      inputs:
+        parameters:
+          - name: before
+            default: ""
+          - name: after
+            default: ""
+          - name: paths
+            default: ""
+      script:
+        image: ghcr.io/kn-lim/toolbox
+        command: [bash]
+        source: |
+          if [ -n "{{inputs.parameters.paths}}" ]; then
+            echo "{{inputs.parameters.paths}}"
+          else
+            git diff --name-only {{inputs.parameters.before}} {{inputs.parameters.after}} | tr '\n' ',' | sed 's/,$//'
+          fi
+        workingDir: /workdir/src
+        volumeMounts:
+          - name: workdir
+            mountPath: /workdir
