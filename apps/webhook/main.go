@@ -129,9 +129,19 @@ func handler(ctx context.Context, request events.APIGatewayV2HTTPRequest) (event
 			}, nil
 		}
 
+		ref := strings.TrimPrefix(event.GetRef(), "refs/heads/")
+		if ref != "main" && ref != "develop" {
+			logger.Infow("ignoring push to non-target branch",
+				"ref", ref,
+			)
+			return events.APIGatewayV2HTTPResponse{
+				StatusCode: http.StatusOK,
+			}, nil
+		}
+
 		msg = Message{
 			Repo:   event.Repo.GetSSHURL(),
-			Ref:    strings.TrimPrefix(event.GetRef(), "refs/heads/"),
+			Ref:    ref,
 			Before: event.GetBefore(),
 			After:  event.GetAfter(),
 		}
