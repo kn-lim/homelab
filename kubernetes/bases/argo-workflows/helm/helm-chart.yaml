@@ -6,7 +6,7 @@ metadata:
 
 name: argo-workflows
 # renovate: datasource=helm depName=argo-workflows repository=https://argoproj.github.io/argo-helm
-version: 0.47.4
+version: 1.0.2
 releaseName: argo-workflows
 namespace: argo
 repo: https://argoproj.github.io/argo-helm
