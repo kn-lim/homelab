@@ -1,7 +1,7 @@
-unit "onepassword-secret" {
-  source = "${find_in_parent_folders("_units/onepassword-secret")}"
+unit "onepassword-secret-read" {
+  source = "${find_in_parent_folders("_units/onepassword-secret-read")}"
 
-  path = "onepassword-secret"
+  path = "onepassword-secret-read"
 
   values = {
     vault_name  = values.vault_name
@@ -16,6 +16,18 @@ unit "sqs" {
 
   values = {
     name = values.name
+  }
+}
+
+unit "onepassword-secret-write" {
+  source = "${find_in_parent_folders("_units/onepassword-secret-write")}"
+
+  path = "onepassword-secret-write"
+
+  values = {
+    vault_name  = values.vault_name
+    secret_name = "webhook"
+    field_name  = "sqs_url"
   }
 }
 

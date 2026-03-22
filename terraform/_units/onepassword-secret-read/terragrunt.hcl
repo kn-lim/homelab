@@ -10,5 +10,5 @@ include "root" {
 }
 
 terraform {
-  source = "${find_in_parent_folders("_modules/onepassword-secret")}"
+  source = "${find_in_parent_folders("_modules/onepassword-secret-read")}"
 }

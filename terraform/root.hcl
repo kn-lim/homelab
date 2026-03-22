@@ -41,7 +41,7 @@ provider "kubernetes" {
 provider "grafana" {}
 %{endif}
 
-%{if local.unit == "onepassword-secret"}
+%{if startswith(local.unit, "onepassword-")}
 provider "onepassword" {}
 %{endif}
 

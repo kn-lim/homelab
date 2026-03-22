@@ -21,10 +21,10 @@ unit "talos" {
   )
 }
 
-unit "onepassword-secret" {
-  source = "${find_in_parent_folders("_units/onepassword-secret")}"
+unit "onepassword-secret-read" {
+  source = "${find_in_parent_folders("_units/onepassword-secret-read")}"
 
-  path = "onepassword-secret"
+  path = "onepassword-secret-read"
 
   values = {
     vault_name  = values.cluster-bootstrap.vault_name

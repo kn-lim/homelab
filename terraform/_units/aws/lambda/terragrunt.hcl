@@ -4,7 +4,7 @@ locals {
 }
 
 dependency "onepassword_secret" {
-  config_path = "../onepassword-secret"
+  config_path = "../onepassword-secret-read"
 }
 
 dependency "sqs" {
