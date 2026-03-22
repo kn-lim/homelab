@@ -8,7 +8,7 @@ resource "onepassword_item" "default" {
 
     field {
       label = var.field_name
-      type  = "concealed"
+      type  = "CONCEALED"
       value = var.value
     }
   }
