@@ -94,7 +94,7 @@ tasks:
       BRANCH: '{{.BRANCH | default "main"}}'
       NAMESPACE: '{{.NAMESPACE | default "argo-workflows"}}'
       REPO: '{{.REPO | default "git@github.com:kn-lim/homelab.git"}}'
-    cmd: 'argo submit kubernetes/workflows/ci.yaml -n {{.NAMESPACE}} -p repo={{.REPO}} -p branch={{.BRANCH}} -p paths={{.PATHS}}'
+    cmd: 'argo submit --from workflowtemplate/ci -n {{.NAMESPACE}} -p repo={{.REPO}} -p branch={{.BRANCH}} -p paths={{.PATHS}}'
 
   terraform:
     desc: Runs the Terraform CI task
