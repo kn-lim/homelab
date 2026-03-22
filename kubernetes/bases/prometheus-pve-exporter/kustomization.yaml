@@ -9,4 +9,4 @@ resources:
 
 images:
   - name: prompve/prometheus-pve-exporter
-    newTag: 3.8.1
+    newTag: 3.8.2
