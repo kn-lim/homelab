@@ -61,6 +61,5 @@ spec:
         - src:
             dependencyName: sqs-dep
             dataKey: body.paths
-            useDefault: true
-            default: ""
+            value: ""
           dest: spec.arguments.parameters.4.value
