@@ -14,7 +14,7 @@ spec:
   ttlStrategy:
     secondsAfterCompletion: 86400
   activeDeadlineSeconds: 3600
-  serviceAccountName: argo-workflow
+  serviceAccountName: argo-workflows
   arguments:
     parameters:
       - name: branch
