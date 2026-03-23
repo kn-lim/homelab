@@ -1,17 +1,12 @@
-variable "field_name" {
-  description = "Label of the field to store the value under"
-  type        = string
+variable "fields" {
+  description = "Map of field labels to values to store in the 1Password item. All fields are stored as CONCEALED."
+  type        = map(string)
+  sensitive   = true
 }
 
 variable "secret_name" {
   description = "Title of the 1Password item to create"
   type        = string
-}
-
-variable "value" {
-  description = "Value to store in the field"
-  type        = string
-  sensitive   = true
 }
 
 variable "vault_name" {

@@ -1,0 +1,20 @@
+{{- $config := (datasource "config") -}}
+{{- range $config.clusters -}}
+{{- if eq .name "homelab" -}}
+stack "webhook" {
+  source = "${find_in_parent_folders("_stacks/webhook")}"
+
+  path = "webhook"
+
+  values = {
+    name = "{{ .name }}"
+
+    vault_name  = "{{ .vault_name }}"
+    secret_name = "github"
+
+    s3_bucket = get_env("TG_BUCKET", "")
+    s3_key    = "lambda/webhook/bootstrap.zip"
+  }
+}
+{{- end }}
+{{- end }}

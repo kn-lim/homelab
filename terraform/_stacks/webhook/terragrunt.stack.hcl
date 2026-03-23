@@ -19,6 +19,16 @@ unit "sqs" {
   }
 }
 
+unit "iam-user" {
+  source = "${find_in_parent_folders("_units/aws/iam-user")}"
+
+  path = "iam-user"
+
+  values = {
+    name = values.name
+  }
+}
+
 unit "onepassword-secret-write" {
   source = "${find_in_parent_folders("_units/onepassword-secret-write")}"
 
@@ -27,7 +37,6 @@ unit "onepassword-secret-write" {
   values = {
     vault_name  = values.vault_name
     secret_name = "webhook"
-    field_name  = "sqs_url"
   }
 }
 

@@ -3,13 +3,14 @@ resource "onepassword_item" "default" {
   title    = var.secret_name
   category = "login"
 
-  section {
-    label = "Details"
-
-    field {
-      label = var.field_name
-      type  = "CONCEALED"
-      value = var.value
+  section_map = {
+    "Details" = {
+      field_map = {
+        for k, v in var.fields : k => {
+          type  = "CONCEALED"
+          value = v
+        }
+      }
     }
   }
 }

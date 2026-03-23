@@ -6,14 +6,14 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.14 |
-| <a name="requirement_grafana"></a> [grafana](#requirement\_grafana) | 4.27.0 |
+| <a name="requirement_grafana"></a> [grafana](#requirement\_grafana) | 4.28.1 |
 | <a name="requirement_http"></a> [http](#requirement\_http) | 3.5.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_grafana"></a> [grafana](#provider\_grafana) | 4.27.0 |
+| <a name="provider_grafana"></a> [grafana](#provider\_grafana) | 4.28.1 |
 | <a name="provider_http"></a> [http](#provider\_http) | 3.5.0 |
 
 ## Modules
@@ -24,9 +24,9 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [grafana_dashboard.dashboards](https://registry.terraform.io/providers/grafana/grafana/4.27.0/docs/resources/dashboard) | resource |
-| [grafana_data_source.prometheus](https://registry.terraform.io/providers/grafana/grafana/4.27.0/docs/resources/data_source) | resource |
-| [grafana_folder.dashboards](https://registry.terraform.io/providers/grafana/grafana/4.27.0/docs/resources/folder) | resource |
+| [grafana_dashboard.dashboards](https://registry.terraform.io/providers/grafana/grafana/4.28.1/docs/resources/dashboard) | resource |
+| [grafana_data_source.prometheus](https://registry.terraform.io/providers/grafana/grafana/4.28.1/docs/resources/data_source) | resource |
+| [grafana_folder.dashboards](https://registry.terraform.io/providers/grafana/grafana/4.28.1/docs/resources/folder) | resource |
 | [http_http.dashboard_json](https://registry.terraform.io/providers/hashicorp/http/3.5.0/docs/data-sources/http) | data source |
 
 ## Inputs
