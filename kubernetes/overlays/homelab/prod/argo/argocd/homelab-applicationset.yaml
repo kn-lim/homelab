@@ -18,6 +18,7 @@ spec:
               elements:
                 # argo
                 - path: argo/argo-workflows
+                - path: argo/argo-events
                 # cluster-services
                 - path: cluster-services/external-secrets
                   serverSideApply: true

@@ -1,0 +1,18 @@
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+
+metadata:
+  name: argo-events
+
+name: argo-events
+# renovate: datasource=helm depName=argo-events repository=https://argoproj.github.io/argo-helm
+version: 2.4.20
+releaseName: argo-events
+namespace: argo
+repo: https://argoproj.github.io/argo-helm
+includeCRDs: true
+valuesInline:
+  controller:
+    podAnnotations:
+      secret.reloader.stakater.com/auto: "true"
+      configmap.reloader.stakater.com/auto: "true"
