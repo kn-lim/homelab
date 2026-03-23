@@ -18,7 +18,7 @@ inputs = {
 
   inline_policy_permissions = {
     sqs = {
-      actions   = ["sqs:ReceiveMessage", "sqs:DeleteMessage", "sqs:GetQueueAttributes"]
+      actions   = ["sqs:GetQueueUrl", "sqs:ReceiveMessage", "sqs:DeleteMessage", "sqs:GetQueueAttributes"]
       resources = [dependency.sqs.outputs.queue_arn]
     }
   }
