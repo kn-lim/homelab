@@ -44,21 +44,21 @@ spec:
       parameters:
         - src:
             dependencyName: sqs-dep
-            dataKey: body.repo
+            dataKey: repo
           dest: spec.arguments.parameters.0.value
         - src:
             dependencyName: sqs-dep
-            dataKey: body.ref
+            dataKey: ref
           dest: spec.arguments.parameters.1.value
         - src:
             dependencyName: sqs-dep
-            dataKey: body.before
+            dataKey: before
           dest: spec.arguments.parameters.2.value
         - src:
             dependencyName: sqs-dep
-            dataKey: body.after
+            dataKey: after
           dest: spec.arguments.parameters.3.value
         - src:
             dependencyName: sqs-dep
-            dataKey: body.paths
+            dataKey: paths
           dest: spec.arguments.parameters.4.value
