@@ -7,3 +7,6 @@ metadata:
 valuesInline:
   server:
     authModes: ["server"]
+  workflow:
+    serviceAccount:
+      name: argo-workflows
