@@ -1,0 +1,11 @@
+apiVersion: argoproj.io/v1alpha1
+kind: EventBus
+
+metadata:
+  name: default
+  namespace: cluster-services
+
+spec:
+  nats:
+    native:
+      replicas: 1

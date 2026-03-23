@@ -25,6 +25,7 @@ spec:
                 - path: cluster-services/kubelet-serving-cert-approver
                 - path: cluster-services/local-path-provisioner
                 - path: cluster-services/reloader
+                - path: cluster-services/webhook
                 # kube-system
                 - path: kube-system/cilium
                 - path: kube-system/coredns
