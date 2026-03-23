@@ -58,3 +58,7 @@ spec:
             dependencyName: sqs-dep
             dataKey: body.after
           dest: spec.arguments.parameters.3.value
+        - src:
+            dependencyName: sqs-dep
+            dataKey: body.paths
+          dest: spec.arguments.parameters.4.value
