@@ -5,4 +5,4 @@ patches:
   - path: values-patch.yaml
 
 resources:
-  - ../../../../../../bases/headlamp/helm
+  - ../../../../../../bases/headlamp/helm-chart

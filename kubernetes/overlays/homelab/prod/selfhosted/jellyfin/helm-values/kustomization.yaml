@@ -5,4 +5,4 @@ patches:
   - path: generated/values-patch.yaml
 
 resources:
-  - ../../../../../../bases/grafana/helm
+  - ../../../../../../bases/jellyfin/helm-chart

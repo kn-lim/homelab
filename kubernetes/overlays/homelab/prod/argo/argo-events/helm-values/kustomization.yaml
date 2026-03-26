@@ -5,4 +5,4 @@ kind: Kustomization
 #   - path: values-patch.yaml
 
 resources:
-  - ../../../../../../bases/argo-events/helm
+  - ../../../../../../bases/argo-events/helm-chart

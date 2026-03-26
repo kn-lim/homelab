@@ -5,4 +5,4 @@ patches:
   - path: values-patch.yaml
 
 resources:
-  - ../../../../../../bases/argo-workflows/helm
+  - ../../../../../../bases/argo-workflows/helm-chart
