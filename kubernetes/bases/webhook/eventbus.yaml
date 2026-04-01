@@ -2,10 +2,9 @@ apiVersion: argoproj.io/v1alpha1
 kind: EventBus
 
 metadata:
-  name: default
+  name: webhook
   namespace: cluster-services
 
 spec:
-  nats:
-    native:
-      replicas: 1
+  jetstream:
+    version: "latest"
