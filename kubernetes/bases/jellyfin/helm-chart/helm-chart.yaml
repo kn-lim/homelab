@@ -6,7 +6,7 @@ metadata:
 
 name: jellyfin
 # renovate: datasource=helm depName=jellyfin repository=https://jellyfin.github.io/jellyfin-helm
-version: 2.7.0
+version: 3.0.0
 releaseName: jellyfin
 namespace: selfhosted
 repo: https://jellyfin.github.io/jellyfin-helm
