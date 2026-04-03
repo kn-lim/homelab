@@ -4,7 +4,7 @@ TALOSCONFIG = "{{config_root}}/homelab-prod.talosconfig"
 
 [tools]
 "aqua:argoproj/argo-cd" = "3.3.6"
-"aqua:argoproj/argo-workflows" = "4.0.3"
+"aqua:argoproj/argo-workflows" = "4.0.4"
 "aqua:aws/aws-cli" = "2.34.22"
 "aqua:go-task/task" = "3.49.1"
 "aqua:golang/go" = "1.26.1"
