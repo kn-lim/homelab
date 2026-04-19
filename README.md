@@ -22,6 +22,8 @@ This repository is managed by [mise](https://github.com/jdx/mise) and [pre-commi
 
 **Core Components**:
 
+- [argo events](https://github.com/argoproj/argo-events)
+- [argo workflows](https://github.com/argoproj/argo-workflows)
 - [argocd](https://github.com/argoproj/argo-cd)
 - [cilium](https://github.com/cilium/cilium)
 - [coredns](https://github.com/coredns/coredns)
@@ -41,6 +43,25 @@ This repository is managed by [mise](https://github.com/jdx/mise) and [pre-commi
 
 The ApplicationSet in [`kubernetes/overlays/homelab/prod/argo/argocd/homelab-applicationset.yaml`](https://github.com/kn-lim/homelab/blob/main/kubernetes/overlays/homelab/prod/argo/argocd/homelab-applicationset.yaml) generates all ArgoCD Applications and must be defined there.
 
+### CI/CD
+
+```mermaid
+flowchart LR
+    A[Push to GitHub] --> B[AWS Lambda]
+    B --> C[AWS SQS]
+    C --> D[Argo Events Sensor]
+    D --> E[Argo Workflows]
+    E --> F[Post Result to Discord]
+```
+
+As the homelab cluster is not publicly available, the GitHub webhook points to an AWS API Gateway connected to an AWS Lambda function. The function validates the request and forwards it as a message to an AWS SQS queue. This way, [Argo Events](https://github.com/argoproj/argo-events) is able to read the message and runs the [ci.yaml workflow](https://github.com/kn-lim/homelab/blob/main/kubernetes/bases/workflow-templates/ci.yaml) using [Argo Workflows](https://github.com/argoproj/argo-workflows) to apply the changes.
+
+### Tailscale
+
+[Tailscale](https://tailscale.com/) is used as the VPN to connect my devices and applications together. The [tailscale kubernetes operator](https://github.com/tailscale/tailscale/) allows my devices to access services within the kubernetes cluster, so that nothing is exposed to the public.
+
+As Tailscale can be used to authenticate users, [tsidp](https://github.com/tailscale/tsidp) acts as the identity provider for any application that allows for SSO.
+
 ### Terragrunt
 
 Talos Linux is managed with [Terragrunt](https://github.com/gruntwork-io/terragrunt) using the official [Talos Linux Terraform provider](https://github.com/siderolabs/terraform-provider-talos).
@@ -48,12 +69,6 @@ Talos Linux is managed with [Terragrunt](https://github.com/gruntwork-io/terragr
 The [talos](https://github.com/kn-lim/homelab/tree/main/terraform/_modules/talos) Terraform module contains config patches that are taken from either the official [Talos Linux documentation](https://docs.siderolabs.com/talos/), [onedr0p/cluster-template](https://github.com/onedr0p/cluster-template), [ajaykumar4/cluster-template](https://github.com/ajaykumar4/cluster-template) or specifically added for my homelab.
 
 The [talos stack](https://github.com/kn-lim/homelab/blob/main/terraform/_stacks/talos/terragrunt.stack.hcl) bootstraps the Talos Linux instance, saves the `kubeconfig` and `talosconfig` files using [hooks](https://terragrunt.gruntwork.io/docs/features/hooks/), then creates resources to prepare the kubernetes cluster for deployments.
-
-### Tailscale
-
-[Tailscale](https://tailscale.com/) is used as the VPN to connect my devices and applications together. The [tailscale kubernetes operator](https://github.com/tailscale/tailscale/) allows my devices to access services within the kubernetes cluster, so that nothing is exposed to the public.
-
-As Tailscale can be used to authenticate users, [tsidp](https://github.com/tailscale/tsidp) acts as the identity provider for any application that allows for SSO.
 
 ## Deploying the Cluster
 
@@ -112,13 +127,13 @@ docs/                               # documentation
 kubernetes/
 ├─ bases/                           # kustomize bases
 │  ├─ applications/
+│  ├─ workflow-templates/           # argo workflows manifests
 ├─ overlays/                        # kustomize overlays
 │  ├─ cluster/
 │  │  ├─ environment/
 │  │  │  ├─ namespace/
 │  │  │  │  ├─ applications/
 │  │  │  │  │  ├─ generated/        # generated files
-├─ workflows/                       # argo-workflows manifests
 terraform/
 ├─ _modules/                        # terraform modules
 ├─ _stacks/                         # terragrunt stacks
@@ -140,6 +155,16 @@ terraform/
 | Node | Specs | OS | Host | Function |
 | - | - | - | - | - |
 | VM - `homelab` | 6 CPU, 40GB RAM | Talos Linux | `proxmox` | Control Plane Node |
+
+## Cost
+
+| Service | Cost per Month | Notes |
+| - | - | - |
+| 1Password | $6 | Family Plan |
+| AWS Lambda | $0 | Usage under Free Tier |
+| AWS SQS | $0 | Usage under Free Tier
+
+**Total**: $6
 
 ## Goals
 
