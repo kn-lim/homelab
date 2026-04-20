@@ -130,6 +130,7 @@ func handler(ctx context.Context, request events.APIGatewayV2HTTPRequest) (event
 		}
 
 		ref := strings.TrimPrefix(event.GetRef(), "refs/heads/")
+		// Check for non-target branches (main and develop)
 		if ref != "main" && ref != "develop" {
 			logger.Infow("ignoring push to non-target branch",
 				"ref", ref,

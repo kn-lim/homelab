@@ -54,10 +54,12 @@ spec:
         - src:
             dependencyName: sqs-dep
             dataKey: body.before
+            value: ""
           dest: spec.arguments.parameters.2.value
         - src:
             dependencyName: sqs-dep
             dataKey: body.after
+            value: ""
           dest: spec.arguments.parameters.3.value
         - src:
             dependencyName: sqs-dep
