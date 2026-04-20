@@ -18,7 +18,10 @@ spec:
         command: [sh, -c]
         args:
           - |
-            GIT_SSH_COMMAND='ssh -i /etc/ssh-key/sshPrivateKey -o StrictHostKeyChecking=no' \
+            mkdir -p /workdir/.ssh
+            cp /etc/ssh-key/sshPrivateKey /workdir/.ssh/id_rsa
+            chmod 600 /workdir/.ssh/id_rsa
+            GIT_SSH_COMMAND='ssh -i /workdir/.ssh/id_rsa -o StrictHostKeyChecking=no' \
             git clone --branch "{{inputs.parameters.branch}}" "{{inputs.parameters.repo}}" /workdir/src
         volumeMounts:
           - name: workdir
