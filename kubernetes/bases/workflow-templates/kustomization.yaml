@@ -13,3 +13,5 @@ configurations:
 images:
   - name: ghcr.io/kn-lim/toolbox
     newTag: "1.2.1"
+  - name: alpine/git
+    newTag: "v2.52.0"

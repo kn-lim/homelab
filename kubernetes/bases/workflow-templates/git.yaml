@@ -14,7 +14,7 @@ spec:
           - name: branch
             default: main
       container:
-        image: ghcr.io/kn-lim/toolbox
+        image: alpine/git
         command: [sh, -c]
         args:
           - |
