@@ -42,27 +42,27 @@ spec:
                       value: ""
                     - name: paths
                       value: ""
-      parameters:
-        - src:
-            dependencyName: sqs-dep
-            dataKey: body.repo
-          dest: spec.arguments.parameters.0.value
-        - src:
-            dependencyName: sqs-dep
-            dataKey: body.ref
-          dest: spec.arguments.parameters.1.value
-        - src:
-            dependencyName: sqs-dep
-            dataKey: body.before
-            value: ""
-          dest: spec.arguments.parameters.2.value
-        - src:
-            dependencyName: sqs-dep
-            dataKey: body.after
-            value: ""
-          dest: spec.arguments.parameters.3.value
-        - src:
-            dependencyName: sqs-dep
-            dataKey: body.paths
-            value: ""
-          dest: spec.arguments.parameters.4.value
+          parameters:
+            - src:
+                dependencyName: sqs-dep
+                dataKey: body.repo
+              dest: spec.arguments.parameters.0.value
+            - src:
+                dependencyName: sqs-dep
+                dataKey: body.ref
+              dest: spec.arguments.parameters.1.value
+            - src:
+                dependencyName: sqs-dep
+                dataKey: body.before
+                value: ""
+              dest: spec.arguments.parameters.2.value
+            - src:
+                dependencyName: sqs-dep
+                dataKey: body.after
+                value: ""
+              dest: spec.arguments.parameters.3.value
+            - src:
+                dependencyName: sqs-dep
+                dataKey: body.paths
+                value: ""
+              dest: spec.arguments.parameters.4.value
