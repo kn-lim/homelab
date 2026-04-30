@@ -49,3 +49,5 @@ talosctl upgrade --nodes 10.20.30.40 --image ghcr.io/siderolabs/installer:v1.13.
 https://docs.siderolabs.com/talos/v1.13/configure-your-talos-cluster/lifecycle-management/upgrading-talos
 
 or run `task talos:upgrade NODE_IP=#### VERSION=v####`
+
+Afterwards, run `terragrunt apply` in the specific Talos terraform directory.
