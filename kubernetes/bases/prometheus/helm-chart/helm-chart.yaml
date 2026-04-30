@@ -6,7 +6,7 @@ metadata:
 
 name: prometheus
 # renovate: datasource=helm depName=prometheus repository=https://prometheus-community.github.io/helm-charts
-version: 29.2.1
+version: 29.4.0
 releaseName: prometheus
 namespace: monitoring
 repo: https://prometheus-community.github.io/helm-charts
