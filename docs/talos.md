@@ -2,7 +2,7 @@
 
 ## Proxmox
 
-https://docs.siderolabs.com/talos/v1.10/platform-specific-installations/virtualized-platforms/proxmox
+https://docs.siderolabs.com/talos/v1.13/platform-specific-installations/virtualized-platforms/proxmox
 
 **System**:
 
@@ -37,15 +37,15 @@ https://docs.siderolabs.com/kubernetes-guides/cni/deploying-cilium
 
 ## Upgrading Talos
 
-Replace `v1.12.2` with the latest version:
+Replace `v1.13.0` with the target version:
 
 
 ```sh
-talosctl upgrade --nodes 10.20.30.40 --image ghcr.io/siderolabs/installer:v1.12.2
+talosctl upgrade --nodes 10.20.30.40 --image ghcr.io/siderolabs/installer:v1.13.0
 
-talosctl upgrade --nodes 10.20.30.40 --image ghcr.io/siderolabs/installer:v1.12.2 --force   # single node clusters
+talosctl upgrade --nodes 10.20.30.40 --image ghcr.io/siderolabs/installer:v1.13.0 --force   # single node clusters
 ```
 
-https://docs.siderolabs.com/talos/v1.12/configure-your-talos-cluster/lifecycle-management/upgrading-talos
+https://docs.siderolabs.com/talos/v1.13/configure-your-talos-cluster/lifecycle-management/upgrading-talos
 
 or run `task talos:upgrade NODE_IP=#### VERSION=v####`
