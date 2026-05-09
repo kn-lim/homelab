@@ -26,7 +26,7 @@ clusters:
         # install_disk: "/dev/sda"
 
         ## Node Hostname
-        # hostname: ""
+        hostname: "talos"
 
     ## Node Subnet CIDR
     node_subnet: "10.1.2.0/24"

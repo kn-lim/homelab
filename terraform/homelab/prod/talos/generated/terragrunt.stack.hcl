@@ -13,6 +13,7 @@ stack "talos" {
       node_data = {
         controlplanes = {
           "10.1.2.11" = {
+            hostname = "talos"
           }
         }
       }
