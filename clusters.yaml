@@ -15,7 +15,7 @@ clusters:
     gateway: "10.1.2.1"
 
     ## Cluster Network Interface Name
-    # network_interface: "eth0"
+    network_interface: "enp1s0"
 
     ## Control Plane Nodes
     controlplanes:
@@ -23,7 +23,7 @@ clusters:
       - ip: "10.1.2.11"
 
         ## Node Install Disk
-        # install_disk: "/dev/vda"
+        install_disk: "/dev/vda"
 
         ## Node Hostname
         hostname: "talos"

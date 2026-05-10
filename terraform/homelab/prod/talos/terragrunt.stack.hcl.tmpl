@@ -12,7 +12,7 @@ stack "talos" {
       endpoint   = "{{ .endpoint }}"
       dns_server = "{{ .dns_server }}"
       gateway    = "{{ .gateway }}"
-{{- if (index . "network_interface") }}
+{{ if (index . "network_interface") }}
       network_interface = "{{ .network_interface }}"
 {{- end }}
 
@@ -23,7 +23,7 @@ stack "talos" {
 {{- if (index . "install_disk") }}
             install_disk = "{{ .install_disk }}"
 {{- end }}
-{{- if (index . "hostname") }}
+{{ if (index . "hostname") }}
             hostname = "{{ .hostname }}"
 {{- end }}
           }

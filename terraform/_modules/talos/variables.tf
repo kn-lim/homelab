@@ -1,11 +1,5 @@
 # Optional Variables
 
-variable "network_interface" {
-  description = "Network interface name for Talos nodes"
-  type        = string
-  default     = "eth0"
-}
-
 # https://github.com/siderolabs/talos/releases
 variable "talos_version" {
   description = "Talos version for machine configuration schema"
@@ -35,11 +29,16 @@ variable "gateway" {
   type        = string
 }
 
+variable "network_interface" {
+  description = "Network interface name for Talos nodes"
+  type        = string
+}
+
 variable "node_data" {
   description = "A map of node data"
   type = object({
     controlplanes = map(object({
-      install_disk = optional(string, "/dev/vda")
+      install_disk = string
       hostname     = optional(string, "")
     }))
   })

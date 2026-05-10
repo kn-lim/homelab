@@ -10,9 +10,13 @@ stack "talos" {
       dns_server = "1.1.1.3"
       gateway    = "10.1.2.1"
 
+      network_interface = "enp1s0"
+
       node_data = {
         controlplanes = {
           "10.1.2.11" = {
+            install_disk = "/dev/vda"
+
             hostname = "talos"
           }
         }
