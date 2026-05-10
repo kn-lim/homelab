@@ -40,8 +40,8 @@ No modules.
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | A name to provide for the Talos cluster | `string` | n/a | yes |
 | <a name="input_dns_server"></a> [dns\_server](#input\_dns\_server) | DNS server | `string` | n/a | yes |
 | <a name="input_gateway"></a> [gateway](#input\_gateway) | Network gateway | `string` | n/a | yes |
-| <a name="input_network_interface"></a> [network\_interface](#input\_network\_interface) | Network interface name for Talos nodes | `string` | `"ens18"` | no |
-| <a name="input_node_data"></a> [node\_data](#input\_node\_data) | A map of node data | <pre>object({<br/>    controlplanes = map(object({<br/>      install_disk = optional(string, "/dev/sda")<br/>      hostname     = optional(string, "")<br/>    }))<br/>  })</pre> | n/a | yes |
+| <a name="input_network_interface"></a> [network\_interface](#input\_network\_interface) | Network interface name for Talos nodes | `string` | `"eth0"` | no |
+| <a name="input_node_data"></a> [node\_data](#input\_node\_data) | A map of node data | <pre>object({<br/>    controlplanes = map(object({<br/>      install_disk = optional(string, "/dev/vda")<br/>      hostname     = optional(string, "")<br/>    }))<br/>  })</pre> | n/a | yes |
 | <a name="input_node_subnet"></a> [node\_subnet](#input\_node\_subnet) | Node subnet for kubelet nodeIP validation | `string` | n/a | yes |
 | <a name="input_pod_subnet"></a> [pod\_subnet](#input\_pod\_subnet) | Pod subnet for Kubernetes pods | `string` | n/a | yes |
 | <a name="input_service_subnet"></a> [service\_subnet](#input\_service\_subnet) | Service subnet for Kubernetes services | `string` | n/a | yes |

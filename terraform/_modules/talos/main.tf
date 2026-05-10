@@ -10,7 +10,6 @@ resource "talos_machine_configuration_apply" "controlplane" {
   config_patches = [
     # patches/
     file("${path.module}/patches/cluster-config.yaml"),
-    file("${path.module}/patches/local-storage.yaml"),
     file("${path.module}/patches/machine-config.yaml"),
     file("${path.module}/patches/registry-mirror.yaml"),
 

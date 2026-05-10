@@ -3,7 +3,7 @@
 variable "network_interface" {
   description = "Network interface name for Talos nodes"
   type        = string
-  default     = "ens18"
+  default     = "eth0"
 }
 
 # https://github.com/siderolabs/talos/releases
@@ -39,7 +39,7 @@ variable "node_data" {
   description = "A map of node data"
   type = object({
     controlplanes = map(object({
-      install_disk = optional(string, "/dev/sda")
+      install_disk = optional(string, "/dev/vda")
       hostname     = optional(string, "")
     }))
   })
