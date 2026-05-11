@@ -1,13 +1,13 @@
 resource "talos_machine_secrets" "default" {}
 
 resource "talos_image_factory_schematic" "default" {
-  schematic = var.nvidia_gpu_enabled ? yamlencode({
+  schematic = yamlencode({
     customization = {
       systemExtensions = {
         officialExtensions = data.talos_image_factory_extensions_versions.default.extensions_info[*].name
       }
     }
-  }) : yamlencode({ customization = {} })
+  })
 }
 
 resource "talos_machine_configuration_apply" "controlplane" {
