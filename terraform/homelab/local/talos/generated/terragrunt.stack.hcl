@@ -30,7 +30,7 @@ stack "talos" {
     }
 
     cluster-bootstrap = {
-      namespace = "cluster-services"
+      namespace = "external-secrets"
 
       vault_name  = "Homelab"
       secret_name = "op-sa-kubernetes"
