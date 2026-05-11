@@ -45,7 +45,7 @@ stack "talos" {
     }
 
     cluster-bootstrap = {
-      namespace = "cluster-services"
+      namespace = "external-secrets"
 
       vault_name  = "{{ .vault_name }}"
       secret_name = "op-sa-kubernetes"
