@@ -12,6 +12,9 @@ stack "talos" {
 
       network_interface = "enp1s0"
 
+
+
+
       node_data = {
         controlplanes = {
           "10.1.2.11" = {

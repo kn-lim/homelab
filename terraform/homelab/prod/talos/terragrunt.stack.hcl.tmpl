@@ -15,6 +15,15 @@ stack "talos" {
 {{ if (index . "network_interface") }}
       network_interface = "{{ .network_interface }}"
 {{- end }}
+{{ if (index . "talos_version") }}
+      talos_version = "{{ .talos_version }}"
+{{- end }}
+{{ if (index . "nvidia_gpu_enabled") }}
+      nvidia_gpu_enabled = {{ .nvidia_gpu_enabled }}
+{{- end }}
+{{ if (index . "kubernetes_version") }}
+      kubernetes_version = "{{ .kubernetes_version }}"
+{{- end }}
 
       node_data = {
         controlplanes = {
@@ -33,9 +42,6 @@ stack "talos" {
       node_subnet    = "{{ .node_subnet }}"
       service_subnet = "{{ .service_subnet }}"
       pod_subnet     = "{{ .pod_subnet }}"
-{{- if (index . "talos_version") }}
-      talos_version = "{{ .talos_version }}"
-{{- end }}
     }
 
     cluster-bootstrap = {
