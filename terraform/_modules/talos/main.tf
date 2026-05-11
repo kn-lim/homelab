@@ -23,7 +23,7 @@ resource "talos_machine_configuration_apply" "controlplane" {
       file("${path.module}/patches/cluster-config.yaml"),
       file("${path.module}/patches/machine-config.yaml"),
       file("${path.module}/patches/registry-mirror.yaml"),
-      var.nvidia_gpu_enabled ? [file("${path.module}/patches/nvidia.yaml")] : [],
+      var.nvidia_gpu_enabled ? [file("${path.module}/patches/nvidia.yaml")] : "",
 
       # templates/
       templatefile("${path.module}/templates/machine-config.yaml.tmpl", {
