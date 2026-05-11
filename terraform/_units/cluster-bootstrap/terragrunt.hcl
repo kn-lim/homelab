@@ -33,6 +33,6 @@ terraform {
 
   before_hook "create_namespace" {
     commands = ["apply"]
-    execute  = ["bash", "-c", "kubectl create namespace external-secrets"]
+    execute  = ["bash", "-c", "kubectl create namespace external-secrets --dry-run=client -o yaml | kubectl apply -f -"]
   }
 }
