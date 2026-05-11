@@ -20,7 +20,7 @@ stack "talos" {
           "10.1.2.11" = {
             install_disk = "/dev/vda"
 
-            hostname = "talos"
+            hostname = "homelab-talos"
           }
         }
       }
