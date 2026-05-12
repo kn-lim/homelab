@@ -46,6 +46,15 @@ clusters:
     ## 1Password Vault Name
     vault_name: "Homelab"
 
+    ## External Secrets
+    external_secrets:
+        ## 1Password SDK
+      - onepassword:
+          - vault_name: "Homelab"
+            namespace: "external-secrets"
+            secret_name: "op-sa-kubernetes"
+            token_secret_name: "onepassword-token"
+
     ## Tailscale Tailnet Name
     tailscale_tailnet_name: "neon-wyrm"
 

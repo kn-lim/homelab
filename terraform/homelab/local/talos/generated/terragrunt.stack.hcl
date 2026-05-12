@@ -12,9 +12,6 @@ stack "talos" {
 
       network_interface = "enp1s0"
 
-
-
-
       node_data = {
         controlplanes = {
           "10.1.2.11" = {
@@ -30,11 +27,9 @@ stack "talos" {
     }
 
     cluster-bootstrap = {
-      namespace = "external-secrets"
-
-      vault_name  = "Homelab"
-      secret_name = "op-sa-kubernetes"
-
+      namespace         = "external-secrets"
+      vault_name        = "Homelab"
+      secret_name       = "op-sa-kubernetes"
       token_secret_name = "onepassword-token"
     }
   }
