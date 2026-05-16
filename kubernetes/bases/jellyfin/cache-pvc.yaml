@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 
 metadata:
   name: jellyfin-cache
-  namespace: selfhosted
+  namespace: jellyfin
 
 spec:
   accessModes:

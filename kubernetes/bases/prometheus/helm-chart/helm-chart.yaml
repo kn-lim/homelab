@@ -8,7 +8,7 @@ name: prometheus
 # renovate: datasource=helm depName=prometheus repository=https://prometheus-community.github.io/helm-charts
 version: 29.6.0
 releaseName: prometheus
-namespace: monitoring
+namespace: prometheus
 repo: https://prometheus-community.github.io/helm-charts
 includeCRDs: true
 valuesInline:

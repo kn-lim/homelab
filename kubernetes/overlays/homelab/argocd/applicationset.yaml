@@ -1,0 +1,74 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+
+metadata:
+  name: homelab
+  namespace: argocd
+
+spec:
+  goTemplate: true
+  generators:
+    - matrix:
+        generators:
+          - list:
+              elements:
+                - revision: main
+          - list:
+              elements:
+                - path: argo-events
+                - path: argo-workflows
+                - path: cilium
+                  namespace: kube-system
+                - path: coredns
+                  namespace: kube-system
+                - path: external-secrets
+                  serverSideApply: true
+                - path: gpu-operator
+                - path: grafana
+                - path: jellyfin
+                - path: kubelet-serving-cert-approver
+                - path: local-path-provisioner
+                - path: metrics-server
+                  namespace: kube-system
+                - path: prometheus
+                - path: reloader
+                - path: tailscale-operator
+                  namespace: tailscale
+                - path: tsidp
+                - path: utilities
+                - path: webhook
+  template:
+    metadata:
+      name: '{{ .path }}'
+    spec:
+      project: default
+      source:
+        repoURL: git@github.com:kn-lim/homelab.git
+        targetRevision: '{{ .revision }}'
+        path: kubernetes/overlays/homelab/{{ .path }}
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{ if .namespace }}{{ .namespace }}{{ else }}{{ .path }}{{ end }}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+  templatePatch: |
+    {{- if .serverSideApply }}
+    spec:
+      syncPolicy:
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true
+    {{- end }}
+    {{- if eq .path "tsidp" }}
+    spec:
+      ignoreDifferences:
+        - group: ""
+          kind: Service
+          name: tsidp-egress
+          jsonPointers:
+            - /spec/externalName
+    {{- end }}

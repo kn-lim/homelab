@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 
 metadata:
   name: tsidp-data
-  namespace: tailscale
+  namespace: tsidp
 
 spec:
   accessModes:

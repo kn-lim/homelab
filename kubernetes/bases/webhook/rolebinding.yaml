@@ -8,7 +8,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: argo-events-webhook
-    namespace: cluster-services
+    namespace: webhook
 
 roleRef:
   kind: Role

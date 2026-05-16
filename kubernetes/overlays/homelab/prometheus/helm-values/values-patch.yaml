@@ -1,0 +1,15 @@
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+
+metadata:
+  name: prometheus
+
+valuesInline:
+  server:
+    persistentVolume:
+      enabled: true
+      size: 20Gi
+      storageClass: local-path
+
+  alertmanager:
+    enabled: false

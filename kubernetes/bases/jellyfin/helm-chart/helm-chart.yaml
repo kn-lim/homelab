@@ -8,7 +8,7 @@ name: jellyfin
 # renovate: datasource=helm depName=jellyfin repository=https://jellyfin.github.io/jellyfin-helm
 version: 3.2.0
 releaseName: jellyfin
-namespace: selfhosted
+namespace: jellyfin
 repo: https://jellyfin.github.io/jellyfin-helm
 includeCRDs: true
 valuesInline:
