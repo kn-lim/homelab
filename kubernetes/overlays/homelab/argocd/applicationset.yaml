@@ -19,6 +19,8 @@ spec:
                 - path: argo-workflows
                 - path: cilium
                   namespace: kube-system
+                - path: csi-driver-nfs
+                  namespace: kube-system
                 - path: coredns
                   namespace: kube-system
                 - path: external-secrets

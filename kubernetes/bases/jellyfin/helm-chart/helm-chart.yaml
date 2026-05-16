@@ -21,12 +21,11 @@ valuesInline:
       existingClaim: jellyfin-media
 
   volumes:
-    - name: nfs-externaldrive
+    - name: media
       nfs:
-        server: nfs.knlim.dev
-        path: /mnt/media
-        readOnly: false
+        server: homelab.knlim.dev
+        path: /mnt/user/media
 
   volumeMounts:
-    - name: nfs-externaldrive
-      mountPath: /nfs-externaldrive
+    - name: media
+      mountPath: /media
