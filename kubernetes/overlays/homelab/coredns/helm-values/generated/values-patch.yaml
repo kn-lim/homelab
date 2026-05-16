@@ -16,7 +16,7 @@ valuesInline:
       plugins:
         - name: errors
         - name: forward
-          parameters: . 10.96.191.141   # tailscale nameserver ip
+          parameters: . 10.96.124.141   # tailscale nameserver ip
 
     # Talos Linux Defaults
     - zones:
