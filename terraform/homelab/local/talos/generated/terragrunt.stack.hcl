@@ -17,7 +17,7 @@ stack "talos" {
           "10.1.2.11" = {
             install_disk = "/dev/vda"
 
-            hostname = "talos"
+            hostname = "homelab-talos"
           }
         }
       }
@@ -27,11 +27,9 @@ stack "talos" {
     }
 
     cluster-bootstrap = {
-      namespace = "cluster-services"
-
-      vault_name  = "Homelab"
-      secret_name = "op-sa-kubernetes"
-
+      namespace         = "external-secrets"
+      vault_name        = "Homelab"
+      secret_name       = "op-sa-kubernetes"
       token_secret_name = "onepassword-token"
     }
   }

@@ -12,8 +12,21 @@ stack "talos" {
       endpoint   = "{{ .endpoint }}"
       dns_server = "{{ .dns_server }}"
       gateway    = "{{ .gateway }}"
-{{ if (index . "network_interface") }}
+{{- if (index . "network_interface") }}
+
       network_interface = "{{ .network_interface }}"
+{{- end }}
+{{- if (index . "talos_version") }}
+
+      talos_version = "{{ .talos_version }}"
+{{- end }}
+{{- if (index . "kubernetes_version") }}
+
+      kubernetes_version = "{{ .kubernetes_version }}"
+{{- end }}
+{{- if (index . "nvidia_gpu_enabled") }}
+
+      nvidia_gpu_enabled = {{ .nvidia_gpu_enabled }}
 {{- end }}
 
       node_data = {
@@ -33,18 +46,19 @@ stack "talos" {
       node_subnet    = "{{ .node_subnet }}"
       service_subnet = "{{ .service_subnet }}"
       pod_subnet     = "{{ .pod_subnet }}"
-{{- if (index . "talos_version") }}
-      talos_version = "{{ .talos_version }}"
-{{- end }}
     }
 
     cluster-bootstrap = {
-      namespace = "cluster-services"
-
-      vault_name  = "{{ .vault_name }}"
-      secret_name = "op-sa-kubernetes"
-
-      token_secret_name = "onepassword-token"
+{{- range .external_secrets }}
+{{- if (index . "onepassword") -}}
+{{- range .onepassword }}
+      namespace         = "{{ .namespace }}"
+      vault_name        = "{{ .vault_name }}"
+      secret_name       = "{{ .secret_name }}"
+      token_secret_name = "{{ .token_secret_name }}"
+{{- end }}
+{{- end }}
+{{- end }}
     }
   }
 }

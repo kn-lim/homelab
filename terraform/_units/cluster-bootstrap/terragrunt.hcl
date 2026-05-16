@@ -30,4 +30,10 @@ include "root" {
 
 terraform {
   source = "${find_in_parent_folders("_modules/cluster-bootstrap")}"
+
+  # Create namespace if it doesn't already exist
+  before_hook "create_namespace" {
+    commands = ["apply"]
+    execute  = ["bash", "-c", "kubectl get namespace ${values.namespace} >/dev/null 2>&1 || kubectl create namespace ${values.namespace}"]
+  }
 }

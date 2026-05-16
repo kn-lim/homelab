@@ -1,6 +1,6 @@
 [env]
-KUBECONFIG = "{{config_root}}/homelab-prod.kubeconfig"
-TALOSCONFIG = "{{config_root}}/homelab-prod.talosconfig"
+KUBECONFIG = "{{config_root}}/homelab-local.kubeconfig"
+TALOSCONFIG = "{{config_root}}/homelab-local.talosconfig"
 
 [tools]
 "aqua:argoproj/argo-cd" = "3.4.2"

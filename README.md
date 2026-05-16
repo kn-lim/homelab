@@ -1,3 +1,9 @@
+<p align="center">
+  <img width="100" style="border-radius: 50%" src="https://raw.githubusercontent.com/kn-lim/kn-lim/refs/heads/main/homelab/icon.png"></img>
+  <br>
+  <i>Powered by ArgoCD, Kubernetes and Terraform</i>
+</p>
+
 # Homelab
 
 ![Talos](https://img.shields.io/badge/talos-v1.13.0-FF7300?logo=talos&logoColor=white)
@@ -7,7 +13,7 @@ A definitely over-engineered, but good enough homelab that handles my home infra
 
 ## Purpose
 
-I had two goals in mind for this homelab:
+I have two goals in mind for this homelab:
 
 1. Learn and implement enterprise-grade systems and patterns
 2. Repurpose old hardware
@@ -28,6 +34,7 @@ This repository is managed by [mise](https://github.com/jdx/mise) and [pre-commi
 - [cilium](https://github.com/cilium/cilium)
 - [coredns](https://github.com/coredns/coredns)
 - [external secrets](https://github.com/external-secrets/external-secrets)
+- [gpu-operator](https://github.com/nvidia/gpu-operator)
 - [grafana](https://github.com/grafana/grafana)
 - [kubelet-serving-cert-approver](https://github.com/alex1989hu/kubelet-serving-cert-approver)
 - [local-path-provisioner](https://github.com/rancher/local-path-provisioner)
@@ -41,18 +48,9 @@ This repository is managed by [mise](https://github.com/jdx/mise) and [pre-commi
 
 [ArgoCD](https://github.com/argoproj/argo-cd) is the GitOps platform for my homelab and is deployed using Kustomize and Helm.
 
-The ApplicationSet in [`kubernetes/overlays/homelab/prod/argo/argocd/homelab-applicationset.yaml`](https://github.com/kn-lim/homelab/blob/main/kubernetes/overlays/homelab/prod/argo/argocd/homelab-applicationset.yaml) generates all ArgoCD Applications and must be defined there.
+The ApplicationSet in [`kubernetes/overlays/homelab/local/argocd/applicationset.yaml`](https://github.com/kn-lim/homelab/blob/main/kubernetes/overlays/homelab/local/argocd/applicationset.yaml) generates all ArgoCD Applications and must be defined there.
 
 ### CI/CD
-
-```mermaid
-flowchart LR
-    A[Push to GitHub] --> B[AWS Lambda]
-    B --> C[AWS SQS]
-    C --> D[Argo Events Sensor]
-    D --> E[Argo Workflows]
-    E --> F[Post Result to Discord]
-```
 
 As the homelab cluster is not publicly available, the GitHub webhook points to an AWS API Gateway connected to an AWS Lambda function. The function validates the request and forwards it as a message to an AWS SQS queue. This way, [Argo Events](https://github.com/argoproj/argo-events) is able to read the message and runs the [ci.yaml workflow](https://github.com/kn-lim/homelab/blob/main/kubernetes/bases/workflow-templates/ci.yaml) using [Argo Workflows](https://github.com/argoproj/argo-workflows) to apply the changes.
 
@@ -62,7 +60,7 @@ As the homelab cluster is not publicly available, the GitHub webhook points to a
 
 As Tailscale can be used to authenticate users, [tsidp](https://github.com/tailscale/tsidp) acts as the identity provider for any application that allows for SSO.
 
-### Terragrunt
+### Terraform/Terragrunt
 
 Talos Linux is managed with [Terragrunt](https://github.com/gruntwork-io/terragrunt) using the official [Talos Linux Terraform provider](https://github.com/siderolabs/terraform-provider-talos).
 
@@ -101,21 +99,20 @@ The [talos stack](https://github.com/kn-lim/homelab/blob/main/terraform/_stacks/
 ### Procedure
 
 0. Fill out `clusters.yaml` and run `task template:generate` to generate all templated files.
-1. Run `terragrunt stack generate` in `terraform/homelab/prod/talos` to generate the stack files.
-2. Run `terragrunt apply` in `terraform/homelab/prod/talos/generated/.terragrunt-stack/talos/.terragrunt-stack/talos` once the Talos Linux instance is waiting to be bootstrapped.
-    - This will create a `homelab-prod.kubeconfig` and `homelab-prod.talosconfig` in the repository's root level.
-3. Once the Talos Linux instance reboots, run `task kubernetes:build-apply` in `kubernetes/bases/namespaces` to create the required namespaces.
-4. Run `terragrunt stack run apply` in `terraform/homelab/prod/talos` to finish the rest of the Talos Linux deployment.
-5. Run `task kubernetes:build-apply` in `kubernetes/overlays/homelab/prod/kube-system/coredns` to install CoreDNS.
-6. Run `task kubernetes:build-apply` in `kubernetes/overlays/homelab/prod/kube-system/cilium` to install Cilium.
-7. Run `task kubernetes:build-apply` in `kubernetes/overlays/homelab/prod/cluster-services/kubelet-serving-cert-approver` to install kubelet-serving-cert-approver.
-8. Run `task kubernetes:build-apply` in `kubernetes/overlays/homelab/prod/cluster-services/local-path-provisioner` to install local-path-provisioner.
-9. Run `task kubernetes:build-apply` in `kubernetes/overlays/homelab/prod/cluster-services/external-secrets` to install External Secrets.
-10. Run `task kubernetes:build-apply` in `kubernetes/overlays/homelab/prod/tailscale/tailscale-operator` to install Tailscale Kubernetes Operator.
-11. Run `task kubernetes:build-apply` in `kubernetes/overlays/homelab/prod/tailscale/tsidp` to install tsidp.
-12. Update `clusters.yaml` with the new `ts-dns` nameserver IP address and run `task template:generate`
-13. Run `task kubernetes:build-apply` in `kubernetes/overlays/homelab/prod/kube-system/coredns` to update CoreDNS.
-14. Run `task kubernetes:build-apply` in `kubernetes/overlays/homelab/prod/argo/argocd` to install ArgoCD and all other applications.
+1. Run `terragrunt stack generate` in `terraform/homelab/local/talos` to generate the stack files.
+2. Run `terragrunt apply` in `terraform/homelab/local/talos/generated/.terragrunt-stack/talos/.terragrunt-stack/talos` once the Talos Linux instance is waiting to be bootstrapped.
+    - This will create a `homelab-local.kubeconfig` and `homelab-local.talosconfig` in the repository's root level.
+3. Run `terragrunt stack run apply` in `terraform/homelab/local/talos` to finish the rest of the Talos Linux deployment.
+4. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/local/coredns` to install CoreDNS.
+5. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/local/cilium` to install Cilium.
+6. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/local/kubelet-serving-cert-approver` to install kubelet-serving-cert-approver.
+7. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/local/local-path-provisioner` to install local-path-provisioner.
+8. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/local/external-secrets` to install External Secrets.
+9. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/local/tailscale-operator` to install Tailscale Kubernetes Operator.
+10. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/local/tsidp` to install tsidp.
+11. Update `clusters.yaml` with the new `ts-dns` nameserver IP address and run `task template:generate`
+12. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/local/coredns` to update CoreDNS.
+13. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/local/argocd` to install ArgoCD and all other applications.
 
 ## Directories
 
@@ -130,10 +127,8 @@ kubernetes/
 │  ├─ workflow-templates/           # argo workflows manifests
 ├─ overlays/                        # kustomize overlays
 │  ├─ cluster/
-│  │  ├─ environment/
-│  │  │  ├─ namespace/
-│  │  │  │  ├─ applications/
-│  │  │  │  │  ├─ generated/        # generated files
+│  │  ├─ applications/
+│  │  │  ├─ generated/              # generated files
 terraform/
 ├─ _modules/                        # terraform modules
 ├─ _stacks/                         # terragrunt stacks
@@ -148,23 +143,31 @@ terraform/
 
 | Device | Specs | OS | Function |
 | - | - | - | - |
-| Desktop - `proxmox` | AMD Ryzen 5 5600X, 64GB RAM | Proxmox VE | Hypervisor |
+| PC - `homelab` | AMD Ryzen 5 5600X, 64GB RAM, NVIDIA GTX 1080 (8GB VRAM) | Unraid 7 | NAS with Talos Linux VM |
 | Linksys Velop | - | - | Access Points |
 | UniFi Cloud Gateway Ultra | - | - | Router and Firewall |
 
 | Node | Specs | OS | Host | Function |
 | - | - | - | - | - |
-| VM - `homelab` | 6 CPU, 40GB RAM | Talos Linux | `proxmox` | Control Plane Node |
+| VM - `talos` | 8 CPU, 32GB RAM | Talos Linux | `homelab` | Control Plane Node |
 
 ## Cost
+
+### Monthly
 
 | Service | Cost per Month | Notes |
 | - | - | - |
 | 1Password | $6 | Family Plan |
 | AWS Lambda | $0 | Usage under Free Tier |
-| AWS SQS | $0 | Usage under Free Tier
+| AWS SQS | $0 | Usage under Free Tier |
 
 **Total**: $6
+
+### One-Time Purchases
+
+| Service | Cost | Notes |
+| - | - | - |
+| Unraid License | $249 | Lifetime License |
 
 ## Goals
 
@@ -172,9 +175,8 @@ terraform/
 - [ ] [Argo Events](https://github.com/argoproj/argo-events) to handle Webhooks
 - [ ] [Argo Workflows](https://github.com/argoproj/argo-workflows) for CI/CD
 - [ ] Setup Monitoring and Alerts for all Services
-- [ ] Setup Homelab Development Cluster
 - [ ] Setup [Kargo](https://github.com/akuity/kargo)
-- [ ] Setup a NAS
+- [x] Setup a NAS with Unraid
 
 ## Thanks
 

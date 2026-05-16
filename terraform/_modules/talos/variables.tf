@@ -1,6 +1,25 @@
 # Optional Variables
 
 # https://github.com/siderolabs/talos/releases
+
+variable "kubernetes_version" {
+  description = "Kubernetes version to pin in machine configuration"
+  type        = string
+  default     = null
+}
+
+variable "nvidia_gpu_enabled" {
+  description = "Enable NVIDIA GPU support on Talos nodes"
+  type        = bool
+  default     = false
+}
+
+variable "talos_system_extensions" {
+  description = "List of official Talos system extensions to install"
+  type        = list(string)
+  default     = [""]
+}
+
 variable "talos_version" {
   description = "Talos version for machine configuration schema"
   type        = string

@@ -5,6 +5,12 @@ clusters:
     ## Talos Version
     # talos_version: ""
 
+    ## Kubernetes Version
+    # kubernetes_version: ""
+
+    ## NVIDIA GPU Support
+    # nvidia_gpu_enabled: true
+
     ## Cluster Endpoint IP
     endpoint: "https://talos.homelab.knlim.dev:6443"
 
@@ -26,7 +32,7 @@ clusters:
         install_disk: "/dev/vda"
 
         ## Node Hostname
-        hostname: "talos"
+        hostname: "homelab-talos"
 
     ## Node Subnet CIDR
     node_subnet: "10.1.2.0/24"
@@ -40,6 +46,15 @@ clusters:
     ## 1Password Vault Name
     vault_name: "Homelab"
 
+    ## External Secrets
+    external_secrets:
+        ## 1Password SDK
+      - onepassword:
+          - vault_name: "Homelab"
+            namespace: "external-secrets"
+            secret_name: "op-sa-kubernetes"
+            token_secret_name: "onepassword-token"
+
     ## Tailscale Tailnet Name
     tailscale_tailnet_name: "neon-wyrm"
 
@@ -48,6 +63,3 @@ clusters:
 
     ## CoreDNS Cluster IP
     coredns_cluster_ip: "10.96.0.10"
-
-    ## Proxmox URL
-    proxmox_url: "proxmox.knlim.dev"
