@@ -3,4 +3,5 @@ kind: Kustomization
 
 resources:
   - ../../../bases/tailscale-operator
+  - namespace.yaml
   - secret.yaml
