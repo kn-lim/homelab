@@ -20,6 +20,14 @@ valuesInline:
       enabled: true
       existingClaim: jellyfin-media
 
+  livenessProbe:
+    timeoutSeconds: 10
+    failureThreshold: 20
+
+  readinessProbe:
+    timeoutSeconds: 10
+    failureThreshold: 20
+
   volumes:
     - name: unraid-media
       nfs:
