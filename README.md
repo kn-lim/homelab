@@ -47,7 +47,7 @@ This repository is managed by [mise](https://github.com/jdx/mise) and [pre-commi
 
 [ArgoCD](https://github.com/argoproj/argo-cd) is the GitOps platform for my homelab and is deployed using Kustomize and Helm.
 
-The ApplicationSet in [`kubernetes/overlays/homelab/local/argocd/applicationset.yaml`](https://github.com/kn-lim/homelab/blob/main/kubernetes/overlays/homelab/local/argocd/applicationset.yaml) generates all ArgoCD Applications and must be defined there.
+The ApplicationSet in [`kubernetes/overlays/homelab/argocd/applicationset.yaml`](https://github.com/kn-lim/homelab/blob/main/kubernetes/overlays/homelab/argocd/applicationset.yaml) generates all ArgoCD Applications and must be defined there.
 
 ### CI/CD
 
@@ -102,16 +102,15 @@ The [talos stack](https://github.com/kn-lim/homelab/blob/main/terraform/_stacks/
 2. Run `terragrunt apply` in `terraform/homelab/local/talos/generated/.terragrunt-stack/talos/.terragrunt-stack/talos` once the Talos Linux instance is waiting to be bootstrapped.
     - This will create a `homelab-local.kubeconfig` and `homelab-local.talosconfig` in the repository's root level.
 3. Run `terragrunt stack run apply` in `terraform/homelab/local/talos` to finish the rest of the Talos Linux deployment.
-4. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/local/coredns` to install CoreDNS.
-5. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/local/cilium` to install Cilium.
-6. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/local/kubelet-serving-cert-approver` to install kubelet-serving-cert-approver.
-7. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/local/local-path-provisioner` to install local-path-provisioner.
-8. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/local/external-secrets` to install External Secrets.
-9. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/local/tailscale-operator` to install Tailscale Kubernetes Operator.
-10. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/local/tsidp` to install tsidp.
-11. Update `clusters.yaml` with the new `ts-dns` nameserver IP address and run `task template:generate`
-12. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/local/coredns` to update CoreDNS.
-13. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/local/argocd` to install ArgoCD and all other applications.
+4. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/coredns` to install CoreDNS.
+5. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/cilium` to install Cilium.
+6. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/kubelet-serving-cert-approver` to install kubelet-serving-cert-approver.
+7. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/external-secrets` to install External Secrets.
+8. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/tailscale-operator` to install Tailscale Kubernetes Operator.
+9. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/tsidp` to install tsidp.
+10. Update `clusters.yaml` with the new `ts-dns` nameserver IP address and run `task template:generate`
+11. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/coredns` to update CoreDNS.
+12. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/argocd` to install ArgoCD and all other applications.
 
 ## Directories
 
