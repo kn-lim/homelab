@@ -6,4 +6,5 @@ generators:
 
 resources:
   # - ../../../bases/prometheus
+  - namespace.yaml
   - ingress.yaml

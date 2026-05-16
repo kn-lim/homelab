@@ -21,11 +21,11 @@ valuesInline:
       existingClaim: jellyfin-media
 
   volumes:
-    - name: media
+    - name: unraid-media
       nfs:
         server: homelab.knlim.dev
         path: /mnt/user/media
 
   volumeMounts:
-    - name: media
-      mountPath: /media
+    - name: unraid-media
+      mountPath: /unraid-media
