@@ -5,7 +5,7 @@ generators:
   - helm-values
 
 resources:
-  - ../../../../bases/argocd
+  - ../../../bases/argocd
   - application.yaml
   - applicationset.yaml
   - argocd-rbac-cm.yaml

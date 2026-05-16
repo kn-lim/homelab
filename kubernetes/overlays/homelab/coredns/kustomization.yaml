@@ -5,4 +5,4 @@ generators:
   - helm-values
 
 # resources:
-#   - ../../../../bases/coredns
+#   - ../../../bases/coredns

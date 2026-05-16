@@ -5,6 +5,6 @@ generators:
   - helm-values
 
 resources:
-  # - ../../../../bases/grafana
+  # - ../../../bases/grafana
   - ingress.yaml
   - tsidp-secret.yaml

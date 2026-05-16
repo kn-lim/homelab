@@ -5,5 +5,5 @@ generators:
   - helm-values
 
 resources:
-  # - ../../../../bases/prometheus
+  # - ../../../bases/prometheus
   - ingress.yaml

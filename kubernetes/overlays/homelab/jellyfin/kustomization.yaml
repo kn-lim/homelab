@@ -5,7 +5,7 @@ generators:
   - helm-values
 
 resources:
-  - ../../../../bases/jellyfin
+  - ../../../bases/jellyfin
   - ingress.yaml
 
 patches:

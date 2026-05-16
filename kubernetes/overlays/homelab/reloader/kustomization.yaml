@@ -2,5 +2,5 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - ../../../../bases/reloader
+  - ../../../bases/reloader
   # - secret.yaml   # TODO: FIXME
