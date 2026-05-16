@@ -25,7 +25,6 @@ spec:
                   namespace: kube-system
                 - path: external-secrets
                   serverSideApply: true
-                - path: gpu-operator
                 - path: grafana
                 - path: jellyfin
                 - path: kubelet-serving-cert-approver
