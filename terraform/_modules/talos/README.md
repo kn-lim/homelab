@@ -51,7 +51,7 @@ No modules.
 | <a name="input_pod_subnet"></a> [pod\_subnet](#input\_pod\_subnet) | Pod subnet for Kubernetes pods | `string` | n/a | yes |
 | <a name="input_service_subnet"></a> [service\_subnet](#input\_service\_subnet) | Service subnet for Kubernetes services | `string` | n/a | yes |
 | <a name="input_talos_system_extensions"></a> [talos\_system\_extensions](#input\_talos\_system\_extensions) | List of official Talos system extensions to install | `list(string)` | <pre>[<br/>  ""<br/>]</pre> | no |
-| <a name="input_talos_version"></a> [talos\_version](#input\_talos\_version) | Talos version for machine configuration schema | `string` | `"v1.13.0"` | no |
+| <a name="input_talos_version"></a> [talos\_version](#input\_talos\_version) | Talos version for machine configuration schema | `string` | `"v1.13.2"` | no |
 
 ## Outputs
 

@@ -37,13 +37,13 @@ https://docs.siderolabs.com/kubernetes-guides/cni/deploying-cilium
 
 ## Upgrading Talos
 
-Replace `v1.13.0` with the target version:
+Replace `v1.13.2` with the target version:
 
 
 ```sh
-talosctl upgrade --nodes 10.20.30.40 --image ghcr.io/siderolabs/installer:v1.13.0
+talosctl upgrade --nodes 10.20.30.40 --image ghcr.io/siderolabs/installer:v1.13.2
 
-talosctl upgrade --nodes 10.20.30.40 --image ghcr.io/siderolabs/installer:v1.13.0 --force   # single node clusters
+talosctl upgrade --nodes 10.20.30.40 --image ghcr.io/siderolabs/installer:v1.13.2 --force   # single node clusters
 ```
 
 https://docs.siderolabs.com/talos/v1.13/configure-your-talos-cluster/lifecycle-management/upgrading-talos
