@@ -8,7 +8,7 @@ name: grafana
 # renovate: datasource=helm depName=grafana repository=https://grafana.github.io/helm-charts
 version: 10.5.15
 releaseName: grafana
-namespace: monitoring
+namespace: grafana
 repo: https://grafana.github.io/helm-charts
 includeCRDs: true
 valuesInline:

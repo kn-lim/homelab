@@ -3,7 +3,7 @@ kind: EventBus
 
 metadata:
   name: webhook
-  namespace: cluster-services
+  namespace: webhook
 
 spec:
   jetstream:

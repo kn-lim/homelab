@@ -3,7 +3,7 @@ kind: Deployment
 
 metadata:
   name: tsidp
-  namespace: tailscale
+  namespace: tsidp
 
 spec:
   replicas: 1

@@ -3,7 +3,7 @@ kind: Sensor
 
 metadata:
   name: webhook
-  namespace: cluster-services
+  namespace: webhook
 
 spec:
   eventBusName: webhook
