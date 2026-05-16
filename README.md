@@ -37,7 +37,6 @@ This repository is managed by [mise](https://github.com/jdx/mise) and [pre-commi
 - [gpu-operator](https://github.com/nvidia/gpu-operator)
 - [grafana](https://github.com/grafana/grafana)
 - [kubelet-serving-cert-approver](https://github.com/alex1989hu/kubelet-serving-cert-approver)
-- [local-path-provisioner](https://github.com/rancher/local-path-provisioner)
 - [metrics server](https://github.com/kubernetes-sigs/metrics-server)
 - [prometheus](https://github.com/prometheus-community/helm-charts/)
 - [reloader](https://github.com/stakater/Reloader)
