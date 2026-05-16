@@ -33,6 +33,7 @@ This repository is managed by [mise](https://github.com/jdx/mise) and [pre-commi
 - [argocd](https://github.com/argoproj/argo-cd)
 - [cilium](https://github.com/cilium/cilium)
 - [coredns](https://github.com/coredns/coredns)
+- [csi-driver-nfs](https://github.com/kubernetes-csi/csi-driver-nfs)
 - [external secrets](https://github.com/external-secrets/external-secrets)
 - [gpu-operator](https://github.com/nvidia/gpu-operator)
 - [grafana](https://github.com/grafana/grafana)
@@ -105,12 +106,13 @@ The [talos stack](https://github.com/kn-lim/homelab/blob/main/terraform/_stacks/
 4. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/coredns` to install CoreDNS.
 5. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/cilium` to install Cilium.
 6. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/kubelet-serving-cert-approver` to install kubelet-serving-cert-approver.
-7. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/external-secrets` to install External Secrets.
-8. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/tailscale-operator` to install Tailscale Kubernetes Operator.
-9. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/tsidp` to install tsidp.
-10. Update `clusters.yaml` with the new `ts-dns` nameserver IP address and run `task template:generate`
-11. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/coredns` to update CoreDNS.
-12. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/argocd` to install ArgoCD and all other applications.
+7. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/csi-driver-nfs` to install csi-driver-nfs.
+8. Run `task kubernetes:build-apply-server-side DIR=kubernetes/overlays/homelab/external-secrets` to install External Secrets.
+9. Run `kubectl create namespace tailscale && task kubernetes:build-apply DIR=kubernetes/overlays/homelab/tailscale-operator` to install Tailscale Kubernetes Operator.
+10. Run `kubectl create namespace tsidp && task kubernetes:build-apply DIR=kubernetes/overlays/homelab/tsidp` to install tsidp.
+11. Update `clusters.yaml` with the new `ts-dns` nameserver IP address and run `task template:generate`
+12. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/coredns` to update CoreDNS.
+13. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/argocd` to install ArgoCD and all other applications.
 
 ## Directories
 

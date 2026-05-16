@@ -9,6 +9,7 @@ parameters:
   server: homelab.knlim.dev
   share: /mnt/user/kubernetes-vm
   subDir: ${pvc.metadata.namespace}/${pvc.metadata.name}
+  mountPermissions: "0777"
 reclaimPolicy: Delete
 volumeBindingMode: Immediate
 allowVolumeExpansion: true
