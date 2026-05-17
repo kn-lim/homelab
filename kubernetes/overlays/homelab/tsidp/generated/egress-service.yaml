@@ -5,7 +5,7 @@ metadata:
   annotations:
     tailscale.com/tailnet-fqdn: idp.neon-wyrm.ts.net
   name: tsidp-egress
-  namespace: tailscale
+  namespace: tsidp
 
 spec:
   externalName: placeholder   # will be overwritten by operator

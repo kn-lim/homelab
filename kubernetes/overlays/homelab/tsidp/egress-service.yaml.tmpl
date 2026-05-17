@@ -8,7 +8,7 @@ metadata:
   annotations:
     tailscale.com/tailnet-fqdn: idp.{{ .tailscale_tailnet_name }}.ts.net
   name: tsidp-egress
-  namespace: tailscale
+  namespace: tsidp
 
 spec:
   externalName: placeholder   # will be overwritten by operator
