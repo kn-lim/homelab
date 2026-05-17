@@ -7,4 +7,5 @@ generators:
 resources:
   # - ../../../bases/grafana
   - ingress.yaml
+  - namespace.yaml
   - tsidp-secret.yaml
