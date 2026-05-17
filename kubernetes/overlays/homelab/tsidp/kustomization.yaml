@@ -4,4 +4,5 @@ kind: Kustomization
 resources:
   - ../../../bases/tsidp
   - generated/egress-service.yaml
+  - namespace.yaml
   - secret.yaml
