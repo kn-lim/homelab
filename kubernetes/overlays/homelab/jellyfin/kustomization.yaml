@@ -7,26 +7,4 @@ generators:
 resources:
   - ../../../bases/jellyfin
   - ingress.yaml
-
-patches:
-  - target:
-      kind: ServiceAccount
-      name: jellyfin
-    patch: |-
-      - op: add
-        path: /metadata/namespace
-        value: jellyfin
-  - target:
-      kind: Service
-      name: jellyfin
-    patch: |-
-      - op: add
-        path: /metadata/namespace
-        value: jellyfin
-  - target:
-      kind: Deployment
-      name: jellyfin
-    patch: |-
-      - op: add
-        path: /metadata/namespace
-        value: jellyfin
+  - namespace.yaml
