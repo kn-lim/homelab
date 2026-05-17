@@ -10,5 +10,6 @@ resources:
   - applicationset.yaml
   - argocd-rbac-cm.yaml
   - ingress.yaml
+  - namespace.yaml
   - ssh-secret.yaml
   - tsidp-secret.yaml
