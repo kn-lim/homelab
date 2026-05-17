@@ -18,7 +18,12 @@ valuesInline:
       existingClaim: jellyfin-config
     media:
       enabled: true
-      existingClaim: jellyfin-media
+      type: hostPath
+      hostPath: /var/mnt/kubernetes-data/jellyfin/media
+    cache:
+      enabled: true
+      type: hostPath
+      hostPath: /var/mnt/kubernetes-data/jellyfin/cache
 
   volumes:
     - name: unraid-media

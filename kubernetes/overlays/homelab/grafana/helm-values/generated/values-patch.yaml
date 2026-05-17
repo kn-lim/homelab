@@ -28,9 +28,17 @@ valuesInline:
       api_url: "https://idp.neon-wyrm.ts.net/userinfo"
 
   persistence:
-    enabled: true
-    size: 10Gi
-    storageClassName: nfs-data
+    enabled: false
+
+  extraVolumes:
+    - name: grafana-data
+      hostPath:
+        path: /var/mnt/kubernetes-data/grafana
+        type: DirectoryOrCreate
+
+  extraVolumeMounts:
+    - name: grafana-data
+      mountPath: /var/lib/grafana
 
   initChownData:
-    enabled: false
+    enabled: true

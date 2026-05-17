@@ -1,0 +1,7 @@
+apiVersion: v1alpha1
+kind: ExternalVolumeConfig
+name: kubernetes-data
+filesystemType: virtiofs
+mount:
+  virtiofs:
+    tag: kubernetes-data

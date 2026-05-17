@@ -21,8 +21,10 @@ resource "talos_machine_configuration_apply" "controlplane" {
     [
       # patches/
       file("${path.module}/patches/cluster-config.yaml"),
+      file("${path.module}/patches/data-virtiofs.yaml"),
       file("${path.module}/patches/machine-config.yaml"),
       file("${path.module}/patches/registry-mirror.yaml"),
+      file("${path.module}/patches/vm-virtiofs.yaml"),
 
       # templates/
       templatefile("${path.module}/templates/machine-config.yaml.tmpl", {
