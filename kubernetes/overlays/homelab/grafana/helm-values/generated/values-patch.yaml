@@ -16,6 +16,8 @@ valuesInline:
         key: client_secret
 
   grafana.ini:
+    paths:
+      data: /grafana-data
     server:
       root_url: "https://grafana.neon-wyrm.ts.net"
     auth.generic_oauth:
@@ -34,11 +36,11 @@ valuesInline:
     - name: grafana-data
       hostPath:
         path: /var/mnt/kubernetes-data/grafana
-        type: DirectoryOrCreate
+        type: Directory
 
   extraVolumeMounts:
     - name: grafana-data
-      mountPath: /var/lib/grafana
+      mountPath: /grafana-data
 
   initChownData:
-    enabled: true
+    enabled: false
