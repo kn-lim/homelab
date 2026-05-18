@@ -3,9 +3,19 @@
 version: '3'
 
 # Input Variables:
-#   DIR: User provided directory to run the kubernetes task commands in
+#   DIR:       User provided directory to run the kubernetes task commands in
+#   NAMESPACE: (Optional) Namespace to ensure exists before applying
 
 tasks:
+  _ensure-namespace:
+    internal: true
+    run: once
+    cmds:
+      - cmd: |
+          if [ -n "{{.NAMESPACE}}" ]; then
+            kubectl get namespace "{{.NAMESPACE}}" 2>/dev/null || kubectl create namespace "{{.NAMESPACE}}"
+          fi
+
   build:
     desc: Returns output from kustomize
     aliases: [kb]
@@ -15,12 +25,14 @@ tasks:
   build-apply:
     desc: Returns output from kustomize and applies the output using kubectl
     aliases: [kba]
+    deps: [_ensure-namespace]
     cmd: kustomize build --enable-helm | kubectl apply -f -
     dir: '{{.DIR | default .USER_WORKING_DIR}}'
 
   build-apply-server-side:
     desc: Returns output from kustomize and applies the output using kubectl
     aliases: [kbas]
+    deps: [_ensure-namespace]
     cmd: kustomize build --enable-helm | kubectl apply --server-side -f -
     dir: '{{.DIR | default .USER_WORKING_DIR}}'
 
