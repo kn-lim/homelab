@@ -9,3 +9,4 @@ resources:
   - http-redirect.yaml
   - generated/gateway.yaml
   - generated/certificate.yaml
+  - generated/dashboard-httproute.yaml

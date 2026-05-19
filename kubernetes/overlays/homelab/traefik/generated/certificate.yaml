@@ -14,3 +14,19 @@ spec:
     group: cert-manager.io
   dnsNames:
     - jellyfin.knlim.dev
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+
+metadata:
+  name: traefik-knlim-dev
+  namespace: traefik
+
+spec:
+  secretName: traefik-knlim-dev-tls
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer
+    group: cert-manager.io
+  dnsNames:
+    - traefik.knlim.dev

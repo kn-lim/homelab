@@ -25,6 +25,8 @@ spec:
         certificateRefs:
           - name: jellyfin-knlim-dev-tls
             kind: Secret
+          - name: traefik-knlim-dev-tls
+            kind: Secret
       allowedRoutes:
         namespaces:
           from: Selector
@@ -34,3 +36,4 @@ spec:
                 operator: In
                 values:
                   - jellyfin
+                  - traefik

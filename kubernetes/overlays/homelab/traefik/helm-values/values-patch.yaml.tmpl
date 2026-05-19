@@ -11,5 +11,10 @@ valuesInline:
   service:
     annotations:
       lbipam.cilium.io/ips: "{{ .local_vip }}"
+
+  ports:
+    traefik:
+      expose:
+        default: true
 {{- end }}
 {{- end }}
