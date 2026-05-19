@@ -26,6 +26,8 @@ spec:
                   serverSideApply: true
                 - path: gateway-api
                   serverSideApply: true
+                - path: gpu-operator
+                  serverSideApply: true
                 - path: grafana
                 - path: jellyfin
                 - path: kubelet-serving-cert-approver

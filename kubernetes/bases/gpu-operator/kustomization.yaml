@@ -1,0 +1,33 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmCharts:
+  - name: gpu-operator
+    repo: https://helm.ngc.nvidia.com/nvidia
+    version: v26.3.1
+    releaseName: gpu-operator
+    namespace: gpu-operator
+    includeCRDs: true
+    valuesInline:
+      driver:
+        enabled: false
+      toolkit:
+        enabled: false
+
+      hostPaths:
+        driverInstallDir: /usr/local
+
+      nfd:
+        enabled: true
+
+      devicePlugin:
+        config:
+          name: time-slicing-config
+          default: any
+
+      dcgm:
+        enabled: false
+      dcgmExporter:
+        enabled: false
+      migManager:
+        enabled: false
