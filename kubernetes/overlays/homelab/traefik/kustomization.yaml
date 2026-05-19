@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+generators:
+  - helm-values
+
+resources:
+  - ../../../bases/traefik
+  - http-redirect.yaml
+  - generated/gateway.yaml
+  - generated/certificate.yaml

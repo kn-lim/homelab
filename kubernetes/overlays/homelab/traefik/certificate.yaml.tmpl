@@ -1,0 +1,24 @@
+{{- $config := (datasource "config") -}}
+{{- range $config.clusters -}}
+{{- if eq .name "homelab" -}}
+{{- $cluster := . -}}
+{{- range $cluster.local_services -}}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+
+metadata:
+  name: {{ . }}-{{ $cluster.local_domain | strings.ReplaceAll "." "-" }}
+  namespace: traefik
+
+spec:
+  secretName: {{ . }}-{{ $cluster.local_domain | strings.ReplaceAll "." "-" }}-tls
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer
+    group: cert-manager.io
+  dnsNames:
+    - {{ . }}.{{ $cluster.local_domain }}
+{{ end -}}
+{{- end -}}
+{{- end -}}

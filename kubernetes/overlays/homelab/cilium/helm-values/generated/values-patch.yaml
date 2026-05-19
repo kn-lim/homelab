@@ -14,6 +14,9 @@ valuesInline:
   operator:
     replicas: 1
 
+  l2announcements:
+    enabled: true
+
   # https://tailscale.com/kb/1236/kubernetes-operator#cilium-in-kube-proxy-replacement-mode
   # routingMode: native
   # socketLB:

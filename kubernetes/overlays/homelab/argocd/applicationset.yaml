@@ -17,11 +17,14 @@ spec:
               elements:
                 - path: argo-events
                 - path: argo-workflows
+                - path: cert-manager
                 - path: cilium
                   namespace: kube-system
                 - path: coredns
                   namespace: kube-system
                 - path: external-secrets
+                  serverSideApply: true
+                - path: gateway-api
                   serverSideApply: true
                 - path: grafana
                 - path: jellyfin
@@ -32,6 +35,7 @@ spec:
                 - path: reloader
                 - path: tailscale-operator
                   namespace: tailscale
+                - path: traefik
                 - path: tsidp
                 - path: utilities
                 - path: webhook

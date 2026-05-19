@@ -8,3 +8,4 @@ resources:
   - ../../../bases/jellyfin
   - ingress.yaml
   - namespace.yaml
+  - generated/httproute.yaml

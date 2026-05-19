@@ -1,0 +1,46 @@
+{{- $config := (datasource "config") -}}
+{{- range $config.clusters -}}
+{{- if eq .name "homelab" -}}
+{{- $cluster := . -}}
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+
+metadata:
+  name: traefik
+  namespace: traefik
+
+spec:
+  gatewayClassName: traefik
+  listeners:
+    # HTTP to HTTPS redirect
+    - name: web
+      port: 8000
+      protocol: HTTP
+      allowedRoutes:
+        namespaces:
+          from: Same
+
+    # Local Services
+    - name: websecure
+      port: 8443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+{{- range $cluster.local_services }}
+          - name: {{ . }}-{{ $cluster.local_domain | strings.ReplaceAll "." "-" }}-tls
+            kind: Secret
+{{- end }}
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchExpressions:
+              - key: kubernetes.io/metadata.name
+                operator: In
+                values:
+{{- range $cluster.local_services }}
+                  - {{ . }}
+{{- end }}
+{{- end }}
+{{- end }}

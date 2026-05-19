@@ -5,12 +5,11 @@ apiVersion: builtin
 kind: HelmChartInflationGenerator
 
 metadata:
-  name: jellyfin
+  name: traefik
 
 valuesInline:
-  jellyfin:
-    env:
-      - name: JELLYFIN_PublishedServerUrl
-        value: "https://jellyfin.{{ .local_domain }}"
+  service:
+    annotations:
+      lbipam.cilium.io/ips: "{{ .local_vip }}"
 {{- end }}
 {{- end }}

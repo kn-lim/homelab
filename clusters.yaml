@@ -63,3 +63,13 @@ clusters:
 
     ## CoreDNS Cluster IP
     coredns_cluster_ip: "10.96.0.10"
+
+    ## Local Domain
+    local_domain: "knlim.dev"
+
+    ## Local VIP
+    local_vip: "10.1.2.12"
+
+    ## Local Services
+    local_services:
+      - jellyfin

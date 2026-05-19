@@ -8,4 +8,4 @@ valuesInline:
   jellyfin:
     env:
       - name: JELLYFIN_PublishedServerUrl
-        value: "https://jellyfin.neon-wyrm.ts.net"
+        value: "https://jellyfin.knlim.dev"
