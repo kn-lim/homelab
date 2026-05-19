@@ -12,5 +12,8 @@ valuesInline:
     env:
       - name: JELLYFIN_PublishedServerUrl
         value: "https://jellyfin.{{ .local_domain }}"
+  resources:
+    limits:
+      nvidia.com/gpu: 1
 {{- end }}
 {{- end }}

@@ -9,3 +9,6 @@ valuesInline:
     env:
       - name: JELLYFIN_PublishedServerUrl
         value: "https://jellyfin.knlim.dev"
+  resources:
+    limits:
+      nvidia.com/gpu: 1
