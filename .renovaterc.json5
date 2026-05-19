@@ -16,13 +16,6 @@
     // Modified for gomplate
     "managerFilePatterns": ["/(^|/)kubernetes/.+\\.ya?ml(?:\\.tmpl)?$/"]
   },
-  "github-actions": {
-    // Modified for renovate colliding with argo workflow templates
-    "managerFilePatterns": [
-      "/(^|/)\\.(?:github|gitea|forgejo)/(?:workflows|actions)/.+\\.ya?ml$/",
-      "/(^|/)action\\.ya?ml$/"
-    ]
-  },
   "kubernetes": {
     // Modified for gomplate
     "managerFilePatterns": ["/(^|/)kubernetes/.+\\.ya?ml(?:\\.tmpl)?$/"]
