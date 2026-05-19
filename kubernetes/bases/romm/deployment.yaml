@@ -15,6 +15,7 @@ spec:
       labels:
         app: romm
     spec:
+      enableServiceLinks: false
       containers:
         - name: romm
           image: ghcr.io/rommapp/romm
@@ -58,6 +59,8 @@ spec:
               mountPath: /romm/resources
             - name: assets
               mountPath: /romm/assets
+            - name: config
+              mountPath: /romm/config
             - name: library
               mountPath: /romm/library
       volumes:
@@ -67,6 +70,9 @@ spec:
         - name: assets
           persistentVolumeClaim:
             claimName: romm-assets
+        - name: config
+          persistentVolumeClaim:
+            claimName: romm-config
         - name: library
           nfs:
             server: homelab.knlim.dev

@@ -18,6 +18,22 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 
 metadata:
+  name: romm-config
+  namespace: romm
+
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: ""
+  resources:
+    requests:
+      storage: 1Gi
+  volumeName: romm-config
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+
+metadata:
   name: romm-assets
   namespace: romm
 
