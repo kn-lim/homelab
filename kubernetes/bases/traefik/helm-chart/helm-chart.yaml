@@ -21,3 +21,6 @@ valuesInline:
 
   gatewayClass:
     enabled: false
+
+  api:
+    insecure: true
