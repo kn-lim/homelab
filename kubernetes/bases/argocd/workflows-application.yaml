@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 
 metadata:
-  name: workflow-templates
+  name: workflows
   namespace: argocd
 
 spec:
@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: git@github.com:kn-lim/homelab.git
     targetRevision: main
-    path: kubernetes/bases/workflow-templates
+    path: kubernetes/bases/workflows
   destination:
     server: https://kubernetes.default.svc
     namespace: argo-workflows
