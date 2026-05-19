@@ -15,4 +15,4 @@ spec:
   rules:
     - backendRefs:
         - name: traefik
-          port: 9000
+          port: 8080
