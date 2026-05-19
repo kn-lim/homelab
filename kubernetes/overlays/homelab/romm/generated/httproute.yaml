@@ -1,0 +1,18 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+
+metadata:
+  name: romm
+  namespace: romm
+
+spec:
+  parentRefs:
+    - name: traefik
+      namespace: traefik
+      sectionName: websecure
+  hostnames:
+    - romm.knlim.dev
+  rules:
+    - backendRefs:
+        - name: romm
+          port: 8080

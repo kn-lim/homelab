@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: romm
+  namespace: romm
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: romm
+  template:
+    metadata:
+      labels:
+        app: romm
+    spec:
+      containers:
+        - name: romm
+          image: ghcr.io/rommapp/romm
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_HOST
+              value: mariadb.mariadb.svc.cluster.local
+            - name: DB_NAME
+              value: romm
+            - name: DB_USER
+              value: romm-user
+            - name: ROMM_DB_DRIVER
+              value: mariadb
+            - name: REDIS_HOST
+              value: valkey-primary.valkey.svc.cluster.local
+            - name: REDIS_PORT
+              value: "6379"
+            - name: DB_PASSWD
+              valueFrom:
+                secretKeyRef:
+                  name: romm-secret
+                  key: db-password
+            - name: ROMM_AUTH_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: romm-secret
+                  key: auth-secret-key
+            - name: IGDB_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: romm-secret
+                  key: igdb-client-id
+            - name: IGDB_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: romm-secret
+                  key: igdb-client-secret
+          volumeMounts:
+            - name: resources
+              mountPath: /romm/resources
+            - name: assets
+              mountPath: /romm/assets
+            - name: library
+              mountPath: /romm/library
+      volumes:
+        - name: resources
+          persistentVolumeClaim:
+            claimName: romm-resources
+        - name: assets
+          persistentVolumeClaim:
+            claimName: romm-assets
+        - name: library
+          nfs:
+            server: homelab.knlim.dev
+            path: /mnt/user/games

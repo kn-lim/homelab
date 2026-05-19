@@ -73,4 +73,5 @@ clusters:
     ## Local Services
     local_services:
       - jellyfin
+      - romm
       - traefik

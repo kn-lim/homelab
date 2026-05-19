@@ -1,0 +1,23 @@
+{{- $config := (datasource "config") -}}
+{{- range $config.clusters -}}
+{{- if eq .name "homelab" -}}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+
+metadata:
+  name: romm
+  namespace: romm
+
+spec:
+  parentRefs:
+    - name: traefik
+      namespace: traefik
+      sectionName: websecure
+  hostnames:
+    - romm.{{ .local_domain }}
+  rules:
+    - backendRefs:
+        - name: romm
+          port: 8080
+{{- end }}
+{{- end }}

@@ -31,15 +31,18 @@ spec:
                 - path: grafana
                 - path: jellyfin
                 - path: kubelet-serving-cert-approver
+                - path: mariadb
                 - path: metrics-server
                   namespace: kube-system
                 - path: prometheus
                 - path: reloader
+                - path: romm
                 - path: tailscale-operator
                   namespace: tailscale
                 - path: traefik
                 - path: tsidp
                 - path: utilities
+                - path: valkey
                 - path: webhook
   template:
     metadata:
