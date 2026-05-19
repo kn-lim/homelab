@@ -9,7 +9,7 @@ clusters:
     # kubernetes_version: ""
 
     ## NVIDIA GPU Support
-    # nvidia_gpu_enabled: true
+    nvidia_gpu_enabled: true
 
     ## Cluster Endpoint IP
     endpoint: "https://talos.homelab.knlim.dev:6443"

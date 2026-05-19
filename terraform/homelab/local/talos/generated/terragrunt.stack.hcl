@@ -12,6 +12,8 @@ stack "talos" {
 
       network_interface = "enp3s0"
 
+      nvidia_gpu_enabled = true
+
       node_data = {
         controlplanes = {
           "10.1.2.11" = {
