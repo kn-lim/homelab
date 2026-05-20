@@ -1,0 +1,36 @@
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+
+metadata:
+  name: open-webui
+
+name: open-webui
+# renovate: datasource=helm depName=open-webui repository=https://helm.openwebui.com
+version: 14.6.0
+releaseName: open-webui
+namespace: open-webui
+repo: https://helm.openwebui.com
+includeCRDs: true
+valuesInline:
+  ollama:
+    enabled: true
+    persistentVolume:
+      enabled: true
+      storageClass: "-"
+      volumeName: ollama-models
+
+  persistence:
+    enabled: true
+    existingClaim: open-webui-data
+
+  enableOpenaiApi: false
+
+  pipelines:
+    enabled: false
+
+  websocket:
+    enabled: true
+    manager: redis
+    url: "redis://valkey.valkey.svc.cluster.local:6379"
+    redis:
+      enabled: false

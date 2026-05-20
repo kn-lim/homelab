@@ -25,6 +25,8 @@ spec:
         certificateRefs:
           - name: jellyfin-knlim-dev-tls
             kind: Secret
+          - name: open-webui-knlim-dev-tls
+            kind: Secret
           - name: romm-knlim-dev-tls
             kind: Secret
           - name: traefik-knlim-dev-tls
@@ -38,5 +40,6 @@ spec:
                 operator: In
                 values:
                   - jellyfin
+                  - open-webui
                   - romm
                   - traefik

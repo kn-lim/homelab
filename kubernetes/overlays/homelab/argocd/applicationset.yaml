@@ -34,6 +34,7 @@ spec:
                 - path: mariadb
                 - path: metrics-server
                   namespace: kube-system
+                - path: open-webui
                 - path: prometheus
                 - path: reloader
                 - path: romm

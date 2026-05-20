@@ -1,0 +1,31 @@
+{{- $config := (datasource "config") -}}
+{{- range $config.clusters -}}
+{{- if eq .name "homelab" -}}
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+
+metadata:
+  name: open-webui
+
+valuesInline:
+  extraEnvVars:
+    - name: WEBUI_SECRET_KEY
+      valueFrom:
+        secretKeyRef:
+          name: open-webui-secret
+          key: webui-secret-key
+    - name: WEBUI_URL
+      value: "https://open-webui.{{ .local_domain }}"
+
+  ollama:
+    runtimeClassName: nvidia
+    resources:
+      limits:
+        nvidia.com/gpu: 1
+    ollama:
+      gpu:
+        enabled: true
+        type: nvidia
+        number: 1
+{{- end }}
+{{- end }}

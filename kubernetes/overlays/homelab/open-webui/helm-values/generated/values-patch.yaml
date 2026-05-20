@@ -1,0 +1,26 @@
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+
+metadata:
+  name: open-webui
+
+valuesInline:
+  extraEnvVars:
+    - name: WEBUI_SECRET_KEY
+      valueFrom:
+        secretKeyRef:
+          name: open-webui-secret
+          key: webui-secret-key
+    - name: WEBUI_URL
+      value: "https://open-webui.knlim.dev"
+
+  ollama:
+    runtimeClassName: nvidia
+    resources:
+      limits:
+        nvidia.com/gpu: 1
+    ollama:
+      gpu:
+        enabled: true
+        type: nvidia
+        number: 1
