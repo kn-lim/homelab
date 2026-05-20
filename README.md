@@ -58,6 +58,10 @@ The ApplicationSet in [`kubernetes/overlays/homelab/argocd/applicationset.yaml`]
 
 As the homelab cluster is not publicly available, the GitHub webhook points to an AWS API Gateway connected to an AWS Lambda function. The function validates the request and forwards it as a message to an AWS SQS queue. This way, [Argo Events](https://github.com/argoproj/argo-events) is able to read the message and runs the [ci.yaml workflow](https://github.com/kn-lim/homelab/blob/main/kubernetes/bases/workflows/ci.yaml) using [Argo Workflows](https://github.com/argoproj/argo-workflows) to apply the changes.
 
+### Gateway API
+
+As some services require direct access rather than through Tailscale, [Traefik](https://github.com/traefik/traefik) and [Cilium](https://github.com/cilium/cilium) are used to create a gateway using the [gateway api](https://github.com/kubernetes-sigs/gateway-api) for routing to the individual services. This provides an alternative way of accessing services besides Tailscale while on the local network.
+
 ### Tailscale
 
 [Tailscale](https://tailscale.com/) is used as the VPN to connect my devices and applications together. The [tailscale kubernetes operator](https://github.com/tailscale/tailscale/) allows my devices to access services within the kubernetes cluster, so that nothing is exposed to the public.
@@ -127,7 +131,7 @@ docs/                               # documentation
 kubernetes/
 ├─ bases/                           # kustomize bases
 │  ├─ applications/
-│  ├─ workflows/           # argo workflows manifests
+│  ├─ workflows/                    # argo workflows manifests
 ├─ overlays/                        # kustomize overlays
 │  ├─ cluster/
 │  │  ├─ applications/
