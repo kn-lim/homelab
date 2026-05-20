@@ -31,6 +31,6 @@ valuesInline:
   websocket:
     enabled: true
     manager: redis
-    url: "redis://valkey.valkey.svc.cluster.local:6379"
+    url: "redis://valkey-primary.valkey.svc.cluster.local:6379"
     redis:
       enabled: false
