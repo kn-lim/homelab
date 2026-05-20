@@ -10,7 +10,7 @@ spec:
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Delete
+  persistentVolumeReclaimPolicy: Retain
   storageClassName: ""
   hostPath:
     path: /var/mnt/kubernetes-data/romm/resources
@@ -28,7 +28,7 @@ spec:
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Delete
+  persistentVolumeReclaimPolicy: Retain
   storageClassName: ""
   hostPath:
     path: /var/mnt/kubernetes-data/romm/config
@@ -46,7 +46,7 @@ spec:
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Delete
+  persistentVolumeReclaimPolicy: Retain
   storageClassName: ""
   hostPath:
     path: /var/mnt/kubernetes-data/romm/assets
