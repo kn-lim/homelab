@@ -31,6 +31,7 @@ This repository is managed by [mise](https://github.com/jdx/mise) and [pre-commi
 - [argo events](https://github.com/argoproj/argo-events)
 - [argo workflows](https://github.com/argoproj/argo-workflows)
 - [argocd](https://github.com/argoproj/argo-cd)
+- [cert-manager](https://github.com/cert-manager/cert-manager)
 - [cilium](https://github.com/cilium/cilium)
 - [coredns](https://github.com/coredns/coredns)
 - [external secrets](https://github.com/external-secrets/external-secrets)
@@ -38,12 +39,14 @@ This repository is managed by [mise](https://github.com/jdx/mise) and [pre-commi
 - [gpu-operator](https://github.com/nvidia/gpu-operator)
 - [grafana](https://github.com/grafana/grafana)
 - [kubelet-serving-cert-approver](https://github.com/alex1989hu/kubelet-serving-cert-approver)
+- [mariadb](https://github.com/MariaDB/server)
 - [metrics server](https://github.com/kubernetes-sigs/metrics-server)
 - [prometheus](https://github.com/prometheus-community/helm-charts/)
 - [reloader](https://github.com/stakater/Reloader)
 - [tailscale kubernetes operator](https://github.com/tailscale/tailscale/)
 - [traefik](https://github.com/traefik/traefik)
 - [tsidp](https://github.com/tailscale/tsidp)
+- [valkey](https://github.com/valkey-io/valkey)
 
 ### ArgoCD
 
@@ -53,7 +56,7 @@ The ApplicationSet in [`kubernetes/overlays/homelab/argocd/applicationset.yaml`]
 
 ### CI/CD
 
-As the homelab cluster is not publicly available, the GitHub webhook points to an AWS API Gateway connected to an AWS Lambda function. The function validates the request and forwards it as a message to an AWS SQS queue. This way, [Argo Events](https://github.com/argoproj/argo-events) is able to read the message and runs the [ci.yaml workflow](https://github.com/kn-lim/homelab/blob/main/kubernetes/bases/workflow-templates/ci.yaml) using [Argo Workflows](https://github.com/argoproj/argo-workflows) to apply the changes.
+As the homelab cluster is not publicly available, the GitHub webhook points to an AWS API Gateway connected to an AWS Lambda function. The function validates the request and forwards it as a message to an AWS SQS queue. This way, [Argo Events](https://github.com/argoproj/argo-events) is able to read the message and runs the [ci.yaml workflow](https://github.com/kn-lim/homelab/blob/main/kubernetes/bases/workflows/ci.yaml) using [Argo Workflows](https://github.com/argoproj/argo-workflows) to apply the changes.
 
 ### Tailscale
 
@@ -124,7 +127,7 @@ docs/                               # documentation
 kubernetes/
 ├─ bases/                           # kustomize bases
 │  ├─ applications/
-│  ├─ workflow-templates/           # argo workflows manifests
+│  ├─ workflows/           # argo workflows manifests
 ├─ overlays/                        # kustomize overlays
 │  ├─ cluster/
 │  │  ├─ applications/
@@ -162,12 +165,6 @@ terraform/
 | AWS SQS | $0 | Usage under Free Tier |
 
 **Total**: $6
-
-### One-Time Purchases
-
-| Service | Cost | Notes |
-| - | - | - |
-| Unraid License | $249 | Lifetime License |
 
 ## Goals
 
