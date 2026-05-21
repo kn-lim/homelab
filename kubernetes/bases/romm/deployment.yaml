@@ -75,5 +75,5 @@ spec:
             claimName: romm-config
         - name: library
           nfs:
-            server: homelab.knlim.dev
+            server: KUSTOMIZE_REPLACE
             path: /mnt/user/games

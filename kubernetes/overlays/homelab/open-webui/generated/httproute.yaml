@@ -11,6 +11,7 @@ spec:
       namespace: traefik
       sectionName: websecure
   hostnames:
+    - chat.knlim.dev
     - open-webui.knlim.dev
   rules:
     - backendRefs:

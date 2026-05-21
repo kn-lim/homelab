@@ -8,3 +8,6 @@ resources:
   - externalsecret.yaml
   - ingress.yaml
   - generated/httproute.yaml
+
+patches:
+  - path: generated/deployment-patch.yaml

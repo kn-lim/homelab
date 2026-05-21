@@ -1,0 +1,15 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: romm
+  namespace: romm
+
+spec:
+  template:
+    spec:
+      volumes:
+        - name: library
+          nfs:
+            server: "homelab.knlim.dev"
+            path: /mnt/user/games

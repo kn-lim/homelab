@@ -24,13 +24,3 @@ valuesInline:
       enabled: true
       type: hostPath
       hostPath: /var/mnt/kubernetes-data/jellyfin/cache
-
-  volumes:
-    - name: unraid-media
-      nfs:
-        server: homelab.knlim.dev
-        path: /mnt/user/media
-
-  volumeMounts:
-    - name: unraid-media
-      mountPath: /unraid-media

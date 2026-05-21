@@ -12,7 +12,7 @@ valuesInline:
           name: open-webui-secret
           key: webui-secret-key
     - name: WEBUI_URL
-      value: "https://open-webui.knlim.dev"
+      value: "https://chat.knlim.dev"
 
   ollama:
     runtimeClassName: nvidia

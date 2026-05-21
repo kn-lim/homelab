@@ -23,6 +23,8 @@ spec:
       tls:
         mode: Terminate
         certificateRefs:
+          - name: chat-knlim-dev-tls
+            kind: Secret
           - name: jellyfin-knlim-dev-tls
             kind: Secret
           - name: open-webui-knlim-dev-tls
@@ -39,6 +41,7 @@ spec:
               - key: kubernetes.io/metadata.name
                 operator: In
                 values:
+                  - chat
                   - jellyfin
                   - open-webui
                   - romm

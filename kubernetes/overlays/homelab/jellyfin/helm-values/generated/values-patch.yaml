@@ -12,3 +12,13 @@ valuesInline:
   resources:
     limits:
       nvidia.com/gpu: 1
+
+  volumes:
+    - name: unraid-media
+      nfs:
+        server: "homelab.knlim.dev"
+        path: /mnt/user/media
+
+  volumeMounts:
+    - name: unraid-media
+      mountPath: /unraid-media

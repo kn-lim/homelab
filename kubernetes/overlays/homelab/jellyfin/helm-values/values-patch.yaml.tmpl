@@ -15,5 +15,15 @@ valuesInline:
   resources:
     limits:
       nvidia.com/gpu: 1
+
+  volumes:
+    - name: unraid-media
+      nfs:
+        server: "{{ .name }}.{{ .local_domain }}"
+        path: /mnt/user/media
+
+  volumeMounts:
+    - name: unraid-media
+      mountPath: /unraid-media
 {{- end }}
 {{- end }}
