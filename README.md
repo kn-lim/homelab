@@ -174,8 +174,8 @@ terraform/
 
 - [x] Use [Terragrunt Stacks](https://terragrunt.gruntwork.io/docs/features/stacks/)
 - [x] Setup a NAS with Unraid
-- [ ] [Argo Events](https://github.com/argoproj/argo-events) to handle Webhooks
-- [ ] [Argo Workflows](https://github.com/argoproj/argo-workflows) for CI/CD
+- [x] [Argo Events](https://github.com/argoproj/argo-events) to handle Webhooks
+- [x] [Argo Workflows](https://github.com/argoproj/argo-workflows) for CI/CD
 - [ ] Setup [Kargo](https://github.com/akuity/kargo) for custom apps
 - [ ] Setup Monitoring and Alerts for all Services
 
