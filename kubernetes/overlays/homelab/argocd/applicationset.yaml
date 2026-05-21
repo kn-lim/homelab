@@ -31,6 +31,8 @@ spec:
                 - path: grafana
                 - path: jellyfin
                 - path: kubelet-serving-cert-approver
+                - path: local-path-provisioner
+                  namespace: local-path-storage
                 - path: mariadb
                 - path: metrics-server
                   namespace: kube-system
