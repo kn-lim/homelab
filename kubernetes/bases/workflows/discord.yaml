@@ -32,27 +32,27 @@ spec:
         command: [sh, -c]
         args:
           - |
+            EXTRA_FIELD=""
+            if [ -n "{{inputs.parameters.paths}}" ]; then
+              EXTRA_FIELD=",{\"name\": \"Paths\", \"value\": \"{{inputs.parameters.paths}}\", \"inline\": false}"
+            elif [ -n "{{inputs.parameters.commit}}" ]; then
+              COMMIT_SHORT=$(echo "{{inputs.parameters.commit}}" | cut -c1-7)
+              if [ -n "{{inputs.parameters.repo}}" ]; then
+                GITHUB_REPO=$(echo "{{inputs.parameters.repo}}" | sed 's|git@github.com:||;s|\.git$||')
+                COMMIT_VALUE="[${COMMIT_SHORT}](https://github.com/${GITHUB_REPO}/commit/{{inputs.parameters.commit}})"
+              else
+                COMMIT_VALUE="${COMMIT_SHORT}"
+              fi
+              EXTRA_FIELD=",{\"name\": \"Commit\", \"value\": \"${COMMIT_VALUE}\", \"inline\": true}"
+            fi
+
             if [ "{{inputs.parameters.status}}" = "Succeeded" ]; then
               COLOR=65280
               EMOJI=":white_check_mark:"
               FAILURES_FIELD=""
-              EXTRA_FIELD=""
-              if [ -n "{{inputs.parameters.paths}}" ]; then
-                EXTRA_FIELD=",{\"name\": \"Paths\", \"value\": \"{{inputs.parameters.paths}}\", \"inline\": false}"
-              elif [ -n "{{inputs.parameters.commit}}" ]; then
-                COMMIT_SHORT=$(echo "{{inputs.parameters.commit}}" | cut -c1-7)
-                if [ -n "{{inputs.parameters.repo}}" ]; then
-                  GITHUB_REPO=$(echo "{{inputs.parameters.repo}}" | sed 's|git@github.com:||;s|\.git$||')
-                  COMMIT_VALUE="[${COMMIT_SHORT}](https://github.com/${GITHUB_REPO}/commit/{{inputs.parameters.commit}})"
-                else
-                  COMMIT_VALUE="${COMMIT_SHORT}"
-                fi
-                EXTRA_FIELD=",{\"name\": \"Commit\", \"value\": \"${COMMIT_VALUE}\", \"inline\": true}"
-              fi
             else
               COLOR=16711680
               EMOJI=":x:"
-              EXTRA_FIELD=""
               FAILURES=$(printf '%s' '{{inputs.parameters.failures}}' | jq -r 'fromjson | [.[] | select(.message | length > 0) | "\(.displayName): \(.message)"] | join("\\n")')
               if [ -n "$FAILURES" ]; then
                 FAILURES_FIELD=",{\"name\": \"Failures\", \"value\": \"${FAILURES}\", \"inline\": false}"
