@@ -17,6 +17,7 @@ unit "grafana" {
           "https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-pods.json",
         ]
       }
+      # argocd = {}
     }
 
     prometheus_sources = {
