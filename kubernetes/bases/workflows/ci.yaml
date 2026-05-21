@@ -97,3 +97,11 @@ spec:
             templateRef:
               name: discord
               template: status
+            arguments:
+              parameters:
+                - name: paths
+                  value: "{{workflow.parameters.paths}}"
+                - name: commit
+                  value: "{{workflow.parameters.after}}"
+                - name: repo
+                  value: "{{workflow.parameters.repo}}"
