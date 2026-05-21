@@ -14,7 +14,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
-	"github.com/google/go-github/v84/github"
+	"github.com/google/go-github/v87/github"
 	"go.uber.org/zap"
 )
 
