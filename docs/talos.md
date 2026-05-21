@@ -1,35 +1,32 @@
 # Talos Linux
 
-## Proxmox
+## Unraid
 
-https://docs.siderolabs.com/talos/v1.13/platform-specific-installations/virtualized-platforms/proxmox
+### CPU
 
-**System**:
+CPU Mode: `Host Passthrough`
+Migratable: `Off`
 
-| Name | Value |
-|-|-|
-| Machine | q35 |
-| BIOS | OVMF (UEFI) |
-| SCSI Controller | VirtIO SCSI single |
-| Qemu Agent | Enabled |
+Pin CPU cores with some headroom for Unraid and other VMs
 
-**Disks**:
+### Machine
 
-| Name | Value |
-|-|-|
-| SSD emulation | Enabled |
+Machine: `Q35-*`
+BIOS: `OVMF`
+Enable USB boot: `No`
+USB Controller: `3.0`
 
-**CPU**:
+### Disks
 
-| Name | Value |
-|-|-|
-| Type | host |
+Unraid Share Mode: `Virtiofs Mode`
 
-**EFI Disk**:
+### GPU
 
-| Name | Value |
-|-|-|
-| Pre-Enroll keys | Disabled |
+1st GPU: `Virtual`
+
+2nd GPU: Point to GPU passed through with IOMMU
+
+Multifunction: `Off`
 
 ## Cilium
 
@@ -37,17 +34,10 @@ https://docs.siderolabs.com/kubernetes-guides/cni/deploying-cilium
 
 ## Upgrading Talos
 
-Replace `v1.13.2` with the target version:
-
-
 ```sh
-talosctl upgrade --nodes 10.20.30.40 --image ghcr.io/siderolabs/installer:v1.13.2
-
-talosctl upgrade --nodes 10.20.30.40 --image ghcr.io/siderolabs/installer:v1.13.2 --force   # single node clusters
+task talos:upgrade NODE_IP=#### VERSION=v####
 ```
 
 https://docs.siderolabs.com/talos/v1.13/configure-your-talos-cluster/lifecycle-management/upgrading-talos
-
-or run `task talos:upgrade NODE_IP=#### VERSION=v####`
 
 Afterwards, run `terragrunt apply` in the specific Talos terraform directory.
