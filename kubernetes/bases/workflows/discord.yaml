@@ -32,22 +32,23 @@ spec:
         args:
           - |
             apk add --no-cache curl jq
+            REPO_FIELD="{\"name\": \"Repo\", \"value\": \"[{{inputs.parameters.repo}}](https://github.com/{{inputs.parameters.repo}})\", \"inline\": true}"
             EXTRA_FIELD=""
             if [ -n "{{inputs.parameters.paths}}" ]; then
-              EXTRA_FIELD=",{\"name\": \"Repo\", \"value\": \"{{inputs.parameters.repo}}\", \"inline\": true},{\"name\": \"Paths\", \"value\": \"{{inputs.parameters.paths}}\", \"inline\": true}"
+              EXTRA_FIELD=",${REPO_FIELD},{\"name\": \"Paths\", \"value\": \"{{inputs.parameters.paths}}\", \"inline\": true}"
             elif [ -n "{{inputs.parameters.commit}}" ]; then
               COMMIT_SHORT=$(echo "{{inputs.parameters.commit}}" | cut -c1-7)
               COMMIT_VALUE="[${COMMIT_SHORT}](https://github.com/{{inputs.parameters.repo}}/commit/{{inputs.parameters.commit}})"
-              EXTRA_FIELD=",{\"name\": \"Repo\", \"value\": \"{{inputs.parameters.repo}}\", \"inline\": true},{\"name\": \"Commit\", \"value\": \"${COMMIT_VALUE}\", \"inline\": true}"
+              EXTRA_FIELD=",${REPO_FIELD},{\"name\": \"Commit\", \"value\": \"${COMMIT_VALUE}\", \"inline\": true}"
             fi
 
             if [ "{{inputs.parameters.status}}" = "Succeeded" ]; then
-              COLOR=65280
-              EMOJI=":white_check_mark:"
+              COLOR=5025616
+              THUMBNAIL="https://raw.githubusercontent.com/kn-lim/kn-lim/refs/heads/main/homelab/success.png"
               FAILURES_FIELD=""
             else
-              COLOR=16711680
-              EMOJI=":x:"
+              COLOR=16007990
+              THUMBNAIL="https://raw.githubusercontent.com/kn-lim/kn-lim/refs/heads/main/homelab/error.png"
               FAILURES=$(printf '%s' '{{inputs.parameters.failures}}' | jq -r 'fromjson | [.[] | select(.message | length > 0) | "\(.displayName): \(.message)"] | join("\\n")')
               if [ -n "$FAILURES" ]; then
                 FAILURES_FIELD=",{\"name\": \"Failures\", \"value\": \"${FAILURES}\", \"inline\": false}"
@@ -60,9 +61,10 @@ spec:
               -H "Content-Type: application/json" \
               -d "{
                 \"embeds\": [{
-                  \"title\": \"$EMOJI Workflow {{inputs.parameters.status}}\",
+                  \"title\": \"Workflow {{inputs.parameters.status}}\",
                   \"url\": \"${ARGO_WORKFLOWS_URL}/workflows/argo-workflows/{{inputs.parameters.workflow-name}}\",
                   \"color\": $COLOR,
+                  \"thumbnail\": {\"url\": \"$THUMBNAIL\"},
                   \"fields\": [
                     {\"name\": \"Workflow\", \"value\": \"{{inputs.parameters.workflow-name}}\", \"inline\": true},
                     {\"name\": \"Status\", \"value\": \"{{inputs.parameters.status}}\", \"inline\": true},
