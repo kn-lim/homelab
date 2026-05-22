@@ -39,7 +39,7 @@ spec:
         command: [bash]
         source: |
           set -eo pipefail
-          DEBIAN_FRONTEND=noninteractive apt-get update -qq && apt-get install -y --no-install-recommends ca-certificates git
+          DEBIAN_FRONTEND=noninteractive apt-get update -qq 1>&2 && apt-get install -y --no-install-recommends ca-certificates git 1>&2
           source /workdir/mise-env.sh
           task --yes --list > /dev/null
           task ci:parse PATHS="{{inputs.parameters.paths}}"
