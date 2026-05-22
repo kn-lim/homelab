@@ -45,7 +45,7 @@ tasks:
         path=$(echo "$path" | tr -d ' \t')
         [ -z "$path" ] && continue
         case "$path" in
-          apps/*/*)
+          apps/*)
             app_dir="$(echo "$path" | cut -d'/' -f1-2)"
             app_name="$(echo "$path" | cut -d'/' -f2)"
             function_name=$(APP="$app_name" yq e '.apps.run[] | select(.application == strenv(APP)) | .functionName' ci.yaml 2>/dev/null | head -1)
@@ -76,15 +76,7 @@ tasks:
             echo "task ci:terraform DIRECTORY=$(echo "$path" | cut -d'/' -f1-4)"
             ;;
         esac
-      done | awk '!seen[$0]++' | (
-        printf '['
-        delimiter=''
-        while IFS= read -r c; do
-          printf '%s{"command":"%s"}' "$delimiter" "$c"
-          delimiter=','
-        done
-        printf ']'
-      )
+      done | awk '!seen[$0]++' | jq -Rn '[inputs | {"command": .}]'
 
   start:
     desc: Wrapper to start the CI workflow
