@@ -65,7 +65,7 @@ spec:
         args:
           - |
             set -eo pipefail
-            DEBIAN_FRONTEND=noninteractive apt-get update -qq && apt-get install -y --no-install-recommends ca-certificates
+            DEBIAN_FRONTEND=noninteractive apt-get update -qq && apt-get install -y --no-install-recommends ca-certificates zip
             [ -f /workdir/mise-env.sh ] || { echo "ERROR: /workdir/mise-env.sh not found — did the setup task run?"; exit 1; }
             source /workdir/mise-env.sh
             task --yes --list > /dev/null
