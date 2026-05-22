@@ -7,50 +7,25 @@ metadata:
 
 spec:
   templates:
-    - name: setup
-      script:
-        image: debian
-        command: [bash]
-        source: |
-          set -eo pipefail
-          DEBIAN_FRONTEND=noninteractive apt-get update -qq && apt-get install -y --no-install-recommends curl ca-certificates
-          curl https://mise.run | sh
-          MISE_DATA_DIR=/workdir/mise ~/.local/bin/mise trust
-          MISE_DATA_DIR=/workdir/mise ~/.local/bin/mise install \
-            aqua:argoproj/argo-cd aqua:aws/aws-cli aqua:go-task/task aqua:gruntwork-io/terragrunt aqua:hashicorp/terraform aqua:helm/helm aqua:jqlang/jq aqua:mikefarah/yq go
-          MISE_DATA_DIR=/workdir/mise ~/.local/bin/mise env -s bash > /workdir/mise-env.sh
-          [ -s /workdir/mise-env.sh ] || { echo "mise env produced empty output"; exit 1; }
-        workingDir: /workdir/src
-        envFrom:
-          - secretRef:
-              name: environment-variables
-        volumeMounts:
-          - name: workdir
-            mountPath: /workdir
-
-    - name: run
+    - name: changes
       inputs:
         parameters:
-          - name: command
-          - name: workdir
-            default: /workdir/src
-      container:
-        image: debian
-        command: [bash, -c]
-        args:
-          - |
-            set -eo pipefail
-            [ -f /workdir/mise-env.sh ] || { echo "ERROR: /workdir/mise-env.sh not found — did the setup task run?"; exit 1; }
-            source /workdir/mise-env.sh
-            task --yes --list > /dev/null
-            {{inputs.parameters.command}}
-        workingDir: "{{inputs.parameters.workdir}}"
-        env:
-          - name: TASK_X_REMOTE_TASKFILES
-            value: "1"
-        envFrom:
-          - secretRef:
-              name: environment-variables
+          - name: before
+            default: ""
+          - name: after
+            default: ""
+          - name: paths
+            default: ""
+      script:
+        image: alpine/git
+        command: [sh]
+        source: |
+          if [ -n "{{inputs.parameters.paths}}" ]; then
+            echo "{{inputs.parameters.paths}}"
+          else
+            git diff --name-only {{inputs.parameters.before}} {{inputs.parameters.after}} | tr '\n' ',' | sed 's/,$//'
+          fi
+        workingDir: /workdir/src
         volumeMounts:
           - name: workdir
             mountPath: /workdir
@@ -78,25 +53,51 @@ spec:
           - name: workdir
             mountPath: /workdir
 
-    - name: changes
+    - name: run
       inputs:
         parameters:
-          - name: before
-            default: ""
-          - name: after
-            default: ""
-          - name: paths
-            default: ""
+          - name: command
+          - name: workdir
+            default: /workdir/src
+      container:
+        image: debian
+        command: [bash, -c]
+        args:
+          - |
+            set -eo pipefail
+            DEBIAN_FRONTEND=noninteractive apt-get update -qq && apt-get install -y --no-install-recommends ca-certificates
+            [ -f /workdir/mise-env.sh ] || { echo "ERROR: /workdir/mise-env.sh not found — did the setup task run?"; exit 1; }
+            source /workdir/mise-env.sh
+            task --yes --list > /dev/null
+            {{inputs.parameters.command}}
+        workingDir: "{{inputs.parameters.workdir}}"
+        env:
+          - name: TASK_X_REMOTE_TASKFILES
+            value: "1"
+        envFrom:
+          - secretRef:
+              name: environment-variables
+        volumeMounts:
+          - name: workdir
+            mountPath: /workdir
+
+    - name: setup
       script:
-        image: alpine/git
-        command: [sh]
+        image: debian
+        command: [bash]
         source: |
-          if [ -n "{{inputs.parameters.paths}}" ]; then
-            echo "{{inputs.parameters.paths}}"
-          else
-            git diff --name-only {{inputs.parameters.before}} {{inputs.parameters.after}} | tr '\n' ',' | sed 's/,$//'
-          fi
+          set -eo pipefail
+          DEBIAN_FRONTEND=noninteractive apt-get update -qq && apt-get install -y --no-install-recommends curl ca-certificates
+          curl https://mise.run | sh
+          MISE_DATA_DIR=/workdir/mise ~/.local/bin/mise trust
+          MISE_DATA_DIR=/workdir/mise ~/.local/bin/mise install \
+            aqua:argoproj/argo-cd aqua:aws/aws-cli aqua:go-task/task aqua:gruntwork-io/terragrunt aqua:hashicorp/terraform aqua:helm/helm aqua:jqlang/jq aqua:mikefarah/yq go
+          MISE_DATA_DIR=/workdir/mise ~/.local/bin/mise env -s bash > /workdir/mise-env.sh
+          [ -s /workdir/mise-env.sh ] || { echo "mise env produced empty output"; exit 1; }
         workingDir: /workdir/src
+        envFrom:
+          - secretRef:
+              name: environment-variables
         volumeMounts:
           - name: workdir
             mountPath: /workdir
