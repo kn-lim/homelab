@@ -14,7 +14,7 @@ images:
   - name: debian
     newTag: "13.5-slim"
   - name: alpine
-    newTag: "3.21"
+    newTag: "3.23"
   - name: alpine/git
     newTag: "2.49.0"
   - name: busybox
