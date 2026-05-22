@@ -24,13 +24,14 @@ spec:
             default: ""
           - name: repo
       container:
-        image: ghcr.io/kn-lim/toolbox
+        image: alpine
         envFrom:
           - secretRef:
               name: environment-variables
         command: [sh, -c]
         args:
           - |
+            apk add --no-cache curl jq
             EXTRA_FIELD=""
             if [ -n "{{inputs.parameters.paths}}" ]; then
               EXTRA_FIELD=",{\"name\": \"Paths\", \"value\": \"{{inputs.parameters.paths}}\", \"inline\": false}"

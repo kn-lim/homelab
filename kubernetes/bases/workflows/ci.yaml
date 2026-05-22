@@ -42,7 +42,7 @@ spec:
         storageClassName: local-path
         resources:
           requests:
-            storage: 2Gi
+            storage: 8Gi
 
   templates:
     - name: main
@@ -71,8 +71,13 @@ spec:
                   value: "{{workflow.parameters.after}}"
                 - name: paths
                   value: "{{workflow.parameters.paths}}"
+          - name: setup
+            dependencies: [git-clone]
+            templateRef:
+              name: command
+              template: setup
           - name: parse
-            dependencies: [changes]
+            dependencies: [changes, setup]
             templateRef:
               name: command
               template: parse

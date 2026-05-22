@@ -11,7 +11,11 @@ configurations:
   - configurations.yaml
 
 images:
-  - name: ghcr.io/kn-lim/toolbox
-    newTag: "1.2.1"
+  - name: debian
+    newTag: "12.14-slim"
+  - name: alpine
+    newTag: "3.21"
+  - name: alpine/git
+    newTag: "2.49.0"
   - name: busybox
     newTag: "1.36.1"
