@@ -141,7 +141,7 @@ func handler(ctx context.Context, request events.APIGatewayV2HTTPRequest) (event
 		}
 
 		msg = Message{
-			Repo:   event.Repo.GetSSHURL(),
+			Repo:   event.Repo.GetFullName(),
 			Ref:    ref,
 			Before: event.GetBefore(),
 			After:  event.GetAfter(),

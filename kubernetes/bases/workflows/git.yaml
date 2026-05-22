@@ -17,7 +17,7 @@ spec:
           - name: source
             path: /workdir/src
             git:
-              repo: "{{inputs.parameters.repo}}"
+              repo: "git@github.com:{{inputs.parameters.repo}}.git"
               revision: "{{inputs.parameters.branch}}"
               sshPrivateKeySecret:
                 name: argo-workflows-ssh-key

@@ -20,7 +20,7 @@ spec:
       - name: branch
         value: main
       - name: repo
-        value: git@github.com:kn-lim/homelab.git
+        value: kn-lim/homelab
       - name: before
         value: ""
       - name: after
