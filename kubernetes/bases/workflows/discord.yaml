@@ -34,7 +34,7 @@ spec:
             apk add --no-cache curl jq
             EXTRA_FIELD=""
             if [ -n "{{inputs.parameters.paths}}" ]; then
-              EXTRA_FIELD=",{\"name\": \"Paths\", \"value\": \"{{inputs.parameters.paths}}\", \"inline\": false}"
+              EXTRA_FIELD=",{\"name\": \"Repo\", \"value\": \"{{inputs.parameters.repo}}\", \"inline\": true},,{\"name\": \"Paths\", \"value\": \"{{inputs.parameters.paths}}\", \"inline\": true}"
             elif [ -n "{{inputs.parameters.commit}}" ]; then
               COMMIT_SHORT=$(echo "{{inputs.parameters.commit}}" | cut -c1-7)
               COMMIT_VALUE="[${COMMIT_SHORT}](https://github.com/{{inputs.parameters.repo}}/commit/{{inputs.parameters.commit}})"
