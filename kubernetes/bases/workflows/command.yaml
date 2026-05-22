@@ -74,6 +74,8 @@ spec:
         env:
           - name: TASK_X_REMOTE_TASKFILES
             value: "1"
+          - name: AWS_REGION
+            value: "us-west-2"
         envFrom:
           - secretRef:
               name: environment-variables
