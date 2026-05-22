@@ -6,7 +6,7 @@ kind: Kustomization
 namespace: kubelet-serving-cert-approver
 
 resources:
-  - github.com/alex1989hu/kubelet-serving-cert-approver/deploy/standalone?ref=v0.10.3
+  - github.com/alex1989hu/kubelet-serving-cert-approver/deploy/standalone?ref=v0.11.0
 
 patches:
   - target:
