@@ -11,6 +11,23 @@
       "matchDepNames": ["aqua:kubernetes-sigs/kustomize"],
       "extractVersion": "^kustomize\\/v(?<version>\\d+\\.\\d+\\.\\d+)$"
     },
+
+    // Overrides
+    {
+      description: "Auto-merge GitHub Actions",
+      matchManagers: ["github-actions"],
+      automerge: false,
+      automergeType: "branch",
+      matchUpdateTypes: ["minor", "patch", "digest"],
+      minimumReleaseAge: "3 days",
+    },
+    {
+      description: "Auto-merge Mise Tools",
+      matchManagers: ["mise"],
+      automerge: false,
+      automergeType: "branch",
+      matchUpdateTypes: ["minor", "patch"],
+    },
   ],
   "argocd": {
     // Modified for gomplate
