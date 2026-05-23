@@ -18,4 +18,4 @@ images:
   - name: alpine/git
     newTag: "v2.52.0"
   - name: busybox
-    newTag: "1.37.0"
+    newTag: "1.38.0"
