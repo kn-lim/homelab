@@ -54,8 +54,8 @@ tasks:
               echo "task ci:lambda DIRECTORY=$app_dir FUNCTION_NAME=$function_name S3_KEY=$s3_key"
             fi
             ;;
-          kubernetes/overlays/*/*/*/*)
-            echo "task ci:argo APPLICATION=$(echo "$path" | cut -d'/' -f6)"
+          kubernetes/overlays/*)
+            echo "task ci:argo APPLICATION=$(echo "$path" | cut -d'/' -f4)"
             ;;
           kubernetes/bases/*)
             override=$(lookup_ci kubernetes "$path")
