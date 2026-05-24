@@ -47,10 +47,9 @@ tasks:
         case "$path" in
           apps/*)
             app_dir="$(echo "$path" | cut -d'/' -f1-2)"
-            app_name="$(echo "$path" | cut -d'/' -f2)"
-            function_name=$(APP="$app_name" yq e '.apps.run[] | select(.application == strenv(APP)) | .functionName' ci.yaml 2>/dev/null | head -1)
-            s3_key=$(APP="$app_name" yq e '.apps.run[] | select(.application == strenv(APP)) | .s3Key' ci.yaml 2>/dev/null | head -1)
-            if [ -n "$function_name" ] && [ -n "$s3_key" ]; then
+            if APP="$app_dir" yq e '.apps.run[] | select(.application == strenv(APP)) | has("lambda")' ci.yaml 2>/dev/null | grep -q true; then
+              function_name=$(APP="$app_dir" yq e '.apps.run[] | select(.application == strenv(APP)) | .lambda.functionName' ci.yaml 2>/dev/null | head -1)
+              s3_key=$(APP="$app_dir" yq e '.apps.run[] | select(.application == strenv(APP)) | .lambda.s3Key' ci.yaml 2>/dev/null | head -1)
               echo "task ci:lambda DIRECTORY=$app_dir FUNCTION_NAME=$function_name S3_KEY=$s3_key"
             fi
             ;;
