@@ -94,7 +94,17 @@ spec:
           curl https://mise.run | sh
           MISE_DATA_DIR=/workdir/mise ~/.local/bin/mise trust
           MISE_DATA_DIR=/workdir/mise ~/.local/bin/mise install \
-            aqua:argoproj/argo-cd aqua:aws/aws-cli aqua:go-task/task aqua:gruntwork-io/terragrunt aqua:hashicorp/terraform aqua:helm/helm aqua:jqlang/jq aqua:mikefarah/yq go
+            aqua:argoproj/argo-cd \
+            aqua:aws/aws-cli \
+            aqua:go-task/task \
+            aqua:gruntwork-io/terragrunt \
+            aqua:hashicorp/terraform \
+            aqua:helm/helm \
+            aqua:jqlang/jq \
+            aqua:kubernetes-sigs/kustomize \
+            aqua:kubernetes/kubernetes/kubectl \
+            aqua:mikefarah/yq \
+            go
           MISE_DATA_DIR=/workdir/mise ~/.local/bin/mise env -s bash > /workdir/mise-env.sh
           [ -s /workdir/mise-env.sh ] || { echo "mise env produced empty output"; exit 1; }
         workingDir: /workdir/src
