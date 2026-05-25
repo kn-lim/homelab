@@ -45,14 +45,6 @@ tasks:
         path=$(echo "$path" | tr -d ' \t')
         [ -z "$path" ] && continue
         case "$path" in
-          apps/*)
-            app_dir="$(echo "$path" | cut -d'/' -f1-2)"
-            if APP="$app_dir" yq e '.apps.run[] | select(.application == strenv(APP)) | has("lambda")' ci.yaml 2>/dev/null | grep -q true; then
-              function_name=$(APP="$app_dir" yq e '.apps.run[] | select(.application == strenv(APP)) | .lambda.functionName' ci.yaml 2>/dev/null | head -1)
-              s3_key=$(APP="$app_dir" yq e '.apps.run[] | select(.application == strenv(APP)) | .lambda.s3Key' ci.yaml 2>/dev/null | head -1)
-              echo "task ci:lambda DIRECTORY=$app_dir FUNCTION_NAME=$function_name S3_KEY=$s3_key"
-            fi
-            ;;
           kubernetes/overlays/*)
             echo "task ci:argo APPLICATION=$(echo "$path" | cut -d'/' -f4)"
             ;;
@@ -73,6 +65,16 @@ tasks:
             ;;
           terraform/*/*/*)
             echo "task ci:terraform DIRECTORY=$(echo "$path" | cut -d'/' -f1-4)"
+            ;;
+          *)
+            app=$(LOOKUP_PATH="$path" yq e '.deploy.run[] | select(.application as $a | strenv(LOOKUP_PATH) | test("^" + $a + "(/|$)")) | .application' ci.yaml 2>/dev/null | head -1)
+            if [ -n "$app" ]; then
+              if APP="$app" yq e '.deploy.run[] | select(.application == strenv(APP)) | has("lambda")' ci.yaml 2>/dev/null | grep -q true; then
+                function_name=$(APP="$app" yq e '.deploy.run[] | select(.application == strenv(APP)) | .lambda.functionName' ci.yaml 2>/dev/null | head -1)
+                s3_key=$(APP="$app" yq e '.deploy.run[] | select(.application == strenv(APP)) | .lambda.s3Key' ci.yaml 2>/dev/null | head -1)
+                echo "task ci:lambda DIRECTORY=$app FUNCTION_NAME=$function_name S3_KEY=$s3_key"
+              fi
+            fi
             ;;
         esac
       done | awk '!seen[$0]++' | jq -Rn '[inputs | {"command": .}]'

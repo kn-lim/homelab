@@ -1,4 +1,4 @@
-apps:
+deploy:
   run:
     - application: apps/webhook
       lambda:
