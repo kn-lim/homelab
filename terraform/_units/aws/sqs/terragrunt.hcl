@@ -13,5 +13,5 @@ include "root" {
 }
 
 terraform {
-  source = "tfr:///terraform-aws-modules/sqs/aws?version=5.2.1"
+  source = "tfr:///terraform-aws-modules/sqs/aws?version=5.2.2"
 }
