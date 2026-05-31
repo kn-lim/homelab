@@ -6,7 +6,7 @@ generators:
 
 resources:
   # - ../../../bases/argo-workflows
-  - environment-secret.yaml
   - ingress.yaml
   - serviceaccount.yaml
-  - ssh-secret.yaml
+  - secret-environment.yaml
+  - secret-ssh.yaml
