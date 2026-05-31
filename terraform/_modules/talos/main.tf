@@ -20,31 +20,31 @@ resource "talos_machine_configuration_apply" "controlplane" {
   config_patches = concat(
     [
       # patches/
-      file("${path.module}/patches/cluster-config.yaml"),
-      file("${path.module}/patches/data-virtiofs.yaml"),
-      file("${path.module}/patches/machine-config.yaml"),
-      file("${path.module}/patches/registry-mirror.yaml"),
-      file("${path.module}/patches/vm-virtiofs.yaml"),
+      file("${path.module}/patches/cluster.yaml"),
+      file("${path.module}/patches/machine.yaml"),
+      file("${path.module}/patches/registry.yaml"),
+      file("${path.module}/patches/virtiofs-data.yaml"),
+      file("${path.module}/patches/virtiofs-vm.yaml"),
 
       # templates/
-      templatefile("${path.module}/templates/machine-config.yaml.tmpl", {
+      templatefile("${path.module}/templates/cluster.yaml.tmpl", {
+        node_subnet    = var.node_subnet
+        pod_subnet     = var.pod_subnet
+        service_subnet = var.service_subnet
+      }),
+      templatefile("${path.module}/templates/machine.yaml.tmpl", {
         install_disk    = each.value.install_disk
         installer_image = data.talos_image_factory_urls.default.urls.installer
         cluster_dns     = cidrhost(var.service_subnet, 10)
         node_subnet     = var.node_subnet
       }),
-      templatefile("${path.module}/templates/network-config.yaml.tmpl", {
+      templatefile("${path.module}/templates/network.yaml.tmpl", {
         hostname          = each.value.hostname
         network_interface = var.network_interface
         node_ip           = each.key
         gateway           = var.gateway
         dns_server        = var.dns_server
         node_subnet       = var.node_subnet
-      }),
-      templatefile("${path.module}/templates/cluster-config.yaml.tmpl", {
-        node_subnet    = var.node_subnet
-        pod_subnet     = var.pod_subnet
-        service_subnet = var.service_subnet
       }),
     ],
     var.nvidia_gpu_enabled ? [file("${path.module}/patches/nvidia.yaml")] : []
