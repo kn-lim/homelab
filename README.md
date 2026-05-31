@@ -1,13 +1,13 @@
 <p align="center">
   <img width="100" style="border-radius: 50%" src="https://raw.githubusercontent.com/kn-lim/kn-lim/refs/heads/main/homelab/icon.png"></img>
   <br>
-  <i>Powered by ArgoCD, Kubernetes and Terraform</i>
+  <i>Kevin's Personal Homelab</i>
 </p>
 
 # Homelab
 
-![Talos](https://img.shields.io/badge/talos-v1.13.2-FF7300?logo=talos&logoColor=white)
-![Kubernetes](https://img.shields.io/badge/kubernetes-v1.36.0-326CE5?logo=kubernetes&logoColor=white)
+![Talos](https://img.shields.io/badge/talos-v1.13.3-FF7300?logo=talos&logoColor=white)
+![Kubernetes](https://img.shields.io/badge/kubernetes-v1.36.1-326CE5?logo=kubernetes&logoColor=white)
 
 A definitely over-engineered, but good enough homelab that handles my home infrastructure and Kubernetes cluster.
 
