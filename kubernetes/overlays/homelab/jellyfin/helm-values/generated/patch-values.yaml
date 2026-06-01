@@ -22,7 +22,7 @@ valuesInline:
       enabled: true
       type: pvc
       storageClass: local-data
-      size: 50Gi
+      size: 20Gi
       accessMode: ReadWriteOnce
 
   volumes:
