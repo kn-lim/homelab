@@ -27,6 +27,6 @@ valuesInline:
   storageClasses:
     - name: local-array
       defaultClass: false
-      reclaimPolicy: Delete
+      reclaimPolicy: Retain
       volumeBindingMode: WaitForFirstConsumer
       allowVolumeExpansion: false
