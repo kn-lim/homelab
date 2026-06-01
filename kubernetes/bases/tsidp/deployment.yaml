@@ -41,6 +41,5 @@ spec:
               mountPath: /app/data
       volumes:
         - name: tsidp-data
-          hostPath:
-            path: /var/mnt/kubernetes-data/tsidp
-            type: DirectoryOrCreate
+          persistentVolumeClaim:
+            claimName: tsidp-data

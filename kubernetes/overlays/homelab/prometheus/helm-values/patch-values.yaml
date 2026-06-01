@@ -6,17 +6,10 @@ metadata:
 
 valuesInline:
   server:
-    storagePath: /var/mnt/kubernetes-data/prometheus
     persistentVolume:
-      enabled: false
-    extraVolumes:
-      - name: prometheus-data
-        hostPath:
-          path: /var/mnt/kubernetes-data/prometheus
-          type: DirectoryOrCreate
-    extraVolumeMounts:
-      - name: prometheus-data
-        mountPath: /var/mnt/kubernetes-data/prometheus
+      enabled: true
+      storageClass: local-data
+      size: 10Gi
 
   alertmanager:
     enabled: false

@@ -39,7 +39,7 @@ spec:
         name: workdir
       spec:
         accessModes: ["ReadWriteOnce"]
-        storageClassName: local-path
+        storageClassName: local-data
         resources:
           requests:
             storage: 8Gi

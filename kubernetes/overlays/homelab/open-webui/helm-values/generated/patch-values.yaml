@@ -5,6 +5,9 @@ metadata:
   name: open-webui
 
 valuesInline:
+  persistence:
+    size: 5Gi
+
   extraEnvVars:
     - name: WEBUI_SECRET_KEY
       valueFrom:
@@ -15,6 +18,8 @@ valuesInline:
       value: "https://chat.knlim.dev"
 
   ollama:
+    persistentVolume:
+      size: 50Gi
     runtimeClassName: nvidia
     resources:
       limits:

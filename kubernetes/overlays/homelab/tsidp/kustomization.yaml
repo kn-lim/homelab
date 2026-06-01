@@ -5,4 +5,5 @@ resources:
   - ../../../bases/tsidp
   - generated/egress-service.yaml
   - namespace.yaml
+  - pvc.yaml
   - secret.yaml

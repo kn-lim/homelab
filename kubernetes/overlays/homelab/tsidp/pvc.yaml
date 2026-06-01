@@ -1,15 +1,12 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
-
 metadata:
-  name: jellyfin-config
-  namespace: jellyfin
-
+  name: tsidp-data
+  namespace: tsidp
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: ""
+  storageClassName: local-data
   resources:
     requests:
-      storage: 2Gi
-  volumeName: jellyfin-config
+      storage: 1Gi

@@ -16,6 +16,18 @@ valuesInline:
     limits:
       nvidia.com/gpu: 1
 
+  persistence:
+    media:
+      enabled: true
+      type: hostPath
+      hostPath: /var/mnt/kubernetes-array/jellyfin/media
+    cache:
+      enabled: true
+      type: pvc
+      storageClass: local-data
+      size: 50Gi
+      accessMode: ReadWriteOnce
+
   volumes:
     - name: unraid-media
       nfs:

@@ -15,12 +15,5 @@ valuesInline:
   persistence:
     config:
       enabled: true
-      existingClaim: jellyfin-config
-    media:
-      enabled: true
-      type: hostPath
-      hostPath: /var/mnt/kubernetes-data/jellyfin/media
-    cache:
-      enabled: true
-      type: hostPath
-      hostPath: /var/mnt/kubernetes-data/jellyfin/cache
+      storageClass: local-data
+      size: 2Gi
