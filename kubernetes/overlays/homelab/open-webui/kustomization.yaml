@@ -5,9 +5,8 @@ generators:
   - helm-values
 
 resources:
-  - ../../../bases/open-webui
+  # - ../../../bases/open-webui
   - namespace.yaml
-  - pv.yaml
   - externalsecret.yaml
   - ingress.yaml
   - generated/httproute.yaml

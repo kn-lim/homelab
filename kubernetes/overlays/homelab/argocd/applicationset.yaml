@@ -31,8 +31,10 @@ spec:
                 - path: grafana
                 - path: jellyfin
                 - path: kubelet-serving-cert-approver
-                - path: local-path-provisioner
-                  namespace: local-path-storage
+                - path: democratic-csi-data
+                  namespace: democratic-csi
+                - path: democratic-csi-array
+                  namespace: democratic-csi
                 - path: mariadb
                 - path: metrics-server
                   namespace: kube-system

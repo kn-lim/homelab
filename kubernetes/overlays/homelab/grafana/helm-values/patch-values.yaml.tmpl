@@ -19,8 +19,6 @@ valuesInline:
         key: client_secret
 
   grafana.ini:
-    paths:
-      data: /grafana-data
     server:
       root_url: "https://grafana.{{ .tailscale_tailnet_name }}.ts.net"
     auth.generic_oauth:
@@ -33,19 +31,8 @@ valuesInline:
       api_url: "https://idp.{{ .tailscale_tailnet_name }}.ts.net/userinfo"
 
   persistence:
-    enabled: false
-
-  extraVolumes:
-    - name: grafana-data
-      hostPath:
-        path: /var/mnt/kubernetes-data/grafana
-        type: Directory
-
-  extraVolumeMounts:
-    - name: grafana-data
-      mountPath: /grafana-data
-
-  initChownData:
-    enabled: false
+    enabled: true
+    storageClassName: local-data
+    size: 1Gi
 {{- end }}
 {{- end }}

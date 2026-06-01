@@ -1,0 +1,32 @@
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+metadata:
+  name: democratic-csi
+releaseName: democratic-csi-array
+namespace: democratic-csi
+includeCRDs: false
+valuesInline:
+  csiDriver:
+    name: "org.democratic-csi.local-array"
+  driver:
+    config:
+      local:
+        shareBasePath: "/var/mnt/kubernetes-array/democratic-csi"
+  node:
+    driver:
+      extraVolumeMounts:
+        - name: local-storage
+          mountPath: /var/mnt/kubernetes-array/democratic-csi
+          mountPropagation: Bidirectional
+    extraVolumes:
+      - name: local-storage
+        hostPath:
+          path: /var/mnt/kubernetes-array/democratic-csi
+          type: Directory
+
+  storageClasses:
+    - name: local-array
+      defaultClass: false
+      reclaimPolicy: Delete
+      volumeBindingMode: WaitForFirstConsumer
+      allowVolumeExpansion: false

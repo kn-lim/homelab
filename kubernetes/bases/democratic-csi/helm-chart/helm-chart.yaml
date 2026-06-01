@@ -1,0 +1,43 @@
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+
+metadata:
+  name: democratic-csi
+
+name: democratic-csi
+# renovate: datasource=helm depName=democratic-csi repository=https://democratic-csi.github.io/charts/
+version: 0.15.1
+repo: https://democratic-csi.github.io/charts/
+includeCRDs: false
+
+valuesInline:
+  csiDriver:
+    attachRequired: false
+    fsGroupPolicy: File
+    storageCapacity: true
+
+  controller:
+    strategy: node
+    externalAttacher:
+      enabled: false
+    externalResizer:
+      enabled: false
+    externalSnapshotter:
+      enabled: false
+    externalProvisioner:
+      extraArgs:
+        - --leader-election=false
+        - --node-deployment=true
+        - --node-deployment-immediate-binding=true
+        - --feature-gates=Topology=true
+        - --strict-topology=true
+        - --enable-capacity=true
+        - --capacity-ownerref-level=1
+
+  driver:
+    config:
+      driver: local-hostpath
+      local:
+        dirPermissionsMode: "0770"
+        dirPermissionsUser: 0
+        dirPermissionsGroup: 0

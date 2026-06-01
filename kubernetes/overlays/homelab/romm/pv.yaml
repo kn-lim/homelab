@@ -13,41 +13,5 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: ""
   hostPath:
-    path: /var/mnt/kubernetes-data/romm/resources
-    type: DirectoryOrCreate
----
-apiVersion: v1
-kind: PersistentVolume
-
-metadata:
-  name: romm-config
-
-spec:
-  capacity:
-    storage: 1Gi
-  volumeMode: Filesystem
-  accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: ""
-  hostPath:
-    path: /var/mnt/kubernetes-data/romm/config
-    type: DirectoryOrCreate
----
-apiVersion: v1
-kind: PersistentVolume
-
-metadata:
-  name: romm-assets
-
-spec:
-  capacity:
-    storage: 5Gi
-  volumeMode: Filesystem
-  accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: ""
-  hostPath:
-    path: /var/mnt/kubernetes-data/romm/assets
+    path: /var/mnt/kubernetes-array/romm/resources
     type: DirectoryOrCreate

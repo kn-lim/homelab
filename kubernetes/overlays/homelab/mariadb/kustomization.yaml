@@ -3,5 +3,4 @@ kind: Kustomization
 
 resources:
   - ../../../bases/mariadb
-  - pv.yaml
   - externalsecret.yaml

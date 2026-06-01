@@ -16,12 +16,11 @@ valuesInline:
     enabled: true
     persistentVolume:
       enabled: true
-      storageClass: "-"
-      volumeName: ollama-models
+      storageClass: local-data
 
   persistence:
     enabled: true
-    existingClaim: open-webui-data
+    storageClass: local-data
 
   enableOpenaiApi: false
 
