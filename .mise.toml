@@ -5,7 +5,7 @@ TALOSCONFIG = "{{config_root}}/homelab-local.talosconfig"
 [tools]
 "aqua:argoproj/argo-cd" = "3.4.3"
 "aqua:argoproj/argo-workflows" = "4.0.5"
-"aqua:aws/aws-cli" = "2.34.57"
+"aqua:aws/aws-cli" = "2.34.58"
 "aqua:go-task/task" = "3.51.1"
 "aqua:gruntwork-io/terragrunt" = "1.0.6"
 "aqua:hairyhenderson/gomplate" = "5.1.0"
