@@ -10,7 +10,7 @@ stack "talos" {
       dns_server = "1.1.1.3"
       gateway    = "10.1.2.1"
 
-      network_interface = "enp3s0"
+      network_interface = "enp2s0"
 
       nvidia_gpu_enabled = true
 

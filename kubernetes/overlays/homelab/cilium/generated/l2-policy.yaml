@@ -9,6 +9,6 @@ spec:
     matchLabels:
       app.kubernetes.io/name: traefik
   interfaces:
-    - ^enp3s0$
+    - ^enp2s0$
   externalIPs: false
   loadBalancerIPs: true
