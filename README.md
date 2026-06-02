@@ -34,6 +34,7 @@ This repository is managed by [mise](https://github.com/jdx/mise) and [pre-commi
 - [cert-manager](https://github.com/cert-manager/cert-manager)
 - [cilium](https://github.com/cilium/cilium)
 - [coredns](https://github.com/coredns/coredns)
+- [democratic-csi](https://github.com/democratic-csi/democratic-csi)
 - [external secrets](https://github.com/external-secrets/external-secrets)
 - [gateway api](https://github.com/kubernetes-sigs/gateway-api)
 - [gpu-operator](https://github.com/nvidia/gpu-operator)
