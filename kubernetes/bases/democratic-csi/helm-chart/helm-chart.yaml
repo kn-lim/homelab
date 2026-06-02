@@ -37,7 +37,7 @@ valuesInline:
   driver:
     config:
       driver: local-hostpath
-      local:
+      local-hostpath:
         dirPermissionsMode: "0770"
         dirPermissionsUser: 0
         dirPermissionsGroup: 0

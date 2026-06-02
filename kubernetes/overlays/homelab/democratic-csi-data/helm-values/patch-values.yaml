@@ -10,8 +10,9 @@ valuesInline:
     name: "org.democratic-csi.local-data"
   driver:
     config:
-      local:
+      local-hostpath:
         shareBasePath: "/var/mnt/kubernetes-data/democratic-csi"
+        controllerBasePath: "/var/mnt/kubernetes-data/democratic-csi"
   node:
     driver:
       extraVolumeMounts:
