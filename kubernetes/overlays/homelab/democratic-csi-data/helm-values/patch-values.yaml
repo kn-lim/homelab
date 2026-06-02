@@ -31,3 +31,8 @@ valuesInline:
       reclaimPolicy: Retain
       volumeBindingMode: WaitForFirstConsumer
       allowVolumeExpansion: false
+    - name: local-data-delete
+      defaultClass: false
+      reclaimPolicy: Delete
+      volumeBindingMode: WaitForFirstConsumer
+      allowVolumeExpansion: false

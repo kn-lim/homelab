@@ -39,7 +39,7 @@ spec:
         name: workdir
       spec:
         accessModes: ["ReadWriteOnce"]
-        storageClassName: local-data
+        storageClassName: local-data-delete
         resources:
           requests:
             storage: 8Gi
