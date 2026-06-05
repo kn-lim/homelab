@@ -16,7 +16,7 @@ unit "talos" {
       service_subnet = values.talos.service_subnet
       pod_subnet     = values.talos.pod_subnet
     },
-    try(values.talos.network_interface, null) != null ? { network_interface = values.talos.network_interface } : {},
+    try(values.talos.hardware_addr, null) != null ? { hardware_addr = values.talos.hardware_addr } : {},
     try(values.talos.talos_version, null) != null ? { talos_version = values.talos.talos_version } : {},
     try(values.talos.nvidia_gpu_enabled, null) != null ? { nvidia_gpu_enabled = values.talos.nvidia_gpu_enabled } : {},
     try(values.talos.kubernetes_version, null) != null ? { kubernetes_version = values.talos.kubernetes_version } : {},

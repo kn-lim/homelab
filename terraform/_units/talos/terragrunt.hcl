@@ -14,7 +14,7 @@ inputs = merge(
     pod_subnet       = values.pod_subnet
     service_subnet   = values.service_subnet
   },
-  try(values.network_interface, null) != null ? { network_interface = values.network_interface } : {},
+  try(values.hardware_addr, null) != null ? { hardware_addr = values.hardware_addr } : {},
   try(values.talos_version, null) != null ? { talos_version = values.talos_version } : {},
   try(values.nvidia_gpu_enabled, null) != null ? { nvidia_gpu_enabled = values.nvidia_gpu_enabled } : {},
   try(values.kubernetes_version, null) != null ? { kubernetes_version = values.kubernetes_version } : {},

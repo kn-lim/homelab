@@ -48,8 +48,8 @@ variable "gateway" {
   type        = string
 }
 
-variable "network_interface" {
-  description = "Network interface name for Talos nodes"
+variable "hardware_addr" {
+  description = "Network interface hardware MAC address for Talos nodes"
   type        = string
 }
 

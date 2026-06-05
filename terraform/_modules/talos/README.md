@@ -43,8 +43,8 @@ No modules.
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | A name to provide for the Talos cluster | `string` | n/a | yes |
 | <a name="input_dns_server"></a> [dns\_server](#input\_dns\_server) | DNS server | `string` | n/a | yes |
 | <a name="input_gateway"></a> [gateway](#input\_gateway) | Network gateway | `string` | n/a | yes |
+| <a name="input_hardware_addr"></a> [hardware\_addr](#input\_hardware\_addr) | Network interface hardware MAC address for Talos nodes | `string` | n/a | yes |
 | <a name="input_kubernetes_version"></a> [kubernetes\_version](#input\_kubernetes\_version) | Kubernetes version to pin in machine configuration | `string` | `null` | no |
-| <a name="input_network_interface"></a> [network\_interface](#input\_network\_interface) | Network interface name for Talos nodes | `string` | n/a | yes |
 | <a name="input_node_data"></a> [node\_data](#input\_node\_data) | A map of node data | <pre>object({<br/>    controlplanes = map(object({<br/>      install_disk = string<br/>      hostname     = optional(string, "")<br/>    }))<br/>  })</pre> | n/a | yes |
 | <a name="input_node_subnet"></a> [node\_subnet](#input\_node\_subnet) | Node subnet for kubelet nodeIP validation | `string` | n/a | yes |
 | <a name="input_nvidia_gpu_enabled"></a> [nvidia\_gpu\_enabled](#input\_nvidia\_gpu\_enabled) | Enable NVIDIA GPU support on Talos nodes | `bool` | `false` | no |

@@ -20,8 +20,8 @@ clusters:
     ## Cluster DNS Gateway IP
     gateway: "10.1.2.1"
 
-    ## Cluster Network Interface Name
-    network_interface: "enp2s0"
+    ## Network Interface Hardware MAC Address
+    hardware_addr: "52:54:00:fe:bd:6a"
 
     ## Control Plane Nodes
     controlplanes:

@@ -12,9 +12,9 @@ stack "talos" {
       endpoint   = "{{ .endpoint }}"
       dns_server = "{{ .dns_server }}"
       gateway    = "{{ .gateway }}"
-{{- if (index . "network_interface") }}
+{{- if (index . "hardware_addr") }}
 
-      network_interface = "{{ .network_interface }}"
+      hardware_addr = "{{ .hardware_addr }}"
 {{- end }}
 {{- if (index . "talos_version") }}
 

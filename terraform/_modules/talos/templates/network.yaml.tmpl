@@ -9,14 +9,16 @@ auto: stable
 %{ endif ~}
 ---
 # Physical Link
-apiVersion: v1alpha1
-kind: LinkConfig
-name: ${network_interface}
-up: true
-addresses:
-  - address: ${node_ip}/24
-routes:
-  - gateway: ${gateway}
+machine:
+  network:
+    interfaces:
+      - deviceSelector:
+          hardwareAddr: ${hardware_addr}
+        addresses:
+          - ${node_ip}/24
+        routes:
+          - network: 0.0.0.0/0  # single NIC cluster
+            gateway: ${gateway}
 ---
 # DNS Resolvers
 apiVersion: v1alpha1

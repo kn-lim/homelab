@@ -23,7 +23,7 @@ resource "talos_machine_configuration_apply" "controlplane" {
       file("${path.module}/patches/cluster.yaml"),
       file("${path.module}/patches/machine.yaml"),
       file("${path.module}/patches/registry.yaml"),
-      # file("${path.module}/patches/virtiofs-array.yaml"),
+      file("${path.module}/patches/virtiofs-array.yaml"),
       file("${path.module}/patches/virtiofs-data.yaml"),
 
       # templates/
@@ -39,12 +39,12 @@ resource "talos_machine_configuration_apply" "controlplane" {
         node_subnet     = var.node_subnet
       }),
       templatefile("${path.module}/templates/network.yaml.tmpl", {
-        hostname          = each.value.hostname
-        network_interface = var.network_interface
-        node_ip           = each.key
-        gateway           = var.gateway
-        dns_server        = var.dns_server
-        node_subnet       = var.node_subnet
+        hostname      = each.value.hostname
+        hardware_addr = var.hardware_addr
+        node_ip       = each.key
+        gateway       = var.gateway
+        dns_server    = var.dns_server
+        node_subnet   = var.node_subnet
       }),
     ],
     var.nvidia_gpu_enabled ? [file("${path.module}/patches/nvidia.yaml")] : []

@@ -11,8 +11,6 @@ spec:
   serviceSelector:
     matchLabels:
       app.kubernetes.io/name: traefik
-  interfaces:
-    - ^{{ .network_interface }}$
   externalIPs: false
   loadBalancerIPs: true
 {{- end }}
