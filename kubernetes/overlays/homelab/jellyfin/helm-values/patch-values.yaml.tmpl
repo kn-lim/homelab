@@ -20,22 +20,12 @@ valuesInline:
     media:
       enabled: true
       type: hostPath
-      hostPath: /var/mnt/kubernetes-array/jellyfin/media
+      hostPath: /var/mnt/media
     cache:
       enabled: true
       type: pvc
       storageClass: local-data
       size: 20Gi
       accessMode: ReadWriteOnce
-
-  volumes:
-    - name: unraid-media
-      nfs:
-        server: "{{ .name }}.{{ .local_domain }}"
-        path: /mnt/user/media
-
-  volumeMounts:
-    - name: unraid-media
-      mountPath: /unraid-media
 {{- end }}
 {{- end }}

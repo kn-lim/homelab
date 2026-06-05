@@ -8,11 +8,10 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: ""
+  storageClassName: local-data
   resources:
     requests:
       storage: 20Gi
-  volumeName: romm-resources
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

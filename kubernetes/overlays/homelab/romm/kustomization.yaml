@@ -4,10 +4,7 @@ kind: Kustomization
 resources:
   - ../../../bases/romm
   - namespace.yaml
-  - pv.yaml
+  - pvc.yaml
   - externalsecret.yaml
   - ingress.yaml
   - generated/httproute.yaml
-
-patches:
-  - path: generated/deployment-patch.yaml

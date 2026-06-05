@@ -74,6 +74,6 @@ spec:
           persistentVolumeClaim:
             claimName: romm-config
         - name: library
-          nfs:
-            server: KUSTOMIZE_REPLACE
-            path: /mnt/user/games
+          hostPath:
+            path: /var/mnt/media/games
+            type: Directory
