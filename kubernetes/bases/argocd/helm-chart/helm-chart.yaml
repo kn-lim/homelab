@@ -6,7 +6,7 @@ metadata:
 
 name: argo-cd
 # renovate: datasource=helm depName=argo-cd repository=https://argoproj.github.io/argo-helm
-version: 9.5.17
+version: 9.5.19
 releaseName: argocd
 namespace: argocd
 repo: https://argoproj.github.io/argo-helm
