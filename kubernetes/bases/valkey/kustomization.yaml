@@ -4,7 +4,7 @@ kind: Kustomization
 helmCharts:
   - name: valkey
     repo: https://charts.bitnami.com/bitnami
-    version: 6.1.0
+    version: 6.1.5
     releaseName: valkey
     namespace: valkey
     includeCRDs: true
