@@ -4,7 +4,7 @@ kind: Kustomization
 helmCharts:
   - name: mariadb
     repo: https://charts.bitnami.com/bitnami
-    version: 26.1.1
+    version: 26.1.3
     releaseName: mariadb
     namespace: mariadb
     includeCRDs: true
