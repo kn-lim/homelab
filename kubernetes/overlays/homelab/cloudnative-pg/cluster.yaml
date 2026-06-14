@@ -27,7 +27,9 @@ spec:
   managed:
     roles:
       - name: immich
-        login: true
         ensure: present
+        login: true
+        inherit: true
+        connectionLimit: -1
         passwordSecret:
           name: postgres-immich-password
