@@ -25,9 +25,13 @@ spec:
         certificateRefs:
           - name: chat-knlim-dev-tls
             kind: Secret
+          - name: immich-knlim-dev-tls
+            kind: Secret
           - name: jellyfin-knlim-dev-tls
             kind: Secret
           - name: open-webui-knlim-dev-tls
+            kind: Secret
+          - name: photos-knlim-dev-tls
             kind: Secret
           - name: romm-knlim-dev-tls
             kind: Secret
@@ -42,7 +46,9 @@ spec:
                 operator: In
                 values:
                   - chat
+                  - immich
                   - jellyfin
                   - open-webui
+                  - photos
                   - romm
                   - traefik

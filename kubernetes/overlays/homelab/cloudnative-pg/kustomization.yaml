@@ -5,3 +5,9 @@ resources:
   - ../../../bases/cloudnative-pg
   - cluster.yaml
   - namespace.yaml
+
+  # Databases
+  - databases/immich.yaml
+
+  # Secrets
+  - externalsecrets/immich.yaml

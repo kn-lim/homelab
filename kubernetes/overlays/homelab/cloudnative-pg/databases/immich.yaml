@@ -1,0 +1,23 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+
+metadata:
+  name: immich
+  namespace: postgres
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+
+spec:
+  name: immich
+  owner: immich
+  cluster:
+    name: postgres
+  extensions:
+    - name: vector
+      ensure: present
+    - name: vchord
+      ensure: present
+    - name: earthdistance
+      ensure: present
+    - name: cube
+      ensure: present

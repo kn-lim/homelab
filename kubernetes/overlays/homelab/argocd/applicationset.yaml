@@ -31,6 +31,8 @@ spec:
                   serverSideApply: true
                 - path: gpu-operator
                   serverSideApply: true
+                - path: immich
+                  serverSideApply: true
                 - path: grafana
                 - path: jellyfin
                 - path: kubelet-serving-cert-approver

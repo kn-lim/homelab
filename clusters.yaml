@@ -73,7 +73,9 @@ clusters:
     ## Local Services
     local_services:
       - chat
+      - immich
       - jellyfin
       - open-webui
+      - photos
       - romm
       - traefik

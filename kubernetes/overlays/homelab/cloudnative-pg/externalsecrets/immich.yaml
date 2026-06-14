@@ -1,0 +1,24 @@
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+
+metadata:
+  name: postgres-immich-password
+  namespace: postgres
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword
+  target:
+    name: postgres-immich-password
+    creationPolicy: Owner
+  data:
+    - secretKey: password
+      remoteRef:
+        key: postgres/immich_password
+        conversionStrategy: Default
+        decodingStrategy: None
+        metadataPolicy: None
