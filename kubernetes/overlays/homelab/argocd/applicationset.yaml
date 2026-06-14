@@ -43,6 +43,7 @@ spec:
                 - path: metrics-server
                   namespace: kube-system
                 - path: open-webui
+                - path: otterwiki
                 - path: prometheus
                 - path: reloader
                 - path: romm

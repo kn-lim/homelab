@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmCharts:
+  - name: otterwiki
+    repo: https://charts.otterwiki.com
+    version: 0.1.4
+    releaseName: otterwiki
+    namespace: otterwiki
+    includeCRDs: true
+    valuesInline:
+      config:
+        SITE_NAME: "Homelab Wiki"
+        READ_ACCESS: ANONYMOUS
+        WRITE_ACCESS: REGISTERED
+        REPOSITORY: /app-data/repository
+      persistence:
+        enabled: true
+        storageClass: local-data
+        size: 5Gi
+      ingress:
+        enabled: false
