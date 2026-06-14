@@ -20,6 +20,9 @@ spec:
                 - path: cert-manager
                 - path: cilium
                   namespace: kube-system
+                - path: cloudnative-pg
+                  namespace: postgres
+                  serverSideApply: true
                 - path: coredns
                   namespace: kube-system
                 - path: external-secrets
