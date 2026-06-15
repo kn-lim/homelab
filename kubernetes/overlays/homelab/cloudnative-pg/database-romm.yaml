@@ -1,0 +1,14 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+
+metadata:
+  name: romm
+  namespace: postgres
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+
+spec:
+  name: romm
+  owner: romm
+  cluster:
+    name: postgres

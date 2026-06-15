@@ -8,6 +8,8 @@ resources:
 
   # Databases
   - database-immich.yaml
+  - database-romm.yaml
 
   # External Secrets
   - externalsecret-immich.yaml
+  - externalsecret-romm.yaml

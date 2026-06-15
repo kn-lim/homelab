@@ -33,3 +33,10 @@ spec:
         connectionLimit: -1
         passwordSecret:
           name: postgres-immich-password
+      - name: romm
+        ensure: present
+        login: true
+        inherit: true
+        connectionLimit: -1
+        passwordSecret:
+          name: postgres-romm-password
