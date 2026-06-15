@@ -1,0 +1,16 @@
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+
+metadata:
+  name: ollama
+
+name: ollama
+# renovate: datasource=helm depName=ollama repository=https://otwld.github.io/ollama-helm/
+version: 1.61.0
+releaseName: ollama
+namespace: ollama
+repo: https://otwld.github.io/ollama-helm/
+includeCRDs: true
+valuesInline:
+  persistentVolume:
+    enabled: true

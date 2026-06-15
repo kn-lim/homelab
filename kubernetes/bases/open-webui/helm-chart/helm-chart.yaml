@@ -13,10 +13,10 @@ repo: https://helm.openwebui.com
 includeCRDs: true
 valuesInline:
   ollama:
-    enabled: true
-    persistentVolume:
-      enabled: true
-      storageClass: local-data
+    enabled: false
+
+  ollamaUrls:
+    - http://ollama.ollama.svc.cluster.local:11434
 
   persistence:
     enabled: true

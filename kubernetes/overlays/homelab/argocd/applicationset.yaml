@@ -41,6 +41,7 @@ spec:
                   namespace: democratic-csi
                 - path: metrics-server
                   namespace: kube-system
+                - path: ollama
                 - path: open-webui
                 - path: otterwiki
                 - path: prometheus

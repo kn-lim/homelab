@@ -19,18 +19,5 @@ valuesInline:
           key: webui-secret-key
     - name: WEBUI_URL
       value: "https://chat.{{ .local_domain }}"
-
-  ollama:
-    persistentVolume:
-      size: 50Gi
-    runtimeClassName: nvidia
-    resources:
-      limits:
-        nvidia.com/gpu: 1
-    ollama:
-      gpu:
-        enabled: true
-        type: nvidia
-        number: 1
 {{- end }}
 {{- end }}

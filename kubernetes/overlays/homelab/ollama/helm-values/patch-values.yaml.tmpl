@@ -1,0 +1,24 @@
+{{- $config := (datasource "config") -}}
+{{- range $config.clusters -}}
+{{- if eq .name "homelab" -}}
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+
+metadata:
+  name: ollama
+
+valuesInline:
+  runtimeClassName: nvidia
+  resources:
+    limits:
+      nvidia.com/gpu: 1
+  ollama:
+    gpu:
+      enabled: true
+      type: nvidia
+      number: 1
+  persistentVolume:
+    storageClass: local-data
+    size: 50Gi
+{{- end }}
+{{- end }}
