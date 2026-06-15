@@ -16,6 +16,7 @@ spec:
               set -e
               mkdir -p /root/.ssh
               cp /etc/otterwiki-deploy-key/ssh-privatekey /root/.ssh/id_ed25519
+              [ -z "$(tail -c1 /root/.ssh/id_ed25519)" ] || echo >> /root/.ssh/id_ed25519
               chmod 600 /root/.ssh/id_ed25519
               export GIT_SSH_COMMAND="ssh -i /root/.ssh/id_ed25519 -o StrictHostKeyChecking=no"
               if [ ! -d /app-data/repository/.git ]; then
