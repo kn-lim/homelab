@@ -23,13 +23,15 @@ spec:
             - containerPort: 8080
           env:
             - name: DB_HOST
-              value: mariadb.mariadb.svc.cluster.local
+              value: postgres-rw.postgres.svc.cluster.local
+            - name: DB_PORT
+              value: "5432"
             - name: DB_NAME
               value: romm
             - name: DB_USER
-              value: romm-user
+              value: romm
             - name: ROMM_DB_DRIVER
-              value: mariadb
+              value: postgresql
             - name: REDIS_HOST
               value: valkey-primary.valkey.svc.cluster.local
             - name: REDIS_PORT
