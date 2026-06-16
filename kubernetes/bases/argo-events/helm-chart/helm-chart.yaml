@@ -6,7 +6,7 @@ metadata:
 
 name: argo-events
 # renovate: datasource=helm depName=argo-events repository=https://argoproj.github.io/argo-helm
-version: 2.4.21
+version: 2.4.22
 releaseName: argo-events
 namespace: argo-events
 repo: https://argoproj.github.io/argo-helm
