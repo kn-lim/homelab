@@ -1,0 +1,13 @@
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+
+metadata:
+  name: vikunja
+
+name: vikunja
+# renovate: datasource=docker depName=ghcr.io/go-vikunja/helm-chart/vikunja
+version: v2.0.2
+releaseName: vikunja
+namespace: vikunja
+repo: oci://ghcr.io/go-vikunja/helm-chart
+includeCRDs: true

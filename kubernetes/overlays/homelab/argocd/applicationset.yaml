@@ -53,6 +53,7 @@ spec:
                 - path: tsidp
                 - path: utilities
                 - path: valkey
+                - path: vikunja
                 - path: webhook
   template:
     metadata:
