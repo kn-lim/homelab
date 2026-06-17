@@ -9,7 +9,9 @@ resources:
   # Databases
   - database-immich.yaml
   - database-romm.yaml
+  - database-vikunja.yaml
 
   # External Secrets
   - externalsecret-immich.yaml
   - externalsecret-romm.yaml
+  - externalsecret-vikunja.yaml

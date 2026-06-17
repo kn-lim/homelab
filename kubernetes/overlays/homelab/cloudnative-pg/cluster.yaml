@@ -40,3 +40,10 @@ spec:
         connectionLimit: -1
         passwordSecret:
           name: postgres-romm-password
+      - name: vikunja
+        ensure: present
+        login: true
+        inherit: true
+        connectionLimit: -1
+        passwordSecret:
+          name: postgres-vikunja-password
