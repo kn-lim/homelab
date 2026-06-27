@@ -19,8 +19,8 @@ valuesInline:
             name: tsidp
             config:
               issuer: https://idp.neon-wyrm.ts.net
-              clientID: ${TSIDP_CLIENT_ID}
-              clientSecret: ${TSIDP_CLIENT_SECRET}
+              clientID: $argocd-tsidp:client_id
+              clientSecret: $argocd-tsidp:client_secret
               redirectURI: https://argocd.neon-wyrm.ts.net/api/dex/callback
               scopes:
                 - openid
@@ -53,17 +53,6 @@ valuesInline:
               sleep 5
             done
             echo "tsidp is available!"
-    env:
-      - name: TSIDP_CLIENT_ID
-        valueFrom:
-          secretKeyRef:
-            name: argocd-tsidp
-            key: client_id
-      - name: TSIDP_CLIENT_SECRET
-        valueFrom:
-          secretKeyRef:
-            name: argocd-tsidp
-            key: client_secret
 
   controller:
     replicas: 1
