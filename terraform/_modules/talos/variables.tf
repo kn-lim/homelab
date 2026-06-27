@@ -23,7 +23,7 @@ variable "talos_system_extensions" {
 variable "talos_version" {
   description = "Talos version for machine configuration schema"
   type        = string
-  default     = "v1.13.4"
+  default     = "v1.13.5"
 }
 
 # Required Variables
