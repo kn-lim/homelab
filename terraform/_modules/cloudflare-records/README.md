@@ -5,7 +5,7 @@
 
 | Name | Version |
 | ---- | ------- |
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.14 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.15 |
 | <a name="requirement_cloudflare"></a> [cloudflare](#requirement\_cloudflare) | 5.21.1 |
 
 ## Providers

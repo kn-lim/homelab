@@ -5,7 +5,7 @@
 
 | Name | Version |
 | ---- | ------- |
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.14 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.15 |
 | <a name="requirement_grafana"></a> [grafana](#requirement\_grafana) | 4.39.0 |
 | <a name="requirement_http"></a> [http](#requirement\_http) | 3.6.0 |
 
