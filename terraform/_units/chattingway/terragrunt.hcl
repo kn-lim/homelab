@@ -2,14 +2,12 @@ locals {
   tags = {
     app = values.name
   }
-
-  endpoint_filename = "./endpoint/bootstrap.zip"
-  task_filename     = "./task/bootstrap.zip"
 }
 
 inputs = {
-  endpoint_filename = local.endpoint_filename
-  task_filename     = local.task_filename
+  s3_bucket       = get_env("TG_BUCKET", "")
+  endpoint_s3_key = "lambda/${values.name}/endpoint/bootstrap.zip"
+  task_s3_key     = "lambda/${values.name}/task/bootstrap.zip"
 
   name = values.name
   # log_format = "JSON"
