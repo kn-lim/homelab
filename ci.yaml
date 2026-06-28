@@ -7,6 +7,12 @@ deploy:
 
 terraform:
   run:
+    - application: dreamingway-bot
+      whenModified:
+        - terraform/_modules/onepassword-secret-read
+        - terraform/_stacks/dreamingway-bot
+        - terraform/_units/dreamingway-bot
+        - terraform/_units/onepassword-secret-read
     - application: grafana
       whenModified:
         - terraform/_modules/grafana
@@ -14,18 +20,21 @@ terraform:
     - application: talos
       whenModified:
         - terraform/_modules/cluster-bootstrap
-        - terraform/_modules/onepassword-secret
+        - terraform/_modules/onepassword-secret-read
         - terraform/_modules/talos
         - terraform/_stacks/talos
         - terraform/_units/cluster-bootstrap
-        - terraform/_units/onepassword-secret
+        - terraform/_units/onepassword-secret-read
         - terraform/_units/talos
     - application: webhook
       whenModified:
         - terraform/_modules/aws/lambda-permission
+        - terraform/_modules/onepassword-secret-read
+        - terraform/_modules/onepassword-secret-write
         - terraform/_stacks/webhook
         - terraform/_units/aws/apigateway
         - terraform/_units/aws/lambda
         - terraform/_units/aws/lambda-permission
         - terraform/_units/aws/sqs
-        - terraform/_units/onepassword-secret
+        - terraform/_units/onepassword-secret-read
+        - terraform/_units/onepassword-secret-write
