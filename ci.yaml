@@ -11,7 +11,7 @@ terraform:
       whenModified:
         - terraform/_modules/onepassword-secret-read
         - terraform/_stacks/dreamingway-bot
-        - terraform/_units/dreamingway-bot
+        - terraform/_units/chattingway
         - terraform/_units/onepassword-secret-read
     - application: grafana
       whenModified:
