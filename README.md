@@ -26,28 +26,62 @@ This repository is managed by [mise](https://github.com/jdx/mise) and [pre-commi
 
 [Task](https://github.com/go-task/task) and [gomplate](https://github.com/hairyhenderson/gomplate) are used to generate Kubernetes manifests and Terragrunt HCL files for values to be centrally managed and easily modifiable.
 
-**Core Components**:
+### Core Components
+
+<details>
+<summary>
+<b>Services</b>
+</summary>
 
 - [argo events](https://github.com/argoproj/argo-events)
 - [argo workflows](https://github.com/argoproj/argo-workflows)
 - [argocd](https://github.com/argoproj/argo-cd)
-- [cert-manager](https://github.com/cert-manager/cert-manager)
-- [cilium](https://github.com/cilium/cilium)
-- [cloudnative-pg](https://github.com/cloudnative-pg/cloudnative-pg)
-- [coredns](https://github.com/coredns/coredns)
 - [democratic-csi](https://github.com/democratic-csi/democratic-csi)
 - [external secrets](https://github.com/external-secrets/external-secrets)
-- [gateway api](https://github.com/kubernetes-sigs/gateway-api)
 - [gpu-operator](https://github.com/nvidia/gpu-operator)
-- [grafana](https://github.com/grafana/grafana)
 - [kubelet-serving-cert-approver](https://github.com/alex1989hu/kubelet-serving-cert-approver)
-- [metrics server](https://github.com/kubernetes-sigs/metrics-server)
-- [prometheus](https://github.com/prometheus-community/helm-charts/)
 - [reloader](https://github.com/stakater/Reloader)
+</details>
+
+<details>
+<summary>
+<b>Networking</b>
+</summary>
+
+- [coredns](https://github.com/coredns/coredns)
+- [cert-manager](https://github.com/cert-manager/cert-manager)
+- [cilium](https://github.com/cilium/cilium)
+- [gateway api](https://github.com/kubernetes-sigs/gateway-api)
 - [tailscale kubernetes operator](https://github.com/tailscale/tailscale/)
 - [traefik](https://github.com/traefik/traefik)
-- [tsidp](https://github.com/tailscale/tsidp)
+</details>
+
+<details>
+<summary>
+<b>Monitoring</b>
+</summary>
+
+- [grafana](https://github.com/grafana/grafana)
+- [metrics server](https://github.com/kubernetes-sigs/metrics-server)
+- [prometheus](https://github.com/prometheus-community/helm-charts/)
+</details>
+
+<details>
+<summary>
+<b>Databases</b>
+</summary>
+
+- [cloudnative-pg](https://github.com/cloudnative-pg/cloudnative-pg)
 - [valkey](https://github.com/valkey-io/valkey)
+</details>
+
+<details>
+<summary>
+<b>Applications</b>
+</summary>
+
+- [tsidp](https://github.com/tailscale/tsidp)
+</details>
 
 ### ArgoCD
 
