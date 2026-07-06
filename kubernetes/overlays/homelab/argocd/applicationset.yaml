@@ -7,6 +7,8 @@ metadata:
 
 spec:
   goTemplate: true
+  syncPolicy:
+    preserveResourcesOnDeletion: true
   generators:
     - matrix:
         generators:
