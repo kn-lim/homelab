@@ -6,7 +6,7 @@ metadata:
   namespace: argocd
 
 spec:
-  project: default
+  project: platform
   source:
     repoURL: git@github.com:kn-lim/homelab.git
     targetRevision: main
