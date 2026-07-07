@@ -21,3 +21,6 @@ spec:
     # Required for CreateNamespace=true
     - group: ''
       kind: Namespace
+    # Workloads with statically-provisioned storage
+    - group: ''
+      kind: PersistentVolume
