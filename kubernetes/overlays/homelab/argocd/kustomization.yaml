@@ -7,7 +7,8 @@ generators:
 resources:
   - ../../../bases/argocd
   - application.yaml
-  - applicationset.yaml
+  - applicationset-apps.yaml
+  - applicationset-platform.yaml
   - appproject-apps.yaml
   - appproject-platform.yaml
   - argocd-rbac-cm.yaml

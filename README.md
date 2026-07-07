@@ -87,7 +87,7 @@ This repository is managed by [mise](https://github.com/jdx/mise) and [pre-commi
 
 [ArgoCD](https://github.com/argoproj/argo-cd) is the GitOps platform for my homelab and is deployed using Kustomize and Helm.
 
-The ApplicationSet in [`kubernetes/overlays/homelab/argocd/applicationset.yaml`](https://github.com/kn-lim/homelab/blob/main/kubernetes/overlays/homelab/argocd/applicationset.yaml) generates all ArgoCD Applications and must be defined there.
+The ApplicationSets in [`kubernetes/overlays/homelab/argocd/`](https://github.com/kn-lim/homelab/tree/main/kubernetes/overlays/homelab/argocd) (`applicationset-platform.yaml` and `applicationset-apps.yaml`) discover all applications by scanning for `.app.yaml` files in each app's overlay directory.
 
 ### CI/CD
 
