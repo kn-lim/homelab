@@ -8,9 +8,6 @@ metadata:
 spec:
   goTemplate: true
   goTemplateOptions: ["missingkey=error"]
-  syncPolicy:
-    # TODO: Remove after verifying migration is complete
-    preserveResourcesOnDeletion: true
   generators:
     - git:
         repoURL: git@github.com:kn-lim/homelab.git
@@ -23,8 +20,6 @@ spec:
   template:
     metadata:
       name: '{{ .path.basename }}'
-      labels:
-        project: apps
     spec:
       project: apps
       source:
