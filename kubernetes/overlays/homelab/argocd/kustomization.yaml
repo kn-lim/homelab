@@ -8,7 +8,10 @@ resources:
   - ../../../bases/argocd
   - application.yaml
   - applicationset.yaml
+  - appproject-apps.yaml
+  - appproject-platform.yaml
   - argocd-rbac-cm.yaml
+  - cluster-homelab.yaml
   - ingress.yaml
   - namespace.yaml
   - secret-ssh.yaml

@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+
+metadata:
+  name: apps
+  namespace: argocd
+
+spec:
+  description: End-user workloads
+  sourceRepos:
+    - git@github.com:kn-lim/homelab.git
+  destinations:
+    - server: '*'
+      namespace: '*'
+    # Prevent workloads in the following reserved namespaces
+    - server: '*'
+      namespace: '!kube-system'
+    - server: '*'
+      namespace: '!argocd'
+  clusterResourceWhitelist:
+    # Required for CreateNamespace=true
+    - group: ''
+      kind: Namespace
