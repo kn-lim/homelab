@@ -1,0 +1,62 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+
+metadata:
+  name: platform
+  namespace: argocd
+
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  syncPolicy:
+    # TODO: Remove after verifying migration is complete
+    preserveResourcesOnDeletion: true
+  generators:
+    - git:
+        repoURL: git@github.com:kn-lim/homelab.git
+        revision: main
+        files:
+          - path: 'kubernetes/overlays/*/*/.app.yaml'
+      selector:
+        matchLabels:
+          project: platform
+  template:
+    metadata:
+      name: '{{ .path.basename }}'
+      labels:
+        project: platform
+    spec:
+      project: platform
+      source:
+        repoURL: git@github.com:kn-lim/homelab.git
+        targetRevision: main
+        path: '{{ .path.path }}'
+      destination:
+        name: '{{ index .path.segments 2 }}'
+        namespace: '{{ dig "namespace" .path.basename . }}'
+      syncPolicy:
+        automated:
+          prune: false
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+        retry:
+          limit: -1
+          backoff:
+            duration: 30s
+            factor: 2
+            maxDuration: 5m
+  # TODO: Modify templatePatch to support both serverSideApply and ignoreDifferences
+  templatePatch: |
+    {{- if and (hasKey . "serverSideApply") .serverSideApply }}
+    spec:
+      syncPolicy:
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true
+    {{- end }}
+    {{- if hasKey . "ignoreDifferences" }}
+    spec:
+      ignoreDifferences:
+        {{- .ignoreDifferences | toYaml | nindent 8 }}
+    {{- end }}
