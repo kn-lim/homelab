@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+
+metadata:
+  name: platform
+  namespace: argocd
+
+spec:
+  description: Cluster infrastructure
+  sourceRepos:
+    - git@github.com:kn-lim/homelab.git
+  destinations:
+    - server: '*'
+      namespace: '*'
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
