@@ -64,7 +64,10 @@ tasks:
             fi
             ;;
           terraform/*/*/*)
-            echo "task ci:terraform DIRECTORY=$(echo "$path" | cut -d'/' -f1-4)"
+            dir=$(echo "$path" | cut -d'/' -f1-4)
+            if [ -f "$dir/terragrunt.stack.hcl" ] || [ -f "$dir/generated/terragrunt.stack.hcl" ]; then
+              echo "task ci:terraform DIRECTORY=$dir"
+            fi
             ;;
           *)
             app=$(LOOKUP_PATH="$path" yq e '.deploy.run[] | select(.application as $a | strenv(LOOKUP_PATH) | test("^" + $a + "(/|$)")) | .application' ci.yaml 2>/dev/null | head -1)
