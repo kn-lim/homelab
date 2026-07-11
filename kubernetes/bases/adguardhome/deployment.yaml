@@ -61,6 +61,8 @@ spec:
               value: "true"
             - name: TS_ACCEPT_DNS
               value: "false"
+            - name: TS_SERVE_CONFIG
+              value: "/etc/tailscale/serve-config.json"
           envFrom:
             - secretRef:
                 name: adguardhome
@@ -78,6 +80,8 @@ spec:
               mountPath: /var/lib/tailscale
             - name: dev-net-tun
               mountPath: /dev/net/tun
+            - name: serve-config
+              mountPath: /etc/tailscale
       volumes:
         - name: adguardhome-data
           persistentVolumeClaim:
@@ -86,3 +90,6 @@ spec:
           hostPath:
             path: /dev/net/tun
             type: CharDevice
+        - name: serve-config
+          configMap:
+            name: adguardhome-serve-config
