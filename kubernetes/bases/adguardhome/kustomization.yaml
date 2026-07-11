@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - deployment.yaml
+
+images:
+  - name: adguard/adguardhome
+    newTag: v0.107.77
+  - name: tailscale/tailscale
+    newTag: v1.98.8

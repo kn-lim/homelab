@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: adguardhome
+  namespace: adguardhome
+
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: adguardhome
+  template:
+    metadata:
+      labels:
+        app: adguardhome
+      annotations:
+        secret.reloader.stakater.com/auto: "true"
+    spec:
+      containers:
+        - name: adguardhome
+          image: adguard/adguardhome
+          ports:
+            - name: dns-udp
+              containerPort: 53
+              protocol: UDP
+            - name: dns-tcp
+              containerPort: 53
+              protocol: TCP
+            - name: http
+              containerPort: 80
+              protocol: TCP
+            - name: http-initial
+              containerPort: 3000
+              protocol: TCP
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+          volumeMounts:
+            - name: adguardhome-data
+              subPath: conf
+              mountPath: /opt/adguardhome/conf
+            - name: adguardhome-data
+              subPath: work
+              mountPath: /opt/adguardhome/work
+        - name: tailscale
+          image: tailscale/tailscale
+          env:
+            - name: TS_HOSTNAME
+              value: "adguard"
+            - name: TS_STATE_DIR
+              value: "/var/lib/tailscale"
+            - name: TS_USERSPACE
+              value: "false"
+            - name: TS_AUTH_ONCE
+              value: "true"
+            - name: TS_ACCEPT_DNS
+              value: "false"
+          envFrom:
+            - secretRef:
+                name: adguardhome
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+          volumeMounts:
+            - name: adguardhome-data
+              subPath: tailscale
+              mountPath: /var/lib/tailscale
+            - name: dev-net-tun
+              mountPath: /dev/net/tun
+      volumes:
+        - name: adguardhome-data
+          persistentVolumeClaim:
+            claimName: adguardhome-data
+        - name: dev-net-tun
+          hostPath:
+            path: /dev/net/tun
+            type: CharDevice
