@@ -18,3 +18,9 @@ variable "override_local_dns" {
   type        = bool
   default     = true
 }
+
+variable "use_with_exit_node" {
+  description = "Whether devices keep using the global nameservers while an exit node is active (requires Tailscale v1.88.1+)"
+  type        = bool
+  default     = false
+}

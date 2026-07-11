@@ -31,6 +31,7 @@ No modules.
 | <a name="input_magic_dns"></a> [magic\_dns](#input\_magic\_dns) | Whether MagicDNS is enabled for the tailnet | `bool` | `true` | no |
 | <a name="input_nameservers"></a> [nameservers](#input\_nameservers) | List of global nameserver IP addresses for the tailnet | `list(string)` | n/a | yes |
 | <a name="input_override_local_dns"></a> [override\_local\_dns](#input\_override\_local\_dns) | Whether devices ignore their local DNS and always use the global nameservers | `bool` | `true` | no |
+| <a name="input_use_with_exit_node"></a> [use\_with\_exit\_node](#input\_use\_with\_exit\_node) | Whether devices keep using the global nameservers while an exit node is active (requires Tailscale v1.88.1+) | `bool` | `false` | no |
 
 ## Outputs
 

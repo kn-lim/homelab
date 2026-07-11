@@ -5,7 +5,8 @@ resource "tailscale_dns_configuration" "default" {
   dynamic "nameservers" {
     for_each = var.nameservers
     content {
-      address = nameservers.value
+      address            = nameservers.value
+      use_with_exit_node = var.use_with_exit_node
     }
   }
 }
