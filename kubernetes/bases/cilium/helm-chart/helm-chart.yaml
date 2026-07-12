@@ -41,3 +41,27 @@ valuesInline:
 
   k8sServiceHost: localhost
   k8sServicePort: 7445
+
+  prometheus:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      trustCRDsExist: true
+
+  operator:
+    prometheus:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+
+  hubble:
+    metrics:
+      enabled:
+        - dns
+        - drop
+        - tcp
+        - flow
+        - icmp
+        - httpV2
+      serviceMonitor:
+        enabled: true
