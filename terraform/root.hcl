@@ -37,7 +37,7 @@ provider "kubernetes" {
 }
 %{endif}
 
-%{if local.unit == "grafana"}
+%{if startswith(local.unit, "grafana-")}
 provider "grafana" {}
 %{endif}
 

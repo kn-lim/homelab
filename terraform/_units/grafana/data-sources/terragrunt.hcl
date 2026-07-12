@@ -1,7 +1,6 @@
 locals {}
 
 inputs = {
-  dashboards         = values.dashboards
   prometheus_sources = values.prometheus_sources
 }
 
@@ -10,5 +9,5 @@ include "root" {
 }
 
 terraform {
-  source = "${find_in_parent_folders("_modules/grafana")}"
+  source = "${find_in_parent_folders("_modules/grafana/data-sources")}"
 }

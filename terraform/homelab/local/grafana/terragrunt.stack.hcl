@@ -1,7 +1,41 @@
-unit "grafana" {
-  source = "${find_in_parent_folders("_units/grafana")}"
+unit "data-sources" {
+  source = "${find_in_parent_folders("_units/grafana/data-sources")}"
 
-  path = "grafana"
+  path = "data-sources"
+
+  values = {
+    prometheus_sources = {
+      homelab = {
+        uid        = "prometheus-homelab"
+        url        = "http://prometheus-server.prometheus.svc.cluster.local:80"
+        is_default = true
+      }
+    }
+  }
+}
+
+unit "dashboards" {
+  source = "${find_in_parent_folders("_units/grafana/dashboards")}"
+
+  path = "dashboards"
+
+  autoinclude {
+    dependency "data-sources" {
+      config_path = unit.data-sources.path
+
+      mock_outputs = {
+        uids = {
+          homelab = "prometheus-homelab"
+        }
+      }
+
+      mock_outputs_allowed_terraform_commands = ["init", "import", "validate", "plan"]
+    }
+
+    inputs = {
+      datasource_uid = dependency.data-sources.outputs.uids["homelab"]
+    }
+  }
 
   values = {
     dashboards = {
@@ -16,15 +50,6 @@ unit "grafana" {
           "https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-nodes.json",
           "https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-pods.json",
         ]
-      }
-      # https://github.com/adinhodovic/argo-cd-mixin
-      # argocd = {}
-    }
-
-    prometheus_sources = {
-      homelab = {
-        url        = "http://prometheus-server.prometheus.svc.cluster.local:80"
-        is_default = true
       }
     }
   }
