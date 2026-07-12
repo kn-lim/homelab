@@ -16,3 +16,13 @@ patches:
       - op: replace
         path: /subjects/0/namespace
         value: kubelet-serving-cert-approver
+  - target:
+      kind: Deployment
+      name: kubelet-serving-cert-approver
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/memory
+        value: 64Mi
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/requests/memory
+        value: 32Mi
