@@ -1,0 +1,192 @@
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+
+metadata:
+  name: alloy
+
+valuesInline:
+  alloy:
+    mounts:
+      extra:
+        - name: rootfs
+          mountPath: /host/root
+          readOnly: true
+        - name: procfs
+          mountPath: /host/proc
+          readOnly: true
+        - name: sysfs
+          mountPath: /host/sys
+          readOnly: true
+    configMap:
+      content: |
+        // -- Storage ---------------------------------------------------------
+        prometheus.remote_write "default" {
+          endpoint {
+            url = "http://prometheus-server.prometheus.svc.cluster.local:80/api/v1/write"
+          }
+        }
+
+        // -- ServiceMonitor / PodMonitor discovery
+        prometheus.operator.servicemonitors "default" {
+          forward_to = [prometheus.remote_write.default.receiver]
+        }
+
+        prometheus.operator.podmonitors "default" {
+          forward_to = [prometheus.remote_write.default.receiver]
+        }
+
+        // -- Node metrics (embedded node_exporter) ---------------------------
+        prometheus.exporter.unix "node" {
+          rootfs_path = "/host/root"
+          procfs_path = "/host/proc"
+          sysfs_path  = "/host/sys"
+        }
+
+        // Override the exporter's built-in job="integrations/unix" label,
+        // which would otherwise win over the scrape's job_name.
+        discovery.relabel "node" {
+          targets = prometheus.exporter.unix.node.targets
+
+          rule {
+            target_label = "job"
+            replacement  = "node-exporter"
+          }
+        }
+
+        prometheus.scrape "node" {
+          job_name   = "node-exporter"
+          targets    = discovery.relabel.node.output
+          forward_to = [prometheus.remote_write.default.receiver]
+        }
+
+        // -- Kubelet + cAdvisor ----------------------------------------------
+        discovery.kubernetes "nodes" {
+          role = "node"
+        }
+
+        prometheus.scrape "kubelet" {
+          job_name          = "kubelet"
+          targets           = discovery.kubernetes.nodes.targets
+          scheme            = "https"
+          bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+
+          tls_config {
+            ca_file = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+          }
+
+          forward_to = [prometheus.remote_write.default.receiver]
+        }
+
+        prometheus.scrape "cadvisor" {
+          job_name          = "cadvisor"
+          targets           = discovery.kubernetes.nodes.targets
+          metrics_path      = "/metrics/cadvisor"
+          scheme            = "https"
+          bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+
+          tls_config {
+            ca_file = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+          }
+
+          forward_to = [prometheus.remote_write.default.receiver]
+        }
+
+        // -- API server ------------------------------------------------------
+        discovery.kubernetes "apiserver" {
+          role = "endpoints"
+
+          namespaces {
+            names = ["default"]
+          }
+
+          selectors {
+            role  = "endpoints"
+            field = "metadata.name=kubernetes"
+          }
+        }
+
+        prometheus.scrape "apiserver" {
+          job_name          = "apiserver"
+          targets           = discovery.kubernetes.apiserver.targets
+          scheme            = "https"
+          bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+
+          tls_config {
+            ca_file     = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+            server_name = "kubernetes"
+          }
+
+          forward_to = [prometheus.remote_write.default.receiver]
+        }
+
+        // -- Talos control plane (static; ports exposed by machine config) ---
+        prometheus.scrape "etcd" {
+          job_name = "etcd"
+          targets  = [
+            { "__address__" = "10.1.2.11:2381", "instance" = "homelab-talos" },
+          ]
+          forward_to = [prometheus.remote_write.default.receiver]
+        }
+
+        prometheus.scrape "kube_scheduler" {
+          job_name          = "kube-scheduler"
+          scheme            = "https"
+          bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+          targets           = [
+            { "__address__" = "10.1.2.11:10259", "instance" = "homelab-talos" },
+          ]
+
+          tls_config {
+            insecure_skip_verify = true
+          }
+
+          forward_to = [prometheus.remote_write.default.receiver]
+        }
+
+        prometheus.scrape "kube_controller_manager" {
+          job_name          = "kube-controller-manager"
+          scheme            = "https"
+          bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+          targets           = [
+            { "__address__" = "10.1.2.11:10257", "instance" = "homelab-talos" },
+          ]
+
+          tls_config {
+            insecure_skip_verify = true
+          }
+
+          forward_to = [prometheus.remote_write.default.receiver]
+        }
+
+        // -- Alloy self-monitoring -------------------------------------------
+        prometheus.exporter.self "alloy" {}
+
+        // Same job-label override as node-exporter above (built-in job="integrations/self").
+        discovery.relabel "alloy" {
+          targets = prometheus.exporter.self.alloy.targets
+
+          rule {
+            target_label = "job"
+            replacement  = "alloy"
+          }
+        }
+
+        prometheus.scrape "alloy" {
+          job_name   = "alloy"
+          targets    = discovery.relabel.alloy.output
+          forward_to = [prometheus.remote_write.default.receiver]
+        }
+
+  controller:
+    hostPID: true
+    volumes:
+      extra:
+        - name: rootfs
+          hostPath:
+            path: /
+        - name: procfs
+          hostPath:
+            path: /proc
+        - name: sysfs
+          hostPath:
+            path: /sys

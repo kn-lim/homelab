@@ -1,0 +1,18 @@
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+
+metadata:
+  name: alloy
+
+name: alloy
+# renovate: datasource=helm depName=alloy repository=https://grafana.github.io/helm-charts
+version: 1.10.1
+releaseName: alloy
+namespace: alloy
+repo: https://grafana.github.io/helm-charts
+includeCRDs: true
+valuesInline:
+  controller:
+    podAnnotations:
+      secret.reloader.stakater.com/auto: "true"
+      configmap.reloader.stakater.com/auto: "true"
