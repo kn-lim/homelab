@@ -8,3 +8,5 @@ resources:
   # - ../../../bases/prometheus
   - namespace.yaml
   - ingress.yaml
+  - servicemonitor-kube-state-metrics.yaml
+  - servicemonitor-prometheus.yaml
