@@ -16,7 +16,9 @@ terraform:
     - application: grafana
       whenModified:
         - terraform/_modules/grafana
+        - terraform/_modules/onepassword-secret-read
         - terraform/_units/grafana
+        - terraform/_units/onepassword-secret-read
     - application: talos
       whenModified:
         - terraform/_modules/cluster-bootstrap

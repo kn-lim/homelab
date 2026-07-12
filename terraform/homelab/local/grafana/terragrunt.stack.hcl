@@ -54,3 +54,38 @@ unit "dashboards" {
     }
   }
 }
+
+unit "onepassword-secret-read" {
+  source = "${find_in_parent_folders("_units/onepassword-secret-read")}"
+
+  path = "onepassword-secret-read"
+
+  values = {
+    vault_name  = "Homelab"
+    secret_name = "grafana-discord-webhook"
+  }
+}
+
+unit "alerting" {
+  source = "${find_in_parent_folders("_units/grafana/alerting")}"
+
+  path = "alerting"
+
+  autoinclude {
+    dependency "onepassword-secret-read" {
+      config_path = unit.onepassword-secret-read.path
+
+      mock_outputs = {
+        fields = {
+          credential = "https://discord.com/api/webhooks/mock"
+        }
+      }
+
+      mock_outputs_allowed_terraform_commands = ["init", "import", "validate", "plan"]
+    }
+
+    inputs = {
+      discord_webhook_url = dependency.onepassword-secret-read.outputs.fields["credential"]
+    }
+  }
+}
