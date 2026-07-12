@@ -24,3 +24,12 @@ valuesInline:
 
   api:
     insecure: true
+
+  metrics:
+    prometheus:
+      service:
+        enabled: true
+      # Required as kustomize's helmchartinflationgenerator cannot see cluster CRDs
+      disableAPICheck: true
+      serviceMonitor:
+        enabled: true
