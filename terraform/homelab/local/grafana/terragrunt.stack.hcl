@@ -62,7 +62,7 @@ unit "onepassword-secret-read" {
 
   values = {
     vault_name  = "Homelab"
-    secret_name = "grafana-discord-webhook"
+    secret_name = "grafana"
   }
 }
 
@@ -77,7 +77,7 @@ unit "alerting" {
 
       mock_outputs = {
         fields = {
-          credential = "https://discord.com/api/webhooks/mock"
+          webhook_url = "https://discord.com/api/webhooks/mock"
         }
       }
 
@@ -85,7 +85,7 @@ unit "alerting" {
     }
 
     inputs = {
-      discord_webhook_url = dependency.onepassword-secret-read.outputs.fields["credential"]
+      discord_webhook_url = dependency.onepassword-secret-read.outputs.fields["webhook_url"]
     }
   }
 }
