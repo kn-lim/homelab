@@ -46,11 +46,11 @@ valuesInline:
     enabled: true
     serviceMonitor:
       enabled: true
+      # Kustomize helm inflation cannot see cluster CRDs; skip the chart's check
       trustCRDsExist: true
 
   operator:
     prometheus:
-      enabled: true
       serviceMonitor:
         enabled: true
 
