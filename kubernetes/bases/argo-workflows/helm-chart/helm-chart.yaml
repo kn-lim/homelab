@@ -11,11 +11,19 @@ releaseName: argo-workflows
 namespace: argo-workflows
 repo: https://argoproj.github.io/argo-helm
 includeCRDs: true
+# Kustomize helm inflation cannot see cluster CRDs
+# The chart guards its ServiceMonitors behind .Capabilities.APIVersions, so declare it explicitly
+apiVersions:
+  - monitoring.coreos.com/v1
 valuesInline:
   controller:
     podAnnotations:
       secret.reloader.stakater.com/auto: "true"
       configmap.reloader.stakater.com/auto: "true"
+    metricsConfig:
+      enabled: true
+    serviceMonitor:
+      enabled: true
     workflowDefaults:
       spec:
         ttlStrategy:
