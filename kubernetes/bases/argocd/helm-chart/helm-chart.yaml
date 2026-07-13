@@ -11,6 +11,10 @@ releaseName: argocd
 namespace: argocd
 repo: https://argoproj.github.io/argo-helm
 includeCRDs: true
+# Kustomize helm inflation cannot see cluster CRDs; the chart guards its
+# ServiceMonitors behind .Capabilities.APIVersions, so declare it explicitly
+apiVersions:
+  - monitoring.coreos.com/v1
 valuesInline:
   global:
     podAnnotations:
@@ -20,6 +24,36 @@ valuesInline:
   configs:
     cm:
       kustomize.buildOptions: "--enable-helm"
+
+  controller:
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+
+  server:
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+
+  repoServer:
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+
+  applicationSet:
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+
+  notifications:
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
 
   redis:
     enabled: true
