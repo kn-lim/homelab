@@ -28,6 +28,8 @@ helmCharts:
       dcgm:
         enabled: false
       dcgmExporter:
-        enabled: false
+        enabled: true
+        serviceMonitor:
+          enabled: true
       migManager:
         enabled: false
