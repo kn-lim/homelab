@@ -13,3 +13,7 @@ helmCharts:
         podAnnotations:
           secret.reloader.stakater.com/auto: "true"
           configmap.reloader.stakater.com/auto: "true"
+      serviceMonitor:
+        enabled: true
+        # Kustomize helm inflation cannot see cluster CRDs; skip the chart's check
+        renderMode: alwaysRender
