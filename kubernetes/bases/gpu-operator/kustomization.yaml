@@ -31,5 +31,12 @@ helmCharts:
         enabled: true
         serviceMonitor:
           enabled: true
+        resources:
+          limits:
+            memory: 256Mi
+            cpu: 200m
+          requests:
+            memory: 64Mi
+            cpu: 50m
       migManager:
         enabled: false
