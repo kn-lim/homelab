@@ -6,6 +6,8 @@ metadata:
   namespace: prometheus
 
 spec:
+  # Community dashboards/rules expect job="kube-state-metrics"
+  jobLabel: app.kubernetes.io/name
   selector:
     matchLabels:
       app.kubernetes.io/name: kube-state-metrics
