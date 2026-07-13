@@ -16,3 +16,7 @@ valuesInline:
     podAnnotations:
       secret.reloader.stakater.com/auto: "true"
       configmap.reloader.stakater.com/auto: "true"
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
