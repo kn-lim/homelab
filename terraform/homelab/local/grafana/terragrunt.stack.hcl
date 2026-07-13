@@ -140,3 +140,27 @@ unit "alerting" {
     }
   }
 }
+
+unit "alert-rules" {
+  source = "${find_in_parent_folders("_units/grafana/alert-rules")}"
+
+  path = "alert-rules"
+
+  autoinclude {
+    dependency "data-sources" {
+      config_path = unit.data-sources.path
+
+      mock_outputs = {
+        uids = {
+          homelab = "prometheus-homelab"
+        }
+      }
+
+      mock_outputs_allowed_terraform_commands = ["init", "import", "validate", "plan"]
+    }
+
+    inputs = {
+      datasource_uid = dependency.data-sources.outputs.uids["homelab"]
+    }
+  }
+}
