@@ -9,3 +9,6 @@ helmCharts:
     releaseName: cloudnative-pg
     namespace: postgres
     includeCRDs: true
+    valuesInline:
+      monitoring:
+        podMonitorEnabled: true
