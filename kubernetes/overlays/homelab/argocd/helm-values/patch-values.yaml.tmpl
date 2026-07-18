@@ -50,9 +50,30 @@ valuesInline:
           - sh
           - -c
           - |
-            echo "Waiting for tsidp to be available..."
-            until wget -q --spider --timeout=5 https://idp.{{ .tailscale_tailnet_name }}.ts.net/.well-known/openid-configuration; do
-              echo "tsidp not ready, retrying in 5 seconds..."
+            HOST="idp.{{ .tailscale_tailnet_name }}.ts.net"
+            URL="https://${HOST}/.well-known/openid-configuration"
+            echo "Waiting for tsidp at ${URL}..."
+            i=0
+            while ! wget -q --spider --timeout=5 "${URL}"; do
+              i=$((i + 1))
+              # Pod errors out at 60 attempts
+              if [ "${i}" -ge 60 ]; then
+                echo "tsidp still unavailable after ${i} attempts, giving up"
+                exit 1
+              fi
+              # Every 6th attempt, report which layer is failing
+              if [ $((i % 6)) -eq 0 ]; then
+                IP=$(nslookup "${HOST}" 2>/dev/null | awk '/^Name:/ { f = 1; next } f && /^Address/ { print $2; exit }')
+                if [ -z "${IP}" ]; then
+                  echo "ERROR: DNS lookup for ${HOST} is failing"
+                elif ! nc -z -w 3 "${IP}" 443 2>/dev/null; then
+                  echo "ERROR: DNS resolves ${HOST} to ${IP} but TCP ${IP}:443 is unreachable"
+                else
+                  echo "ERROR: TCP to ${IP}:443 is open but the HTTPS probe is failing"
+                fi
+              else
+                echo "tsidp not ready, retrying in 5 seconds... (attempt ${i}/60)"
+              fi
               sleep 5
             done
             echo "tsidp is available!"
