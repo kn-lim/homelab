@@ -12,7 +12,7 @@ configurations:
 
 images:
   - name: debian
-    newTag: "13.5-slim"
+    newTag: "13.6-slim"
   - name: alpine
     newTag: "3.24"
   - name: alpine/git
