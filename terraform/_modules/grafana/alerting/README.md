@@ -6,7 +6,7 @@
 | Name | Version |
 | ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.15 |
-| <a name="requirement_grafana"></a> [grafana](#requirement\_grafana) | 4.40.1 |
+| <a name="requirement_grafana"></a> [grafana](#requirement\_grafana) | 4.41.0 |
 
 ## Providers
 
@@ -22,9 +22,9 @@ No modules.
 
 | Name | Type |
 | ---- | ---- |
-| [grafana_contact_point.discord](https://registry.terraform.io/providers/grafana/grafana/4.40.1/docs/resources/contact_point) | resource |
-| [grafana_message_template.discord](https://registry.terraform.io/providers/grafana/grafana/4.40.1/docs/resources/message_template) | resource |
-| [grafana_notification_policy.root](https://registry.terraform.io/providers/grafana/grafana/4.40.1/docs/resources/notification_policy) | resource |
+| [grafana_contact_point.discord](https://registry.terraform.io/providers/grafana/grafana/4.41.0/docs/resources/contact_point) | resource |
+| [grafana_message_template.discord](https://registry.terraform.io/providers/grafana/grafana/4.41.0/docs/resources/message_template) | resource |
+| [grafana_notification_policy.root](https://registry.terraform.io/providers/grafana/grafana/4.41.0/docs/resources/notification_policy) | resource |
 
 ## Inputs
 
