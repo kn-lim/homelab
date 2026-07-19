@@ -1,0 +1,13 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  description: "Go repo Renovate config: bump the go directive in go.mod and tidy after module updates",
+  postUpdateOptions: ["gomodTidy"],
+  packageRules: [
+    {
+      matchManagers: ["gomod"],
+      matchDepNames: ["go"],
+      matchDepTypes: ["golang"],
+      rangeStrategy: "bump",
+    },
+  ],
+}
