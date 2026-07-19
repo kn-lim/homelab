@@ -1,0 +1,49 @@
+apiVersion: batch/v1
+kind: CronJob
+
+metadata:
+  name: otterwiki-sync
+  namespace: otterwiki
+
+spec:
+  schedule: "*/15 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 86400
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: git-sync
+              image: alpine/git
+              command: ["sh", "-c"]
+              args:
+                - |
+                  set -e
+                  mkdir -p /root/.ssh
+                  cp /etc/otterwiki-deploy-key/ssh-privatekey /root/.ssh/id_ed25519
+                  [ -z "$(tail -c1 /root/.ssh/id_ed25519)" ] || echo >> /root/.ssh/id_ed25519
+                  chmod 600 /root/.ssh/id_ed25519
+                  export GIT_SSH_COMMAND="ssh -i /root/.ssh/id_ed25519 -o StrictHostKeyChecking=no"
+                  git config --global --add safe.directory /app-data/repository
+                  cd /app-data/repository
+                  git fetch origin
+                  git reset --hard origin/main
+                  git clean -fd
+              volumeMounts:
+                - name: data
+                  mountPath: /app-data
+                - name: deploy-key
+                  mountPath: /etc/otterwiki-deploy-key
+                  readOnly: true
+          volumes:
+            - name: data
+              persistentVolumeClaim:
+                claimName: otterwiki
+            - name: deploy-key
+              secret:
+                secretName: otterwiki-deploy-key
+                defaultMode: 0400

@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
   - ../../../bases/otterwiki
+  - cronjob-sync.yaml
   - externalsecret-config.yaml
   - externalsecret-deploy-key.yaml
   - ingress.yaml

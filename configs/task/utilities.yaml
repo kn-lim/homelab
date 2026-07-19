@@ -17,3 +17,13 @@ tasks:
     desc: Runs pre-commit on all files
     aliases: [pc]
     cmd: 'pre-commit run --all-files'
+
+  wiki-sync:
+    desc: Force syncs the otterwiki repository with GitHub
+    vars:
+      JOB_NAME: otterwiki-sync-manual-{{ now.Unix }}
+    cmds:
+      - kubectl -n otterwiki create job --from=cronjob/otterwiki-sync {{ .JOB_NAME }}
+      - kubectl -n otterwiki wait --for=condition=complete --timeout=120s job/{{ .JOB_NAME }}
+      - kubectl -n otterwiki logs job/{{ .JOB_NAME }}
+      - kubectl -n otterwiki delete job {{ .JOB_NAME }}
