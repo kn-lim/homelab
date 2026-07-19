@@ -58,7 +58,12 @@
     {
       description: "Process annotated dependencies",
       customType: "regex",
-      managerFilePatterns: ["/.*/"],
+      managerFilePatterns: [
+        // Modified for gomplate
+        "/(^|/).+\\.env(?:\\.tmpl)?$/",
+        "/(^|/).+\\.sh(?:\\.tmpl)?$/",
+        "/(^|/).+\\.ya?ml(?:\\.tmpl)?$/",
+      ],
       matchStrings: [
         // # renovate: datasource=github-releases depName=k3s-io/k3s
         // k3s_release_version: &version v1.29.0+k3s1
