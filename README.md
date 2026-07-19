@@ -192,7 +192,7 @@ terraform/
 
 | Node | Specs | OS | Host | Function |
 | - | - | - | - | - |
-| VM - `talos` | 8 CPU, 40GB RAM | Talos Linux | `homelab` | Control Plane Node |
+| VM - `talos` | 8 CPU, 36GB RAM | Talos Linux | `homelab` | Control Plane Node |
 
 ## Cost
 
