@@ -9,5 +9,13 @@
       matchDepTypes: ["golang"],
       rangeStrategy: "bump",
     },
+    {
+      description: "Only bump the go directive on new minor Go releases",
+      matchManagers: ["gomod"],
+      matchDepNames: ["go"],
+      matchDepTypes: ["golang"],
+      matchUpdateTypes: ["patch"],
+      enabled: false,
+    },
   ],
 }
