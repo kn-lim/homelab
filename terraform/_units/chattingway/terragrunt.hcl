@@ -26,5 +26,5 @@ include "root" {
 
 terraform {
   # https://github.com/kn-lim/terraform-aws-chattingway
-  source = "git::https://github.com/kn-lim/terraform-aws-chattingway.git//?ref=v2.0.0"
+  source = "git::https://github.com/kn-lim/terraform-aws-chattingway.git//?ref=v2.1.0"
 }
