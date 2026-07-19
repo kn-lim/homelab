@@ -1,0 +1,20 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  description: "ArgoCD-specific Renovate config",
+  argocd: {
+    // Modified for gomplate
+    managerFilePatterns: ["/(^|/)kubernetes/.+\\.ya?ml(?:\\.tmpl)?$/"],
+  },
+  packageRules: [
+    {
+      description: "Argo Operator Group",
+      groupName: "argocd",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["/argocd/"],
+      group: {
+        commitMessageTopic: "{{{groupName}}} group",
+      },
+      minimumGroupSize: 2,
+    },
+  ],
+}
