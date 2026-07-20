@@ -1,6 +1,6 @@
 module github.com/kn-lim/homelab/apps/webhook
 
-go 1.26.5
+go 1.26
 
 require (
 	github.com/aws/aws-lambda-go v1.54.0
