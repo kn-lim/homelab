@@ -3,12 +3,36 @@
 version: '3'
 
 tasks:
-  # TODO: Remove --force if no longer a single node cluster
+  # TODO: Remove the cordon / force-delete / --force when using a multi-node cluster.
   upgrade:
     desc: Upgrade talos to specified version
     requires:
       vars: [NODE_IP, VERSION]
     cmds:
       - |
+        # Resolve the Kubernetes node name from its internal IP.
+        NODE_NAME=$(kubectl get nodes -o wide --no-headers | awk -v ip="{{.NODE_IP}}" '$6==ip {print $1}')
+        if [ -z "$NODE_NAME" ]; then
+          echo "ERROR: could not resolve a node with internal IP {{.NODE_IP}}" >&2
+          exit 1
+        fi
+
+        # Cordon and delete pods preventing node shutdown for single-node clusters.
+        kubectl cordon "$NODE_NAME"
+        kubectl delete pod -n kube-system -l k8s-app=kube-dns --force --grace-period=0 --ignore-not-found || true
+        kubectl delete pod -n postgres -l cnpg.io/cluster=postgres --force --grace-period=0 --ignore-not-found || true
+
+        # Upgrade using the currently-installed image, swapping only the tag.
         INSTALL_IMAGE=$(talosctl get machineconfig --nodes {{.NODE_IP}} -o yaml | yq 'select(di==0) | .spec | from_yaml | .machine.install.image')
         talosctl upgrade --nodes {{.NODE_IP}} --image "${INSTALL_IMAGE%:*}:v{{.VERSION}}" --force
+
+        # Restore scheduling once the API server is reachable again after the reboot.
+        for i in $(seq 1 30); do
+          if kubectl uncordon "$NODE_NAME" 2>/dev/null; then
+            break
+          fi
+          echo "Waiting for the Kubernetes API to return after reboot... ($i/30)"
+          sleep 10
+        done
+
+        echo "Talos upgrade to v{{.VERSION}} complete."
