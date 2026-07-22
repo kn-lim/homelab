@@ -65,11 +65,11 @@ valuesInline:
               if [ $((i % 6)) -eq 0 ]; then
                 IP=$(nslookup "${HOST}" 2>/dev/null | awk '/^Name:/ { f = 1; next } f && /^Address/ { print $2; exit }')
                 if [ -z "${IP}" ]; then
-                  echo "ERROR: DNS lookup for ${HOST} is failing"
+                  echo "ERROR: DNS lookup for ${HOST} is failing (attempt ${i}/60)"
                 elif ! nc -z -w 3 "${IP}" 443 2>/dev/null; then
-                  echo "ERROR: DNS resolves ${HOST} to ${IP} but TCP ${IP}:443 is unreachable"
+                  echo "ERROR: DNS resolves ${HOST} to ${IP} but TCP ${IP}:443 is unreachable (attempt ${i}/60)"
                 else
-                  echo "ERROR: TCP to ${IP}:443 is open but the HTTPS probe is failing"
+                  echo "ERROR: TCP to ${IP}:443 is open but the HTTPS probe is failing (attempt ${i}/60)"
                 fi
               else
                 echo "tsidp not ready, retrying in 5 seconds... (attempt ${i}/60)"
