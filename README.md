@@ -6,7 +6,7 @@
 
 # Homelab
 
-![Talos](https://img.shields.io/badge/talos-v1.13.6-FF7300?logo=talos&logoColor=white)
+![Talos](https://img.shields.io/badge/talos-v1.13.7-FF7300?logo=talos&logoColor=white)
 ![Kubernetes](https://img.shields.io/badge/kubernetes-v1.36.2-326CE5?logo=kubernetes&logoColor=white)
 
 A definitely over-engineered, but good enough homelab that handles my home infrastructure and Kubernetes cluster.
