@@ -53,6 +53,11 @@
       matchDatasources: ["github-releases"],
       addLabels: ["renovate/github-release"],
     },
+    {
+      matchManagers: ["pre-commit"],
+      semanticCommitType: "chore",
+      semanticCommitScope: "pre-commit",
+    },
   ],
   customManagers: [
     {
