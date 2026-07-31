@@ -6,7 +6,7 @@ metadata:
 
 name: coredns
 # renovate: datasource=helm depName=coredns repository=https://coredns.github.io/helm
-version: 1.46.2
+version: 1.47.0
 releaseName: coredns
 namespace: kube-system
 repo: https://coredns.github.io/helm
