@@ -9,4 +9,4 @@ images:
   - name: adguard/adguardhome
     newTag: v0.107.78
   - name: tailscale/tailscale
-    newTag: v1.98.9
+    newTag: v1.98.10
