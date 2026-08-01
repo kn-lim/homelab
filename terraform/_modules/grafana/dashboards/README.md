@@ -6,7 +6,7 @@
 | Name | Version |
 | ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.15 |
-| <a name="requirement_grafana"></a> [grafana](#requirement\_grafana) | 4.41.0 |
+| <a name="requirement_grafana"></a> [grafana](#requirement\_grafana) | 4.43.0 |
 | <a name="requirement_http"></a> [http](#requirement\_http) | 3.6.0 |
 
 ## Providers
@@ -24,8 +24,8 @@ No modules.
 
 | Name | Type |
 | ---- | ---- |
-| [grafana_dashboard.dashboards](https://registry.terraform.io/providers/grafana/grafana/4.41.0/docs/resources/dashboard) | resource |
-| [grafana_folder.dashboards](https://registry.terraform.io/providers/grafana/grafana/4.41.0/docs/resources/folder) | resource |
+| [grafana_dashboard.dashboards](https://registry.terraform.io/providers/grafana/grafana/4.43.0/docs/resources/dashboard) | resource |
+| [grafana_folder.dashboards](https://registry.terraform.io/providers/grafana/grafana/4.43.0/docs/resources/folder) | resource |
 | [http_http.dashboard_json](https://registry.terraform.io/providers/hashicorp/http/3.6.0/docs/data-sources/http) | data source |
 
 ## Inputs
