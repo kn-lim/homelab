@@ -33,7 +33,7 @@ spec:
             - name: ROMM_DB_DRIVER
               value: postgresql
             - name: REDIS_HOST
-              value: valkey-primary.valkey.svc.cluster.local
+              value: valkey.valkey.svc.cluster.local
             - name: REDIS_PORT
               value: "6379"
             - name: DB_PASSWD

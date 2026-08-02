@@ -10,7 +10,7 @@ valuesInline:
       containers:
         main:
           env:
-            REDIS_HOSTNAME: valkey-primary.valkey.svc.cluster.local
+            REDIS_HOSTNAME: valkey.valkey.svc.cluster.local
 
   server:
     controllers:
