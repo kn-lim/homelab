@@ -39,6 +39,28 @@ unit "cluster-bootstrap" {
 
   path = "cluster-bootstrap"
 
+  autoinclude {
+    dependencies {
+      paths = ["../talos"]
+    }
+
+    dependency "onepassword-secret-read" {
+      config_path = unit.onepassword-secret-read.path
+
+      mock_outputs = {
+        fields = {
+          credential = "mock-credential"
+        }
+      }
+
+      mock_outputs_allowed_terraform_commands = ["init", "import", "validate", "plan"]
+    }
+
+    inputs = {
+      token = dependency.onepassword-secret-read.outputs.fields["credential"]
+    }
+  }
+
   values = {
     namespace         = values.cluster-bootstrap.namespace
     token_secret_name = values.cluster-bootstrap.token_secret_name
