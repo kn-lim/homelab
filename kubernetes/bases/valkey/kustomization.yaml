@@ -9,8 +9,6 @@ helmCharts:
     namespace: valkey
     includeCRDs: true
     valuesInline:
-      fullnameOverride: valkey-primary
-
       image:
         # renovate: datasource=docker depName=valkey/valkey
         tag: "9.1.1"
