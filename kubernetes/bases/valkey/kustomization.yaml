@@ -9,8 +9,6 @@ helmCharts:
     namespace: valkey
     includeCRDs: true
     valuesInline:
-      # Keeps the Service named valkey-primary, matching the hostname that
-      # immich, romm and open-webui already point at.
       fullnameOverride: valkey-primary
 
       image:
