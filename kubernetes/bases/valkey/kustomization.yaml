@@ -3,36 +3,48 @@ kind: Kustomization
 
 helmCharts:
   - name: valkey
-    repo: https://charts.bitnami.com/bitnami
-    version: 6.2.5
+    repo: https://valkey.io/valkey-helm/
+    version: 0.11.0
     releaseName: valkey
     namespace: valkey
     includeCRDs: true
     valuesInline:
-      architecture: standalone
+      # Keeps the Service named valkey-primary, matching the hostname that
+      # immich, romm and open-webui already point at.
+      fullnameOverride: valkey-primary
 
-      auth:
-        enabled: false
+      image:
+        # renovate: datasource=docker depName=valkey/valkey
+        tag: "9.1.1"
 
-      primary:
-        persistence:
-          enabled: false
-        resources:
-          limits:
-            memory: 256Mi
-            cpu: 250m
-          requests:
-            memory: 64Mi
-            cpu: 50m
+      resources:
+        limits:
+          memory: 256Mi
+          cpu: 250m
+        requests:
+          memory: 64Mi
+          cpu: 50m
 
       metrics:
         enabled: true
+        exporter:
+          image:
+            # renovate: datasource=docker depName=ghcr.io/oliver006/redis_exporter
+            tag: "v1.88.0"
+          resources:
+            limits:
+              memory: 128Mi
+              cpu: 100m
+            requests:
+              memory: 32Mi
+              cpu: 25m
         serviceMonitor:
           enabled: true
-        resources:
-          limits:
-            memory: 128Mi
-            cpu: 100m
-          requests:
-            memory: 32Mi
-            cpu: 25m
+
+patches:
+  - target:
+      kind: .*
+    patch: |
+      - op: add
+        path: /metadata/namespace
+        value: valkey
