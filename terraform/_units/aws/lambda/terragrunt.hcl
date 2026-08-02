@@ -3,14 +3,6 @@ locals {
   region   = read_terragrunt_config(find_in_parent_folders("region.hcl")).locals.region
 }
 
-dependency "onepassword_secret" {
-  config_path = "../onepassword-secret-read"
-}
-
-dependency "sqs" {
-  config_path = "../sqs"
-}
-
 inputs = {
   function_name = "${values.name}-lambda"
   handler       = "bootstrap"
@@ -26,23 +18,7 @@ inputs = {
     key    = values.s3_key
   }
 
-  environment_variables = {
-    AWS_SQS_URL = dependency.sqs.outputs.queue_url
-    # TODO: Replace with custom label when possible
-    GITHUB_WEBHOOK_SECRET = dependency.onepassword_secret.outputs.fields["credential"]
-  }
-
   attach_policy_json = true
-  policy_json = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect   = "Allow"
-        Action   = ["sqs:SendMessage"]
-        Resource = dependency.sqs.outputs.queue_arn
-      }
-    ]
-  })
 
   cloudwatch_logs_retention_in_days = 1
 }
