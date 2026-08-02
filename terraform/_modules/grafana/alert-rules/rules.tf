@@ -146,13 +146,14 @@ locals {
         no_data_state = "Alerting"
       },
       {
-        name      = "ExternalSecretSyncFailing"
-        expr      = "sum by (namespace, name) (externalsecret_status_condition{condition=\"Ready\", status=\"False\"})"
-        op        = "gt"
-        threshold = 0
-        for       = "15m"
-        severity  = "warning"
-        summary   = "ExternalSecret is failing to sync."
+        name          = "ExternalSecretSyncFailing"
+        expr          = "sum by (namespace, name) (externalsecret_status_condition{condition=\"Ready\", status=\"False\"})"
+        op            = "gt"
+        threshold     = 0
+        for           = "15m"
+        severity      = "warning"
+        summary       = "ExternalSecret is failing to sync."
+        no_data_state = "OK"
       },
       {
         # No 5xx samples yet (or no traffic) renders NoData: that is healthy
