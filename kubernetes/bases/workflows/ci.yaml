@@ -12,13 +12,19 @@ spec:
     mutexes:
       - name: "ci-{{workflow.parameters.repo}}"
   ttlStrategy:
-    secondsAfterCompletion: 86400
+    secondsAfterCompletion: 259200
   volumeClaimGC:
     strategy: OnWorkflowCompletion
-  podGC:
-    strategy: OnWorkflowSuccess
   activeDeadlineSeconds: 3600
   serviceAccountName: argo-workflows
+  workflowMetadata:
+    labelsFrom:
+      homelab.knlim.dev/repo:
+        expression: sprig.last(sprig.splitList("/", workflow.parameters.repo))
+      homelab.knlim.dev/branch:
+        expression: sprig.replace("/", "-", workflow.parameters.branch)
+      homelab.knlim.dev/commit:
+        expression: sprig.trunc(7, workflow.parameters.after)
   arguments:
     parameters:
       - name: branch

@@ -66,3 +66,15 @@ spec:
                 dataKey: body.paths
                 value: ""
               dest: spec.arguments.parameters.4.value
+            - src:
+                dependencyName: sqs-dep
+                dataTemplate: 'ci-{{ .Input.body.repo | splitList "/" | last }}-'
+              dest: metadata.generateName
+            - src:
+                dependencyName: sqs-dep
+                dataTemplate: '**{{ .Input.body.repo }}** `{{ .Input.body.ref }}` @ {{ .Input.body.after | trunc 7 }}'
+              dest: metadata.annotations.workflows\.argoproj\.io/title
+            - src:
+                dependencyName: sqs-dep
+                dataTemplate: 'Commit range `{{ .Input.body.before | trunc 7 }}..{{ .Input.body.after | trunc 7 }}`'
+              dest: metadata.annotations.workflows\.argoproj\.io/description

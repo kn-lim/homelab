@@ -27,8 +27,8 @@ valuesInline:
     workflowDefaults:
       spec:
         ttlStrategy:
-          secondsAfterCompletion: 86400
-          secondsAfterSuccess: 86400
+          secondsAfterCompletion: 259200
+          secondsAfterSuccess: 259200
           secondsAfterFailure: 604800
     workflowNamespaces:
       - argo-workflows
