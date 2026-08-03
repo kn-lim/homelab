@@ -120,3 +120,5 @@ spec:
                   value: "{{workflow.parameters.after}}"
                 - name: repo
                   value: "{{workflow.parameters.repo}}"
+                - name: targets
+                  value: "{{workflow.outputs.parameters.ci-targets}}"

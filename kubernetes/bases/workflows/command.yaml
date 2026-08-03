@@ -34,6 +34,13 @@ spec:
       inputs:
         parameters:
           - name: paths
+      outputs:
+        parameters:
+          - name: targets
+            valueFrom:
+              path: /tmp/targets.txt
+              default: ""
+            globalName: ci-targets
       script:
         image: debian
         command: [bash]
@@ -42,7 +49,9 @@ spec:
           DEBIAN_FRONTEND=noninteractive apt-get update -qq 1>&2 && apt-get install -y --no-install-recommends ca-certificates git 1>&2
           source /workdir/mise-env.sh
           task --yes --list > /dev/null
-          task ci:parse PATHS="{{inputs.parameters.paths}}"
+          task ci:parse PATHS="{{inputs.parameters.paths}}" | tee /tmp/commands.json
+          jq -r '[.[].command | (capture("(APPLICATION|DIRECTORY)=(?<v>[^ ]+)") | .v)?] | join(", ")' \
+            /tmp/commands.json > /tmp/targets.txt 2>/dev/null || : > /tmp/targets.txt
         workingDir: /workdir/src
         env:
           - name: TASK_X_REMOTE_TASKFILES

@@ -22,6 +22,8 @@ spec:
             default: ""
           - name: commit
             default: ""
+          - name: targets
+            default: ""
           - name: repo
       container:
         image: alpine
@@ -32,28 +34,49 @@ spec:
         args:
           - |
             apk add --no-cache curl jq
-            REPO_FIELD="{\"name\": \"Repo\", \"value\": \"[{{inputs.parameters.repo}}](https://github.com/{{inputs.parameters.repo}})\", \"inline\": true}"
-            EXTRA_FIELD=""
-            if [ -n "{{inputs.parameters.paths}}" ]; then
-              EXTRA_FIELD=",${REPO_FIELD},{\"name\": \"Paths\", \"value\": \"{{inputs.parameters.paths}}\", \"inline\": true}"
-            elif [ -n "{{inputs.parameters.commit}}" ]; then
+
+            TARGETS='{{inputs.parameters.targets}}'
+            case "$TARGETS" in *'{{'*) TARGETS="" ;; esac
+
+            # Convert workflow.duration (seconds) to readable format
+            D=$(printf '%s' '{{inputs.parameters.duration}}' | cut -d. -f1)
+            case "$D" in ''|*[!0-9]*) D=0 ;; esac
+            if [ "$D" -ge 3600 ]; then
+              DURATION="$((D / 3600))h$(((D % 3600) / 60))m$((D % 60))s"
+            elif [ "$D" -ge 60 ]; then
+              DURATION="$((D / 60))m$((D % 60))s"
+            else
+              DURATION="${D}s"
+            fi
+
+            FIELDS="{\"name\": \"Workflow\", \"value\": \"{{inputs.parameters.workflow-name}}\", \"inline\": true}"
+            FIELDS="${FIELDS},{\"name\": \"Status\", \"value\": \"{{inputs.parameters.status}}\", \"inline\": true}"
+            FIELDS="${FIELDS},{\"name\": \"Duration\", \"value\": \"${DURATION}\", \"inline\": true}"
+            FIELDS="${FIELDS},{\"name\": \"Repo\", \"value\": \"[{{inputs.parameters.repo}}](https://github.com/{{inputs.parameters.repo}})\", \"inline\": true}"
+
+            if [ -n "{{inputs.parameters.commit}}" ]; then
               COMMIT_SHORT=$(echo "{{inputs.parameters.commit}}" | cut -c1-7)
-              COMMIT_VALUE="[${COMMIT_SHORT}](https://github.com/{{inputs.parameters.repo}}/commit/{{inputs.parameters.commit}})"
-              EXTRA_FIELD=",${REPO_FIELD},{\"name\": \"Commit\", \"value\": \"${COMMIT_VALUE}\", \"inline\": true}"
+              FIELDS="${FIELDS},{\"name\": \"Commit\", \"value\": \"[${COMMIT_SHORT}](https://github.com/{{inputs.parameters.repo}}/commit/{{inputs.parameters.commit}})\", \"inline\": true}"
+            fi
+            if [ -n "{{inputs.parameters.paths}}" ]; then
+              FIELDS="${FIELDS},{\"name\": \"Paths\", \"value\": \"{{inputs.parameters.paths}}\", \"inline\": true}"
+            fi
+
+            if [ -n "$TARGETS" ]; then
+              TARGETS_JSON=$(printf '%s' "$TARGETS" | cut -c1-1000 | jq -Rs .)
+              FIELDS="${FIELDS},{\"name\": \"Targets\", \"value\": ${TARGETS_JSON}, \"inline\": false}"
             fi
 
             if [ "{{inputs.parameters.status}}" = "Succeeded" ]; then
               COLOR=5025616
               THUMBNAIL="https://raw.githubusercontent.com/kn-lim/kn-lim/refs/heads/main/homelab/success.png"
-              FAILURES_FIELD=""
             else
               COLOR=16007990
               THUMBNAIL="https://raw.githubusercontent.com/kn-lim/kn-lim/refs/heads/main/homelab/error.png"
-              FAILURES=$(printf '%s' '{{inputs.parameters.failures}}' | jq -r 'fromjson | [.[] | select(.message | length > 0) | "\(.displayName): \(.message)"] | join("\\n")')
-              if [ -n "$FAILURES" ]; then
-                FAILURES_FIELD=",{\"name\": \"Failures\", \"value\": \"${FAILURES}\", \"inline\": false}"
-              else
-                FAILURES_FIELD=""
+              FAILURES_TEXT=$(printf '%s' '{{inputs.parameters.failures}}' | jq -r 'fromjson | [.[] | select(.message | length > 0) | "\(.displayName) (\(.templateName))\n\(.message)"] | join("\n\n")' 2>/dev/null || true)
+              if [ -n "$FAILURES_TEXT" ]; then
+                FAILURES_JSON=$(printf '%s' "$FAILURES_TEXT" | head -c 1000 | jq -Rs .)
+                FIELDS="${FIELDS},{\"name\": \"Failures\", \"value\": ${FAILURES_JSON}, \"inline\": false}"
               fi
             fi
 
@@ -63,14 +86,8 @@ spec:
                 \"embeds\": [{
                   \"title\": \"Workflow {{inputs.parameters.status}}\",
                   \"url\": \"${ARGO_WORKFLOWS_URL}/workflows/argo-workflows/{{inputs.parameters.workflow-name}}\",
-                  \"color\": $COLOR,
-                  \"thumbnail\": {\"url\": \"$THUMBNAIL\"},
-                  \"fields\": [
-                    {\"name\": \"Workflow\", \"value\": \"{{inputs.parameters.workflow-name}}\", \"inline\": true},
-                    {\"name\": \"Status\", \"value\": \"{{inputs.parameters.status}}\", \"inline\": true},
-                    {\"name\": \"Duration\", \"value\": \"{{inputs.parameters.duration}}\", \"inline\": true}
-                    ${FAILURES_FIELD}
-                    ${EXTRA_FIELD}
-                  ]
+                  \"color\": ${COLOR},
+                  \"thumbnail\": {\"url\": \"${THUMBNAIL}\"},
+                  \"fields\": [${FIELDS}]
                 }]
               }"
