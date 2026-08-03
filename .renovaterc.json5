@@ -2,12 +2,12 @@
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     // https://github.com/home-operations/renovate-presets
-    "github>home-operations/renovate-presets//config/baseConfig.json5#3.0.0",
-    "github>home-operations/renovate-presets//config/dependencyDashboard.json5#3.0.0",
-    "github>home-operations/renovate-presets//policies/semanticCommits.json5#3.0.0",
-    "github>home-operations/renovate-presets//managers/cnpg.json5#3.0.0",
-    "github>home-operations/renovate-presets//managers/oci.json5#3.0.0",
-    "github>home-operations/renovate-presets//overrides/mise.json5#3.0.0",
+    "github>home-operations/renovate-presets//config/baseConfig.json5#4.0.0",
+    "github>home-operations/renovate-presets//config/dependencyDashboard.json5#4.0.0",
+    "github>home-operations/renovate-presets//policies/semanticCommits.json5#4.0.0",
+    "github>home-operations/renovate-presets//managers/cnpg.json5#4.0.0",
+    "github>home-operations/renovate-presets//managers/oci.json5#4.0.0",
+    "github>home-operations/renovate-presets//overrides/mise.json5#4.0.0",
     ":semanticCommits",
     // ArgoCD-specific config
     "github>kn-lim/homelab//configs/renovate/argocd.json5",
