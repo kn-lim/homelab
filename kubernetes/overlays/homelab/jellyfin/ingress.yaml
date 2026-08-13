@@ -4,6 +4,8 @@ kind: Ingress
 metadata:
   name: jellyfin
   namespace: jellyfin
+  annotations:
+    tailscale.com/tags: "tag:k8s-jellyfin"
 
 spec:
   ingressClassName: tailscale
