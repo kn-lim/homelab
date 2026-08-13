@@ -4,6 +4,8 @@ kind: Ingress
 metadata:
   name: open-webui
   namespace: open-webui
+  annotations:
+    tailscale.com/tags: "tag:k8s-open-webui"
 
 spec:
   ingressClassName: tailscale
