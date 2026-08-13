@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+
+metadata:
+  name: mise-cache
+  namespace: argo-workflows
+
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-data-delete
+  resources:
+    requests:
+      storage: 16Gi

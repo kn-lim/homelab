@@ -43,6 +43,9 @@ spec:
       secret:
         secretName: argo-workflows-ssh-key
         defaultMode: 0400
+    - name: mise-cache
+      persistentVolumeClaim:
+        claimName: mise-cache
 
   volumeClaimTemplates:
     - metadata:

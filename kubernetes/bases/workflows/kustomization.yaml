@@ -6,6 +6,7 @@ resources:
   - command.yaml
   - discord.yaml
   - git.yaml
+  - pvc.yaml
 
 configurations:
   - configurations.yaml

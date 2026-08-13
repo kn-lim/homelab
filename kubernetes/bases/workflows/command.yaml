@@ -62,6 +62,8 @@ spec:
         volumeMounts:
           - name: workdir
             mountPath: /workdir
+          - name: mise-cache
+            mountPath: /mise-cache
 
     - name: run
       inputs:
@@ -92,6 +94,8 @@ spec:
         volumeMounts:
           - name: workdir
             mountPath: /workdir
+          - name: mise-cache
+            mountPath: /mise-cache
 
     - name: setup
       script:
@@ -100,21 +104,28 @@ spec:
         source: |
           set -eo pipefail
           DEBIAN_FRONTEND=noninteractive apt-get update -qq && apt-get install -y --no-install-recommends curl ca-certificates
-          curl https://mise.run | sh
-          MISE_DATA_DIR=/workdir/mise ~/.local/bin/mise trust
-          MISE_DATA_DIR=/workdir/mise ~/.local/bin/mise install \
-            aqua:argoproj/argo-cd \
-            aqua:aws/aws-cli \
-            aqua:go-task/task \
-            aqua:gruntwork-io/terragrunt \
-            aqua:hashicorp/terraform \
-            aqua:helm/helm \
-            aqua:jqlang/jq \
-            aqua:kubernetes-sigs/kustomize \
-            aqua:kubernetes/kubernetes/kubectl \
-            aqua:mikefarah/yq \
-            go
-          MISE_DATA_DIR=/workdir/mise ~/.local/bin/mise env -s bash > /workdir/mise-env.sh
+
+          # renovate: datasource=github-releases depName=jdx/mise
+          MISE_VERSION="2026.8.5"
+          export MISE_VERSION
+
+          REPO_SLUG=$(echo "{{workflow.parameters.repo}}" | tr '/' '-' | tr -cd 'A-Za-z0-9._-')
+          [ -n "$REPO_SLUG" ] || { echo "ERROR: could not derive cache slug from repo '{{workflow.parameters.repo}}'"; exit 1; }
+
+          CACHE="/mise-cache/$REPO_SLUG"
+          mkdir -p "$CACHE/bin"
+          export MISE_DATA_DIR="$CACHE/data"
+          export MISE_INSTALL_PATH="$CACHE/bin/mise"
+
+          if [ "$("$MISE_INSTALL_PATH" version 2>/dev/null | head -n1 | cut -d' ' -f1)" != "${MISE_VERSION#v}" ]; then
+            curl https://mise.run | sh
+          fi
+
+          "$MISE_INSTALL_PATH" trust
+          "$MISE_INSTALL_PATH" install
+          "$MISE_INSTALL_PATH" prune --yes
+          "$MISE_INSTALL_PATH" env -s bash > /workdir/mise-env.sh
+          echo "export MISE_DATA_DIR=$MISE_DATA_DIR" >> /workdir/mise-env.sh
           [ -s /workdir/mise-env.sh ] || { echo "mise env produced empty output"; exit 1; }
         workingDir: /workdir/src
         envFrom:
@@ -123,3 +134,5 @@ spec:
         volumeMounts:
           - name: workdir
             mountPath: /workdir
+          - name: mise-cache
+            mountPath: /mise-cache
