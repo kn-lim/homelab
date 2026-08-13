@@ -4,6 +4,8 @@ kind: Ingress
 metadata:
   name: romm
   namespace: romm
+  annotations:
+    tailscale.com/tags: "tag:k8s-romm"
 
 spec:
   ingressClassName: tailscale
