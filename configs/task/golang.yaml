@@ -1,0 +1,21 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: '3'
+
+tasks:
+  lint:
+    desc: Runs golangci-lint on every Go module in apps/
+    cmds:
+      - |
+        MODULES=$(find apps -type f -name go.mod -not -path "*/vendor/*" -printf "%h\n" | sort)
+        if [ -z "$MODULES" ]; then
+          echo "No Go modules found in apps/"
+          exit 0
+        fi
+        STATUS=0
+        for MODULE in $MODULES; do
+          echo "=== $MODULE ==="
+          (cd "$MODULE" && golangci-lint run) || STATUS=1
+        done
+        exit $STATUS
+    dir: "{{ .ROOT_DIR }}"

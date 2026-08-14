@@ -20,6 +20,7 @@ tasks:
     cmds:
       - defer: rm -f bootstrap bootstrap.zip
       - |
+        go vet ./...
         go build -o bootstrap .
         zip bootstrap.zip bootstrap
         aws s3 cp bootstrap.zip s3://$TG_BUCKET/{{.S3_KEY}}

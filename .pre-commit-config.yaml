@@ -36,6 +36,14 @@ repos:
         language: system
         pass_filenames: false
         stages: ["pre-commit"]
+      - id: golangci-lint
+        name: golangci-lint
+        description: Lint Go code.
+        entry: bash -c 'mise exec -- task golang:lint'
+        language: system
+        files: '^(apps/.*\.(go|mod|sum)|\.golangci\.yml)$'
+        pass_filenames: false
+        stages: ["pre-commit"]
       - id: trufflehog
         name: TruffleHog
         description: Detect secrets in your data.

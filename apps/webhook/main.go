@@ -57,7 +57,7 @@ func init() {
 }
 
 func handler(ctx context.Context, request events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
-	defer logger.Sync()
+	defer func() { _ = logger.Sync() }()
 
 	// Check if API Gateway request is base64 encoded
 	bodyBytes := []byte(request.Body)

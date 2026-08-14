@@ -5,6 +5,9 @@ version: '3'
 includes:
   ci:
     taskfile: ./configs/task/ci.yaml
+  golang:
+    taskfile: ./configs/task/golang.yaml
+    aliases: [go]
   kubernetes:
     taskfile: ./configs/task/kubernetes.yaml
     aliases: [k8s]
