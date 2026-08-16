@@ -30,6 +30,8 @@ unit "chattingway" {
     }
 
     inputs = {
+      enable_counter_table = try(values.enable_counter_table, false)
+
       endpoint_environment_variables = {
         ADMIN_ROLE_USERS           = values.admin_role_users
         DEBUG                      = values.debug
@@ -40,9 +42,11 @@ unit "chattingway" {
       }
 
       task_environment_variables = {
-        DEBUG               = values.debug
-        DISCORD_API_VERSION = values.discord_api_version
-        DISCORD_BOT_TOKEN   = dependency.onepassword-secret-read.outputs.fields["token"]
+        COUNTER_DISCORD_ADMIN_ROLE = try(values.counter_admin_role, "")
+        COUNTER_TABLE_NAME         = "${values.name}-counters"
+        DEBUG                      = values.debug
+        DISCORD_API_VERSION        = values.discord_api_version
+        DISCORD_BOT_TOKEN          = dependency.onepassword-secret-read.outputs.fields["token"]
       }
     }
   }

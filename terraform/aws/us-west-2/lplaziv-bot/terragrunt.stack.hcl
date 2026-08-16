@@ -7,6 +7,9 @@ stack "lplaziv-bot" {
     name             = "lplaziv-bot"
     admin_role_users = ""
 
+    enable_counter_table = true
+    counter_admin_role   = "Maintainers"
+
     discord_api_version = "10"
 
     credential = {
