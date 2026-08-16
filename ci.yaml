@@ -19,12 +19,12 @@ terraform:
         - terraform/_modules/onepassword-secret-read
         - terraform/_units/grafana
         - terraform/_units/onepassword-secret-read
-    - application: lplaziv-bot
-      whenModified:
-        - terraform/_modules/onepassword-secret-read
-        - terraform/_stacks/lplaziv-bot
-        - terraform/_units/chattingway
-        - terraform/_units/onepassword-secret-read
+    # - application: lplaziv-bot
+    #   whenModified:
+    #     - terraform/_modules/onepassword-secret-read
+    #     - terraform/_stacks/lplaziv-bot
+    #     - terraform/_units/chattingway
+    #     - terraform/_units/onepassword-secret-read
     - application: talos
       whenModified:
         - terraform/_modules/cluster-bootstrap
