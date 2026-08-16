@@ -3,6 +3,10 @@
 *.kubeconfig
 *.talosconfig
 
+# Go
+bootstrap
+bootstrap.zip
+
 # Helm
 charts/
 
