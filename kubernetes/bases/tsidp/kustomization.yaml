@@ -8,4 +8,4 @@ resources:
 
 images:
   - name: ghcr.io/tailscale/tsidp
-    newTag: v0.0.14
+    newTag: v0.0.15
