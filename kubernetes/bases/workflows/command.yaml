@@ -106,7 +106,7 @@ spec:
           DEBIAN_FRONTEND=noninteractive apt-get update -qq && apt-get install -y --no-install-recommends curl ca-certificates
 
           # renovate: datasource=github-releases depName=jdx/mise
-          MISE_VERSION="2026.8.10"
+          MISE_VERSION="2026.8.11"
           export MISE_VERSION
 
           REPO_SLUG=$(echo "{{workflow.parameters.repo}}" | tr '/' '-' | tr -cd 'A-Za-z0-9._-')
