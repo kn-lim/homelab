@@ -3,10 +3,10 @@ clusters:
   - name: "homelab"
 
     ## Talos Version
-    talos_version: "v1.13.8"
+    talos_version: "v1.13.9"
 
     ## Kubernetes Version
-    kubernetes_version: "v1.36.3"
+    kubernetes_version: "v1.36.4"
 
     ## NVIDIA GPU Support
     nvidia_gpu_enabled: true
