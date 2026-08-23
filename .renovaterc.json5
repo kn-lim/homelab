@@ -22,6 +22,12 @@
       extractVersion: "^kustomize\\/v(?<version>\\d+\\.\\d+\\.\\d+)$",
     },
     {
+      // TODO: Remove rule when no longer using a NVIDIA GTX 1080 GPU
+      matchDatasources: ["helm"],
+      matchDepNames: ["gpu-operator"],
+      enabled: false,
+    },
+    {
       matchUpdateTypes: ["major"],
       addLabels: ["type/major"],
     },

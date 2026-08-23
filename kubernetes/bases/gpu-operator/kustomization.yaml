@@ -4,7 +4,7 @@ kind: Kustomization
 helmCharts:
   - name: gpu-operator
     repo: https://helm.ngc.nvidia.com/nvidia
-    version: v26.7.0
+    version: v26.3.3
     releaseName: gpu-operator
     namespace: gpu-operator
     includeCRDs: true
