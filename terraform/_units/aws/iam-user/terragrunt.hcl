@@ -15,5 +15,5 @@ include "root" {
 }
 
 terraform {
-  source = "tfr:///terraform-aws-modules/iam/aws//modules/iam-user?version=6.8.0"
+  source = "tfr:///terraform-aws-modules/iam/aws//modules/iam-user?version=6.8.1"
 }
