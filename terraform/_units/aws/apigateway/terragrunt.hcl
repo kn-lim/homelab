@@ -18,5 +18,5 @@ include "root" {
 }
 
 terraform {
-  source = "tfr:///terraform-aws-modules/apigateway-v2/aws?version=6.1.0"
+  source = "tfr:///terraform-aws-modules/apigateway-v2/aws?version=6.1.1"
 }
