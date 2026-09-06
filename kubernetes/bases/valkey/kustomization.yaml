@@ -4,7 +4,7 @@ kind: Kustomization
 helmCharts:
   - name: valkey
     repo: https://valkey.io/valkey-helm/
-    version: 0.11.0
+    version: 0.12.0
     releaseName: valkey
     namespace: valkey
     includeCRDs: true
