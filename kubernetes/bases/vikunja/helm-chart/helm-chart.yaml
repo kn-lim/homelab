@@ -6,7 +6,7 @@ metadata:
 
 name: vikunja
 # renovate: datasource=docker depName=ghcr.io/go-vikunja/helm-chart/vikunja
-version: 2.2.1
+version: 2.3.0
 releaseName: vikunja
 namespace: vikunja
 repo: oci://ghcr.io/go-vikunja/helm-chart
