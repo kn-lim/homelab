@@ -1,13 +1,13 @@
 module github.com/kn-lim/homelab/apps/webhook
 
-go 1.26
+go 1.27
 
 require (
 	github.com/aws/aws-lambda-go v1.55.0
 	github.com/aws/aws-sdk-go-v2 v1.46.0
 	github.com/aws/aws-sdk-go-v2/config v1.33.3
 	github.com/aws/aws-sdk-go-v2/service/sqs v1.51.0
-	github.com/google/go-github/v90 v90.0.0
+	github.com/google/go-github/v91 v91.0.0
 	go.uber.org/zap v1.28.0
 )
 
