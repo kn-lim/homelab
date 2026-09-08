@@ -79,3 +79,4 @@ clusters:
       - photos
       - romm
       - traefik
+      - vikunja

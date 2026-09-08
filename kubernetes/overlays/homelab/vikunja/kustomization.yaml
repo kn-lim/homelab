@@ -7,3 +7,4 @@ generators:
 resources:
   - externalsecret.yaml
   - ingress.yaml
+  - generated/httproute.yaml

@@ -25,7 +25,7 @@ valuesInline:
       VIKUNJA_DATABASE_HOST: postgres-rw.postgres.svc.cluster.local
       VIKUNJA_DATABASE_USER: vikunja
       VIKUNJA_DATABASE_DATABASE: vikunja
-      VIKUNJA_SERVICE_PUBLICURL: "https://vikunja.{{ .tailscale_tailnet_name }}.ts.net"
+      VIKUNJA_SERVICE_PUBLICURL: "https://vikunja.{{ .local_domain }}"
       VIKUNJA_DATABASE_PASSWORD:
         valueFrom:
           secretKeyRef:

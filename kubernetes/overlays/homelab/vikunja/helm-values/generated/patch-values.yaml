@@ -22,7 +22,7 @@ valuesInline:
       VIKUNJA_DATABASE_HOST: postgres-rw.postgres.svc.cluster.local
       VIKUNJA_DATABASE_USER: vikunja
       VIKUNJA_DATABASE_DATABASE: vikunja
-      VIKUNJA_SERVICE_PUBLICURL: "https://vikunja.neon-wyrm.ts.net"
+      VIKUNJA_SERVICE_PUBLICURL: "https://vikunja.knlim.dev"
       VIKUNJA_DATABASE_PASSWORD:
         valueFrom:
           secretKeyRef:
