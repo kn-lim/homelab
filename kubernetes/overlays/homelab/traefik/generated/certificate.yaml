@@ -67,6 +67,22 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 
 metadata:
+  name: otterwiki-knlim-dev
+  namespace: traefik
+
+spec:
+  secretName: otterwiki-knlim-dev-tls
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer
+    group: cert-manager.io
+  dnsNames:
+    - otterwiki.knlim.dev
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+
+metadata:
   name: photos-knlim-dev
   namespace: traefik
 
@@ -126,3 +142,19 @@ spec:
     group: cert-manager.io
   dnsNames:
     - vikunja.knlim.dev
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+
+metadata:
+  name: wiki-knlim-dev
+  namespace: traefik
+
+spec:
+  secretName: wiki-knlim-dev-tls
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer
+    group: cert-manager.io
+  dnsNames:
+    - wiki.knlim.dev

@@ -76,7 +76,9 @@ clusters:
       - immich
       - jellyfin
       - open-webui
+      - otterwiki
       - photos
       - romm
       - traefik
       - vikunja
+      - wiki

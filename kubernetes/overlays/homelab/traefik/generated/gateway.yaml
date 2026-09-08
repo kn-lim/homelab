@@ -31,6 +31,8 @@ spec:
             kind: Secret
           - name: open-webui-knlim-dev-tls
             kind: Secret
+          - name: otterwiki-knlim-dev-tls
+            kind: Secret
           - name: photos-knlim-dev-tls
             kind: Secret
           - name: romm-knlim-dev-tls
@@ -38,6 +40,8 @@ spec:
           - name: traefik-knlim-dev-tls
             kind: Secret
           - name: vikunja-knlim-dev-tls
+            kind: Secret
+          - name: wiki-knlim-dev-tls
             kind: Secret
       allowedRoutes:
         namespaces:
@@ -51,7 +55,9 @@ spec:
                   - immich
                   - jellyfin
                   - open-webui
+                  - otterwiki
                   - photos
                   - romm
                   - traefik
                   - vikunja
+                  - wiki

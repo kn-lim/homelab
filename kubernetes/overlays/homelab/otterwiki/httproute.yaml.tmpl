@@ -1,0 +1,24 @@
+{{- $config := (datasource "config") -}}
+{{- range $config.clusters -}}
+{{- if eq .name "homelab" -}}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+
+metadata:
+  name: otterwiki
+  namespace: otterwiki
+
+spec:
+  parentRefs:
+    - name: traefik
+      namespace: traefik
+      sectionName: websecure
+  hostnames:
+    - otterwiki.{{ .local_domain }}
+    - wiki.{{ .local_domain }}
+  rules:
+    - backendRefs:
+        - name: otterwiki
+          port: 80
+{{- end }}
+{{- end }}
