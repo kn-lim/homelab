@@ -16,4 +16,4 @@ images:
   - name: alpine/git
     newTag: "v2.54.0"
   - name: redimp/otterwiki
-    newTag: "2.24.0"
+    newTag: "2.24.1"
