@@ -1,10 +1,10 @@
-# This Service sends traffic to the tsidp instance on the homelab cluster.
 apiVersion: v1
 kind: Service
 
 metadata:
   annotations:
     tailscale.com/tailnet-fqdn: idp.neon-wyrm.ts.net
+    tailscale.com/hostname: tsidp-egress-homelab-lenovo
   name: tsidp-egress
   namespace: tsidp
 

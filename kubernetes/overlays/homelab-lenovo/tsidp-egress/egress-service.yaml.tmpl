@@ -1,13 +1,13 @@
 {{- $config := (datasource "config") -}}
 {{- range $config.clusters -}}
 {{- if eq .name "homelab-lenovo" -}}
-# This Service sends traffic to the tsidp instance on the homelab cluster.
 apiVersion: v1
 kind: Service
 
 metadata:
   annotations:
     tailscale.com/tailnet-fqdn: idp.{{ .tailscale_tailnet_name }}.ts.net
+    tailscale.com/hostname: tsidp-egress-{{ .name }}
   name: tsidp-egress
   namespace: tsidp
 
