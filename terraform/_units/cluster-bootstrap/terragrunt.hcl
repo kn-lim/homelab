@@ -1,4 +1,10 @@
-locals {}
+locals {
+  platform = read_terragrunt_config(find_in_parent_folders("platform.hcl")).locals.platform
+  region   = read_terragrunt_config(find_in_parent_folders("region.hcl")).locals.region
+
+  # Same path root.hcl hands to the kubernetes provider; the hook must target the same cluster.
+  kubeconfig_path = "${get_repo_root()}/${local.platform}-${local.region}.kubeconfig"
+}
 
 inputs = merge(
   {
@@ -18,6 +24,6 @@ terraform {
   # Create namespace if it doesn't already exist
   before_hook "create_namespace" {
     commands = ["apply"]
-    execute  = ["bash", "-c", "kubectl get namespace ${values.namespace} >/dev/null 2>&1 || kubectl create namespace ${values.namespace}"]
+    execute  = ["bash", "-c", "kubectl --kubeconfig ${local.kubeconfig_path} get namespace ${values.namespace} >/dev/null 2>&1 || kubectl --kubeconfig ${local.kubeconfig_path} create namespace ${values.namespace}"]
   }
 }

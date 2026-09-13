@@ -5,6 +5,10 @@ version: '3'
 # Input Variables:
 #   DIR:       User provided directory to run the kubernetes task commands in
 #   NAMESPACE: (Optional) Namespace to ensure exists before applying
+#   CONTEXT:   (Optional) kubectl context to target (e.g. admin@homelab-lenovo); defaults to the current context
+
+vars:
+  KUBECTL: 'kubectl{{if .CONTEXT}} --context {{.CONTEXT}}{{end}}'
 
 tasks:
   _ensure-namespace:
@@ -13,7 +17,7 @@ tasks:
     cmds:
       - cmd: |
           if [ -n "{{.NAMESPACE}}" ]; then
-            kubectl get namespace "{{.NAMESPACE}}" 2>/dev/null || kubectl create namespace "{{.NAMESPACE}}"
+            {{.KUBECTL}} get namespace "{{.NAMESPACE}}" 2>/dev/null || {{.KUBECTL}} create namespace "{{.NAMESPACE}}"
           fi
 
   build:
@@ -26,18 +30,18 @@ tasks:
     desc: Returns output from kustomize and applies the output using kubectl
     aliases: [kba]
     deps: [_ensure-namespace]
-    cmd: kustomize build --enable-helm | kubectl apply -f -
+    cmd: kustomize build --enable-helm | {{.KUBECTL}} apply -f -
     dir: '{{.DIR | default .USER_WORKING_DIR}}'
 
   build-apply-server-side:
     desc: Returns output from kustomize and applies the output using kubectl
     aliases: [kbas]
     deps: [_ensure-namespace]
-    cmd: kustomize build --enable-helm | kubectl apply --server-side -f -
+    cmd: kustomize build --enable-helm | {{.KUBECTL}} apply --server-side -f -
     dir: '{{.DIR | default .USER_WORKING_DIR}}'
 
   build-delete:
     desc: Returns output from kustomize and deletes the output using kubectl
     aliases: [kbd]
-    cmd: kustomize build --enable-helm | kubectl delete -f -
+    cmd: kustomize build --enable-helm | {{.KUBECTL}} delete -f -
     dir: '{{.DIR | default .USER_WORKING_DIR}}'

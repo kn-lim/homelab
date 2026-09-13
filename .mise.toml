@@ -1,5 +1,5 @@
 [env]
-KUBECONFIG = "{{config_root}}/homelab-local.kubeconfig"
+KUBECONFIG = "{{config_root}}/homelab-local.kubeconfig:{{config_root}}/homelab-lenovo-local.kubeconfig"
 TALOSCONFIG = "{{config_root}}/homelab-local.talosconfig"
 
 [tools]
