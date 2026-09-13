@@ -9,6 +9,15 @@ valuesInline:
     name: kube-dns
     clusterIP: 10.96.0.10   # service subnet
   servers:
+    # Tailscale Nameserver
+    - zones:
+        - zone: ts.net
+      port: 53
+      plugins:
+        - name: errors
+        - name: forward
+          parameters: . 10.96.159.27   # tailscale nameserver ip
+
     # Talos Linux Defaults
     - zones:
         - zone: .

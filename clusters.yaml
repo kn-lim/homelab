@@ -157,8 +157,7 @@ clusters:
     tailscale_tailnet_name: "neon-wyrm"
 
     ## Tailscale Nameserver IP
-    # TODO: Fill in after cluster initializes
-    # tailscale_nameserver_ip: ""
+    tailscale_nameserver_ip: "10.96.159.27"
 
     ## CoreDNS Cluster IP
     coredns_cluster_ip: "10.96.0.10"
