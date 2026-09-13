@@ -24,9 +24,13 @@ resource "grafana_rule_group" "groups" {
         summary = rule.value.summary
       }
 
-      labels = {
-        severity = rule.value.severity
-      }
+      labels = merge(
+        {
+          severity = rule.value.severity
+          cluster = "{{ $labels.cluster }}"
+        },
+        lookup(rule.value, "labels", {}),
+      )
 
       data {
         ref_id         = "A"

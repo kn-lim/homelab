@@ -29,6 +29,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
+| <a name="input_clusters"></a> [clusters](#input\_clusters) | Cluster names that ship metrics to this Prometheus. One absent-target rule renders per cluster. | `list(string)` | n/a | yes |
 | <a name="input_datasource_uid"></a> [datasource\_uid](#input\_datasource\_uid) | UID of the Prometheus data source that alert rule queries run against. | `string` | n/a | yes |
 
 ## Outputs

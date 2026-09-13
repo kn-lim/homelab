@@ -13,8 +13,8 @@
 
 | Name | Version |
 | ---- | ------- |
-| <a name="provider_grafana"></a> [grafana](#provider\_grafana) | 4.40.1 |
-| <a name="provider_http"></a> [http](#provider\_http) | 3.6.0 |
+| <a name="provider_grafana"></a> [grafana](#provider\_grafana) | 4.46.0 |
+| <a name="provider_http"></a> [http](#provider\_http) | 3.6.2 |
 
 ## Modules
 

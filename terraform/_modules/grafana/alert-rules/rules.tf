@@ -3,7 +3,7 @@ locals {
     node = [
       {
         name      = "NodeCPUHigh"
-        expr      = "1 - avg(rate(node_cpu_seconds_total{mode=\"idle\"}[10m]))"
+        expr      = "1 - avg by (cluster) (rate(node_cpu_seconds_total{mode=\"idle\"}[10m]))"
         op        = "gt"
         threshold = 0.9
         for       = "15m"
@@ -21,7 +21,7 @@ locals {
       },
       {
         name      = "NodeFilesystemAlmostFull"
-        expr      = "max by (mountpoint) (1 - node_filesystem_avail_bytes{fstype!~\"tmpfs|ramfs\"} / node_filesystem_size_bytes)"
+        expr      = "max by (cluster, mountpoint) (1 - node_filesystem_avail_bytes{fstype!~\"tmpfs|ramfs\"} / node_filesystem_size_bytes)"
         op        = "gt"
         threshold = 0.85
         for       = "15m"
@@ -30,7 +30,7 @@ locals {
       },
       {
         name          = "NodeNotReady"
-        expr          = "min(kube_node_status_condition{condition=\"Ready\", status=\"true\"})"
+        expr          = "min by (cluster) (kube_node_status_condition{condition=\"Ready\", status=\"true\"})"
         op            = "lt"
         threshold     = 1
         for           = "5m"
@@ -43,7 +43,7 @@ locals {
     control-plane = [
       {
         name          = "ApiServerDown"
-        expr          = "min(up{job=\"apiserver\"})"
+        expr          = "min by (cluster) (up{job=\"apiserver\"})"
         op            = "lt"
         threshold     = 1
         for           = "5m"
@@ -53,7 +53,7 @@ locals {
       },
       {
         name          = "EtcdDown"
-        expr          = "min(up{job=\"etcd\"})"
+        expr          = "min by (cluster) (up{job=\"etcd\"})"
         op            = "lt"
         threshold     = 1
         for           = "5m"
@@ -63,7 +63,7 @@ locals {
       },
       {
         name      = "ApiServerHighLatency"
-        expr      = "histogram_quantile(0.99, sum by (le) (rate(apiserver_request_duration_seconds_bucket{verb!~\"WATCH|CONNECT\"}[10m])))"
+        expr      = "histogram_quantile(0.99, sum by (cluster, le) (rate(apiserver_request_duration_seconds_bucket{verb!~\"WATCH|CONNECT\"}[10m])))"
         op        = "gt"
         threshold = 1
         for       = "15m"
@@ -75,7 +75,7 @@ locals {
     workloads = [
       {
         name      = "PodCrashLooping"
-        expr      = "sum by (namespace, pod) (increase(kube_pod_container_status_restarts_total[1h]))"
+        expr      = "sum by (cluster, namespace, pod) (increase(kube_pod_container_status_restarts_total[1h]))"
         op        = "gt"
         threshold = 3
         for       = "5m"
@@ -84,7 +84,7 @@ locals {
       },
       {
         name      = "DeploymentReplicasMismatch"
-        expr      = "max by (namespace, deployment) (kube_deployment_spec_replicas - kube_deployment_status_replicas_available)"
+        expr      = "max by (cluster, namespace, deployment) (kube_deployment_spec_replicas - kube_deployment_status_replicas_available)"
         op        = "gt"
         threshold = 0
         for       = "15m"
@@ -93,7 +93,7 @@ locals {
       },
       {
         name      = "PVCAlmostFull"
-        expr      = "max by (namespace, persistentvolumeclaim) (kubelet_volume_stats_used_bytes / kubelet_volume_stats_capacity_bytes)"
+        expr      = "max by (cluster, namespace, persistentvolumeclaim) (kubelet_volume_stats_used_bytes / kubelet_volume_stats_capacity_bytes)"
         op        = "gt"
         threshold = 0.85
         for       = "15m"
@@ -106,7 +106,7 @@ locals {
       {
         # Filtered query: empty result (NoData) means everything is healthy
         name          = "ArgoAppNotHealthy"
-        expr          = "sum by (name) (argocd_app_info{health_status!=\"Healthy\"})"
+        expr          = "sum by (cluster, name) (argocd_app_info{health_status!=\"Healthy\"})"
         op            = "gt"
         threshold     = 0
         for           = "15m"
@@ -117,7 +117,7 @@ locals {
       {
         # Filtered query: empty result (NoData) means everything is healthy
         name          = "ArgoAppOutOfSync"
-        expr          = "sum by (name) (argocd_app_info{sync_status!=\"Synced\"})"
+        expr          = "sum by (cluster, name) (argocd_app_info{sync_status!=\"Synced\"})"
         op            = "gt"
         threshold     = 0
         for           = "1h"
@@ -127,7 +127,7 @@ locals {
       },
       {
         name      = "CertificateExpiringSoon"
-        expr      = "min by (namespace, name) ((certmanager_certificate_expiration_timestamp_seconds - time()) / 86400)"
+        expr      = "min by (cluster, namespace, name) ((certmanager_certificate_expiration_timestamp_seconds - time()) / 86400)"
         op        = "lt"
         threshold = 14
         for       = "1h"
@@ -137,7 +137,7 @@ locals {
       {
         # Component-down check: a vanished target yields NoData, so alert on it
         name          = "CNPGInstanceDown"
-        expr          = "min(cnpg_collector_up)"
+        expr          = "min by (cluster) (cnpg_collector_up)"
         op            = "lt"
         threshold     = 1
         for           = "5m"
@@ -147,7 +147,7 @@ locals {
       },
       {
         name          = "ExternalSecretSyncFailing"
-        expr          = "sum by (namespace, name) (externalsecret_status_condition{condition=\"Ready\", status=\"False\"})"
+        expr          = "sum by (cluster, namespace, name) (externalsecret_status_condition{condition=\"Ready\", status=\"False\"})"
         op            = "gt"
         threshold     = 0
         for           = "15m"
@@ -158,7 +158,7 @@ locals {
       {
         # No 5xx samples yet (or no traffic) renders NoData: that is healthy
         name          = "TraefikHigh5xxRate"
-        expr          = "sum(rate(traefik_service_requests_total{code=~\"5..\"}[5m])) / sum(rate(traefik_service_requests_total[5m]))"
+        expr          = "sum by (cluster) (rate(traefik_service_requests_total{code=~\"5..\"}[5m])) / sum by (cluster) (rate(traefik_service_requests_total[5m]))"
         op            = "gt"
         threshold     = 0.05
         for           = "10m"
@@ -171,7 +171,7 @@ locals {
     gpu = [
       {
         name      = "GPUTemperatureHigh"
-        expr      = "max(DCGM_FI_DEV_GPU_TEMP)"
+        expr      = "max by (cluster) (DCGM_FI_DEV_GPU_TEMP)"
         op        = "gt"
         threshold = 85
         for       = "10m"
@@ -180,7 +180,7 @@ locals {
       },
       {
         name      = "GPUMemoryAlmostFull"
-        expr      = "max(DCGM_FI_DEV_FB_USED / (DCGM_FI_DEV_FB_USED + DCGM_FI_DEV_FB_FREE))"
+        expr      = "max by (cluster) (DCGM_FI_DEV_FB_USED / (DCGM_FI_DEV_FB_USED + DCGM_FI_DEV_FB_FREE))"
         op        = "gt"
         threshold = 0.95
         for       = "15m"
@@ -189,46 +189,51 @@ locals {
       },
     ]
 
-    meta = [
-      {
-        name           = "MetricsPipelineDown"
-        expr           = "min(up{job=\"prometheus-server\"})"
-        op             = "lt"
-        threshold      = 1
-        for            = "5m"
-        severity       = "critical"
-        summary        = "Prometheus is down or unreachable — the metrics pipeline is broken."
-        no_data_state  = "Alerting"
-        exec_err_state = "Alerting"
-      },
-      {
-        name      = "AlloyRemoteWriteFailing"
-        expr      = "sum(rate(prometheus_remote_storage_samples_failed_total[10m]))"
-        op        = "gt"
-        threshold = 0
-        for       = "10m"
-        severity  = "critical"
-        summary   = "Alloy is failing to remote_write samples to Prometheus."
-      },
-      {
-        name          = "CriticalScrapeTargetsAbsent"
-        expr          = "(absent(up{job=\"kubelet\"}) or absent(up{job=\"node-exporter\"}) or absent(up{job=\"apiserver\"})) * 1"
-        op            = "gt"
-        threshold     = 0
-        for           = "15m"
-        severity      = "critical"
-        summary       = "A critical scrape target (kubelet / node-exporter / apiserver) is absent."
-        no_data_state = "OK"
-      },
-      {
-        name      = "ScrapeTargetDown"
-        expr      = "min by (job) (up)"
-        op        = "lt"
-        threshold = 1
-        for       = "15m"
-        severity  = "warning"
-        summary   = "A scrape target has been down for 15 minutes."
-      },
-    ]
+    meta = concat(
+      [
+        {
+          name           = "MetricsPipelineDown"
+          expr           = "min(up{job=\"prometheus-server\"})"
+          op             = "lt"
+          threshold      = 1
+          for            = "5m"
+          severity       = "critical"
+          summary        = "Prometheus is down or unreachable — the metrics pipeline is broken."
+          no_data_state  = "Alerting"
+          exec_err_state = "Alerting"
+        },
+        {
+          name      = "AlloyRemoteWriteFailing"
+          expr      = "sum by (cluster) (rate(prometheus_remote_storage_samples_failed_total[10m]))"
+          op        = "gt"
+          threshold = 0
+          for       = "10m"
+          severity  = "critical"
+          summary   = "Alloy is failing to remote_write samples to Prometheus."
+        },
+        {
+          name      = "ScrapeTargetDown"
+          expr      = "min by (cluster, job) (up)"
+          op        = "lt"
+          threshold = 1
+          for       = "15m"
+          severity  = "warning"
+          summary   = "A scrape target has been down for 15 minutes."
+        },
+      ],
+      [
+        for cluster in var.clusters : {
+          name          = "CriticalScrapeTargetsAbsent-${cluster}"
+          expr          = "(absent(up{job=\"kubelet\", cluster=\"${cluster}\"}) or absent(up{job=\"node-exporter\", cluster=\"${cluster}\"}) or absent(up{job=\"apiserver\", cluster=\"${cluster}\"})) * 1"
+          op            = "gt"
+          threshold     = 0
+          for           = "15m"
+          severity      = "critical"
+          summary       = "A critical scrape target (kubelet / node-exporter / apiserver) is absent on ${cluster}."
+          no_data_state = "OK"
+          labels        = { cluster = cluster }
+        }
+      ],
+    )
   }
 }
