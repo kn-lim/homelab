@@ -63,8 +63,11 @@ unit "cluster-bootstrap" {
     }
   }
 
-  values = {
-    namespace         = values.cluster-bootstrap.namespace
-    token_secret_name = values.cluster-bootstrap.token_secret_name
-  }
+  values = merge(
+    {
+      namespace         = values.cluster-bootstrap.namespace
+      token_secret_name = values.cluster-bootstrap.token_secret_name
+    },
+    try(values.cluster-bootstrap.argocd_registration, null) != null ? { argocd_registration = values.cluster-bootstrap.argocd_registration } : {},
+  )
 }

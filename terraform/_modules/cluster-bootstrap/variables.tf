@@ -1,3 +1,15 @@
+# Optional Variables
+
+variable "argocd_registration" {
+  description = "Register this cluster with a remote ArgoCD hub by storing manager credentials in 1Password. Null disables registration."
+  type = object({
+    cluster_endpoint = string
+    vault_name       = string
+    secret_name      = string
+  })
+  default = null
+}
+
 # Required Variables
 
 variable "namespace" {

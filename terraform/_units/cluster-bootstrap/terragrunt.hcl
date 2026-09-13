@@ -1,9 +1,12 @@
 locals {}
 
-inputs = {
-  namespace         = values.namespace
-  token_secret_name = values.token_secret_name
-}
+inputs = merge(
+  {
+    namespace         = values.namespace
+    token_secret_name = values.token_secret_name
+  },
+  try(values.argocd_registration, null) != null ? { argocd_registration = values.argocd_registration } : {},
+)
 
 include "root" {
   path = find_in_parent_folders("root.hcl")
