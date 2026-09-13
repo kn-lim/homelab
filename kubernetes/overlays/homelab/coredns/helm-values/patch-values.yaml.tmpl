@@ -12,6 +12,7 @@ valuesInline:
     name: kube-dns
     clusterIP: {{ .coredns_cluster_ip }}   # service subnet
   servers:
+{{- if (index . "tailscale_nameserver_ip") }}
     # Tailscale Nameserver
     - zones:
         - zone: ts.net
@@ -20,7 +21,7 @@ valuesInline:
         - name: errors
         - name: forward
           parameters: . {{ .tailscale_nameserver_ip }}   # tailscale nameserver ip
-
+{{ end }}
     # Talos Linux Defaults
     - zones:
         - zone: .
