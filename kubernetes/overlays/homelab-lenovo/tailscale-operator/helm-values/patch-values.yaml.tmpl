@@ -1,0 +1,14 @@
+{{- $config := (datasource "config") -}}
+{{- range $config.clusters -}}
+{{- if eq .name "homelab-lenovo" -}}
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+
+metadata:
+  name: tailscale-operator
+
+valuesInline:
+  operatorConfig:
+    hostname: tailscale-operator-{{ .name }}
+{{- end }}
+{{- end }}

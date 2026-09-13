@@ -1,0 +1,18 @@
+{{- $config := (datasource "config") -}}
+{{- range $config.clusters -}}
+{{- if eq .name "homelab-lenovo" -}}
+# This Service sends traffic to the tsidp instance on the homelab cluster.
+apiVersion: v1
+kind: Service
+
+metadata:
+  annotations:
+    tailscale.com/tailnet-fqdn: idp.{{ .tailscale_tailnet_name }}.ts.net
+  name: tsidp-egress
+  namespace: tsidp
+
+spec:
+  externalName: placeholder   # will be overwritten by operator
+  type: ExternalName
+{{- end }}
+{{- end }}

@@ -1,0 +1,9 @@
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+
+metadata:
+  name: tailscale-operator
+
+valuesInline:
+  operatorConfig:
+    hostname: tailscale-operator-homelab-lenovo
