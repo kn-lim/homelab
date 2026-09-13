@@ -6,6 +6,10 @@ kind: CiliumLoadBalancerIPPool
 
 metadata:
   name: local-pool
+  annotations:
+    # The cilium-operator creates the Cilium CRDs at runtime.
+    # This option lets ArgoCD sync this resource before the CRDs exist.
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 
 spec:
   blocks:

@@ -3,6 +3,10 @@ kind: CiliumL2AnnouncementPolicy
 
 metadata:
   name: local-gateway-policy
+  annotations:
+    # The cilium-operator creates the Cilium CRDs at runtime.
+    # This option lets ArgoCD sync this resource before the CRDs exist.
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 
 spec:
   serviceSelector:
