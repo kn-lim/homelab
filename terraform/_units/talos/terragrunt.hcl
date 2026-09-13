@@ -18,6 +18,8 @@ inputs = merge(
   try(values.talos_version, null) != null ? { talos_version = values.talos_version } : {},
   try(values.nvidia_gpu_enabled, null) != null ? { nvidia_gpu_enabled = values.nvidia_gpu_enabled } : {},
   try(values.kubernetes_version, null) != null ? { kubernetes_version = values.kubernetes_version } : {},
+  try(values.system_extensions, null) != null ? { system_extensions = values.system_extensions } : {},
+  try(values.virtiofs_volumes, null) != null ? { virtiofs_volumes = values.virtiofs_volumes } : {},
 )
 
 include "root" {

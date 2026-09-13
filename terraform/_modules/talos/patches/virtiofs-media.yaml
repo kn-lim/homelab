@@ -1,7 +1,0 @@
-apiVersion: v1alpha1
-kind: ExternalVolumeConfig
-name: media
-filesystemType: virtiofs
-mount:
-  virtiofs:
-    tag: media

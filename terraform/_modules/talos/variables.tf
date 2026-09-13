@@ -14,16 +14,22 @@ variable "nvidia_gpu_enabled" {
   default     = false
 }
 
-variable "talos_system_extensions" {
-  description = "List of official Talos system extensions to install"
+variable "system_extensions" {
+  description = "List of official Talos system extensions to include in the image"
   type        = list(string)
-  default     = [""]
+  default     = []
 }
 
 variable "talos_version" {
   description = "Talos version for machine configuration schema"
   type        = string
   default     = "v1.13.5"
+}
+
+variable "virtiofs_volumes" {
+  description = "List of virtiofs tags to mount as external volumes (VM hosts only)"
+  type        = list(string)
+  default     = []
 }
 
 # Required Variables

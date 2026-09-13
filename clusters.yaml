@@ -11,6 +11,16 @@ clusters:
     ## NVIDIA GPU Support
     nvidia_gpu_enabled: true
 
+    ## Talos System Extensions
+    system_extensions:
+      - siderolabs/qemu-guest-agent
+
+    ## Virtiofs Volumes
+    virtiofs_volumes:
+      - kubernetes-array
+      - kubernetes-data
+      - media
+
     ## Cluster Endpoint IP
     endpoint: "https://talos.homelab.knlim.dev:6443"
 

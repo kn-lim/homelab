@@ -23,10 +23,12 @@ resource "talos_machine_configuration_apply" "controlplane" {
       file("${path.module}/patches/cluster.yaml"),
       file("${path.module}/patches/machine.yaml"),
       file("${path.module}/patches/registry.yaml"),
-      file("${path.module}/patches/virtiofs-array.yaml"),
-      file("${path.module}/patches/virtiofs-data.yaml"),
-      file("${path.module}/patches/virtiofs-media.yaml"),
-
+    ],
+    [
+      for volume in var.virtiofs_volumes :
+      templatefile("${path.module}/templates/virtiofs.yaml.tmpl", { volume = volume })
+    ],
+    [
       # templates/
       templatefile("${path.module}/templates/cluster.yaml.tmpl", {
         node_subnet    = var.node_subnet

@@ -28,6 +28,22 @@ stack "talos" {
 
       nvidia_gpu_enabled = {{ .nvidia_gpu_enabled }}
 {{- end }}
+{{- if (index . "system_extensions") }}
+
+      system_extensions = [
+{{- range .system_extensions }}
+        "{{ . }}",
+{{- end }}
+      ]
+{{- end }}
+{{- if (index . "virtiofs_volumes") }}
+
+      virtiofs_volumes = [
+{{- range .virtiofs_volumes }}
+        "{{ . }}",
+{{- end }}
+      ]
+{{- end }}
 
       node_data = {
         controlplanes = {

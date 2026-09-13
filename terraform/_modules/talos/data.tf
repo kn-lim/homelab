@@ -8,9 +8,8 @@ data "talos_image_factory_extensions_versions" "default" {
   talos_version = var.talos_version
   exact_filters = {
     names = concat(
-      ["siderolabs/qemu-guest-agent"],
+      var.system_extensions,
       var.nvidia_gpu_enabled ? ["siderolabs/nonfree-kmod-nvidia-lts", "siderolabs/nvidia-container-toolkit-lts"] : [],
-      var.talos_system_extensions
     )
   }
 }

@@ -50,8 +50,9 @@ No modules.
 | <a name="input_nvidia_gpu_enabled"></a> [nvidia\_gpu\_enabled](#input\_nvidia\_gpu\_enabled) | Enable NVIDIA GPU support on Talos nodes | `bool` | `false` | no |
 | <a name="input_pod_subnet"></a> [pod\_subnet](#input\_pod\_subnet) | Pod subnet for Kubernetes pods | `string` | n/a | yes |
 | <a name="input_service_subnet"></a> [service\_subnet](#input\_service\_subnet) | Service subnet for Kubernetes services | `string` | n/a | yes |
-| <a name="input_talos_system_extensions"></a> [talos\_system\_extensions](#input\_talos\_system\_extensions) | List of official Talos system extensions to install | `list(string)` | <pre>[<br/>  ""<br/>]</pre> | no |
+| <a name="input_system_extensions"></a> [system\_extensions](#input\_system\_extensions) | List of official Talos system extensions to include in the image | `list(string)` | `[]` | no |
 | <a name="input_talos_version"></a> [talos\_version](#input\_talos\_version) | Talos version for machine configuration schema | `string` | `"v1.13.5"` | no |
+| <a name="input_virtiofs_volumes"></a> [virtiofs\_volumes](#input\_virtiofs\_volumes) | List of virtiofs tags to mount as external volumes (VM hosts only) | `list(string)` | `[]` | no |
 
 ## Outputs
 

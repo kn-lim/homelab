@@ -18,6 +18,16 @@ stack "talos" {
 
       nvidia_gpu_enabled = true
 
+      system_extensions = [
+        "siderolabs/qemu-guest-agent",
+      ]
+
+      virtiofs_volumes = [
+        "kubernetes-array",
+        "kubernetes-data",
+        "media",
+      ]
+
       node_data = {
         controlplanes = {
           "10.1.2.11" = {
