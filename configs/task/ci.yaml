@@ -47,7 +47,13 @@ tasks:
         [ -z "$path" ] && continue
         case "$path" in
           kubernetes/overlays/*)
-            echo "task ci:argo APPLICATION=$(echo "$path" | cut -d'/' -f4)"
+            cluster=$(echo "$path" | cut -d'/' -f3)
+            app=$(echo "$path" | cut -d'/' -f4)
+            if [ "$cluster" = "homelab" ]; then
+              echo "task ci:argo APPLICATION=$app"
+            else
+              echo "task ci:argo APPLICATION=${cluster}-${app}"
+            fi
             ;;
           kubernetes/bases/*)
             override=$(lookup_ci kubernetes "$path")
