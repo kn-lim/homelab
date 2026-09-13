@@ -25,7 +25,12 @@ valuesInline:
         // -- Storage ---------------------------------------------------------
         prometheus.remote_write "default" {
           endpoint {
-            url = "http://prometheus-server.prometheus.svc.cluster.local:80/api/v1/write"
+            url = "{{ .prometheus_remote_write_url }}"
+          }
+
+          // The cluster label separates this cluster from the other clusters in Grafana.
+          external_labels = {
+            cluster = "{{ .name }}",
           }
         }
 

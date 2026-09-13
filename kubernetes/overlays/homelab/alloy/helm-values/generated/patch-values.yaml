@@ -24,6 +24,11 @@ valuesInline:
           endpoint {
             url = "http://prometheus-server.prometheus.svc.cluster.local:80/api/v1/write"
           }
+
+          // The cluster label separates this cluster from the other clusters in Grafana.
+          external_labels = {
+            cluster = "homelab",
+          }
         }
 
         // -- ServiceMonitor / PodMonitor discovery

@@ -74,6 +74,9 @@ clusters:
     ## CoreDNS Cluster IP
     coredns_cluster_ip: "10.96.0.10"
 
+    ## Prometheus Remote Write URL
+    prometheus_remote_write_url: "http://prometheus-server.prometheus.svc.cluster.local:80/api/v1/write"
+
     ## Local Domain
     local_domain: "knlim.dev"
 
@@ -161,6 +164,9 @@ clusters:
 
     ## CoreDNS Cluster IP
     coredns_cluster_ip: "10.96.0.10"
+
+    ## Prometheus Remote Write URL
+    prometheus_remote_write_url: "https://prometheus.neon-wyrm.ts.net/api/v1/write"
 
     ## Local Domain
     local_domain: "homelab-lenovo.knlim.dev"

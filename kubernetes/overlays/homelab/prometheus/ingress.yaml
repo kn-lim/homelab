@@ -4,6 +4,8 @@ kind: Ingress
 metadata:
   name: prometheus
   namespace: prometheus
+  annotations:
+    tailscale.com/tags: "tag:k8s-prometheus"
 
 spec:
   ingressClassName: tailscale
