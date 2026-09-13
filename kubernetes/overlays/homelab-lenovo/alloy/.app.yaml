@@ -1,0 +1,7 @@
+project: platform
+ignoreDifferences:
+  - group: ""
+    kind: Service
+    name: prometheus-egress
+    jsonPointers:
+      - /spec/externalName

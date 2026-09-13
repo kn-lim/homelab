@@ -1,0 +1,19 @@
+{{- $config := (datasource "config") -}}
+{{- range $config.clusters -}}
+{{- if eq .name "homelab-lenovo" -}}
+# This Service sends remote-write traffic to the Prometheus on the homelab cluster.
+apiVersion: v1
+kind: Service
+
+metadata:
+  annotations:
+    tailscale.com/tailnet-fqdn: prometheus.{{ .tailscale_tailnet_name }}.ts.net
+    tailscale.com/hostname: prometheus-egress-{{ .name }}
+  name: prometheus-egress
+  namespace: alloy
+
+spec:
+  externalName: placeholder   # will be overwritten by operator
+  type: ExternalName
+{{- end }}
+{{- end }}
