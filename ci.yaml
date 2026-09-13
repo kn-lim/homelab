@@ -5,6 +5,12 @@ deploy:
         functionName: homelab-lambda
         s3Key: lambda/webhook/bootstrap.zip
 
+kubernetes:
+  run:
+    - application: tsidp
+      whenModified:
+        - kubernetes/bases/tailscale-dns
+
 terraform:
   run:
     - application: dreamingway-bot
