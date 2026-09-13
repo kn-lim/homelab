@@ -194,8 +194,8 @@ terraform/
 
 | Node | Specs | OS | Host | Function |
 | - | - | - | - | - |
-| VM - `talos` | 8 CPU, 36GB RAM | Talos Linux | `homelab` | Main Node |
-| Laptop - `homelab-lenovo` | 12 CPU, 16GB RAM | Talos Linux | `homelab-lenovo` | Node with Less Power Consumption |
+| VM - `homelab-talos` | 8 CPU, 36GB RAM | Talos Linux | `homelab` | Main Node |
+| Laptop - `homelab-lenovo` | 12 CPU, 16GB RAM | Talos Linux | `homelab-lenovo` | Node with Low Power Consumption |
 
 ## Cost
 
