@@ -1,0 +1,17 @@
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+
+metadata:
+  name: tailscale-operator
+
+name: tailscale-operator
+# renovate: datasource=helm depName=tailscale-operator repository=https://pkgs.tailscale.com/helmcharts
+version: 1.102.3
+releaseName: tailscale-operator
+namespace: tailscale
+repo: https://pkgs.tailscale.com/helmcharts
+includeCRDs: true
+valuesInline:
+  operatorConfig:
+    podAnnotations:
+      secret.reloader.stakater.com/auto: "true"

@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
   - ../../../bases/tsidp
+  - ../../../bases/tailscale-dns
   - generated/egress-service.yaml
   - namespace.yaml
   - pvc.yaml

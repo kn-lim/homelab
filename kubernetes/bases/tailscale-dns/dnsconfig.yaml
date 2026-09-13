@@ -3,7 +3,6 @@ kind: DNSConfig
 
 metadata:
   name: ts-dns
-  namespace: tsidp
 
 spec:
   nameserver:
