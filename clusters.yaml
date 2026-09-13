@@ -92,3 +92,83 @@ clusters:
       - traefik
       - vikunja
       - wiki
+
+    ## Cluster Name
+  - name: "homelab-lenovo"
+
+    ## Talos Version
+    talos_version: "v1.13.9"
+
+    ## Kubernetes Version
+    kubernetes_version: "v1.36.4"
+
+    ## NVIDIA GPU Support
+    nvidia_gpu_enabled: false
+
+    ## Talos System Extensions
+    system_extensions:
+      - siderolabs/amd-ucode
+
+    ## Cluster Endpoint IP
+    endpoint: "https://talos.homelab-lenovo.knlim.dev:6443"
+
+    ## Cluster DNS Server IP
+    dns_server: "1.1.1.3"
+
+    ## Cluster DNS Gateway IP
+    gateway: "10.1.2.1"
+
+    ## Network Interface Hardware MAC Address
+    hardware_addr: "a0:ce:c8:ce:86:1e"
+
+    ## Control Plane Nodes
+    controlplanes:
+        ## Node IP Address
+      - ip: "10.1.2.20"
+
+        ## Node Install Disk
+        install_disk: "/dev/nvme0n1"
+
+        ## Node Hostname
+        hostname: "homelab-lenovo"
+
+    ## Node Subnet CIDR
+    node_subnet: "10.1.2.0/24"
+
+    ## Service Subnet CIDR
+    service_subnet: "10.96.0.0/16"
+
+    ## Pod Subnet CID
+    pod_subnet: "10.244.0.0/16"
+
+    ## 1Password Vault Name
+    vault_name: "Homelab"
+
+    ## External Secrets
+    external_secrets:
+        ## 1Password SDK
+      - onepassword:
+          - vault_name: "Homelab"
+            namespace: "external-secrets"
+            secret_name: "op-sa-kubernetes"
+            token_secret_name: "onepassword-token"
+
+    ## Tailscale Tailnet Name
+    tailscale_tailnet_name: "neon-wyrm"
+
+    ## Tailscale Nameserver IP
+    # TODO: Fill in after cluster initializes
+    # tailscale_nameserver_ip: ""
+
+    ## CoreDNS Cluster IP
+    coredns_cluster_ip: "10.96.0.10"
+
+    ## Local Domain
+    local_domain: "homelab-lenovo.knlim.dev"
+
+    ## Local VIP
+    local_vip: "10.1.2.21"
+
+    ## Local Services
+    local_services:
+      - traefik
