@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+generators:
+  - helm-values
+
+resources:
+  # - ../../../bases/cilium
+  - generated/lb-pool.yaml
+  - generated/l2-policy.yaml

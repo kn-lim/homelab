@@ -188,12 +188,14 @@ terraform/
 | Device | Specs | OS | Function |
 | - | - | - | - |
 | PC - `homelab` | AMD Ryzen 5 5600X, 64GB RAM, NVIDIA GTX 1080 (8GB VRAM) | Unraid 7 | NAS with Talos Linux VM |
+| Laptop - `homelab-lenovo` | Lenovo IdeaPad 5 Pro 14ACN6, AMD Ryzen 5 5600U, 16GB RAM | Talos Linux | Standalone Kubernetes Cluster |
 | Linksys Velop | - | - | Access Points |
 | UniFi Cloud Gateway Ultra | - | - | Router and Firewall |
 
 | Node | Specs | OS | Host | Function |
 | - | - | - | - | - |
-| VM - `talos` | 8 CPU, 36GB RAM | Talos Linux | `homelab` | Control Plane Node |
+| VM - `talos` | 8 CPU, 36GB RAM | Talos Linux | `homelab` | Main Node |
+| Laptop - `homelab-lenovo` | 12 CPU, 16GB RAM | Talos Linux | `homelab-lenovo` | Node with Less Power Consumption |
 
 ## Cost
 

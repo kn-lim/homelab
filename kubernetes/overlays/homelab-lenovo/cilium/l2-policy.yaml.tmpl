@@ -1,0 +1,17 @@
+{{- $config := (datasource "config") -}}
+{{- range $config.clusters -}}
+{{- if eq .name "homelab-lenovo" -}}
+apiVersion: cilium.io/v2alpha1
+kind: CiliumL2AnnouncementPolicy
+
+metadata:
+  name: local-gateway-policy
+
+spec:
+  serviceSelector:
+    matchLabels:
+      app.kubernetes.io/name: traefik
+  externalIPs: false
+  loadBalancerIPs: true
+{{- end }}
+{{- end }}
