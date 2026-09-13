@@ -19,7 +19,11 @@ spec:
           project: apps
   template:
     metadata:
-      name: '{{ .path.basename }}'
+      # TODO: Cleanup to include homelab-* when rebuilding homelab from scratch
+      name: '{{ if eq (index .path.segments 2) "homelab" }}{{ .path.basename }}{{ else }}{{ index .path.segments 2 }}-{{ .path.basename }}{{ end }}'
+      labels:
+        cluster: '{{ index .path.segments 2 }}'
+        project: '{{ .project }}'
     spec:
       project: apps
       source:

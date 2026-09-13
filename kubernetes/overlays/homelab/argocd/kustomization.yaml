@@ -13,6 +13,7 @@ resources:
   - appproject-platform.yaml
   - argocd-rbac-cm.yaml
   - cluster-homelab.yaml
+  - generated/clusters.yaml
   - ingress.yaml
   - namespace.yaml
   - secret-ssh.yaml

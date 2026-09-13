@@ -1,0 +1,35 @@
+---
+# ArgoCD cluster Secret for homelab-lenovo, rendered from the 1Password item written by the cluster-bootstrap module.
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+
+metadata:
+  name: cluster-homelab-lenovo
+  namespace: argocd
+
+spec:
+  refreshInterval: 24h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword
+  target:
+    name: cluster-homelab-lenovo
+    creationPolicy: Owner
+    template:
+      metadata:
+        labels:
+          argocd.argoproj.io/secret-type: cluster
+      data:
+        name: homelab-lenovo
+        server: '{{ .server }}'
+        config: '{"bearerToken":"{{ .bearer_token }}","tlsClientConfig":{"caData":"{{ .ca_data }}"}}'
+  data:
+    - secretKey: server
+      remoteRef:
+        key: argocd-cluster-homelab-lenovo/server
+    - secretKey: bearer_token
+      remoteRef:
+        key: argocd-cluster-homelab-lenovo/bearer_token
+    - secretKey: ca_data
+      remoteRef:
+        key: argocd-cluster-homelab-lenovo/ca_data

@@ -1,0 +1,40 @@
+{{- $config := (datasource "config") -}}
+{{- range $config.clusters -}}
+{{- if ne .name "homelab" -}}
+---
+# ArgoCD cluster Secret for {{ .name }}, rendered from the 1Password item written by the cluster-bootstrap module.
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+
+metadata:
+  name: cluster-{{ .name }}
+  namespace: argocd
+
+spec:
+  refreshInterval: 24h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword
+  target:
+    name: cluster-{{ .name }}
+    creationPolicy: Owner
+    template:
+      metadata:
+        labels:
+          argocd.argoproj.io/secret-type: cluster
+      data:
+        name: {{ .name }}
+        server: '{{ "{{ .server }}" }}'
+        config: '{"bearerToken":"{{ "{{ .bearer_token }}" }}","tlsClientConfig":{"caData":"{{ "{{ .ca_data }}" }}"}}'
+  data:
+    - secretKey: server
+      remoteRef:
+        key: argocd-cluster-{{ .name }}/server
+    - secretKey: bearer_token
+      remoteRef:
+        key: argocd-cluster-{{ .name }}/bearer_token
+    - secretKey: ca_data
+      remoteRef:
+        key: argocd-cluster-{{ .name }}/ca_data
+{{- end }}
+{{- end }}
