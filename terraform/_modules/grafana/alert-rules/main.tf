@@ -27,7 +27,7 @@ resource "grafana_rule_group" "groups" {
       labels = merge(
         {
           severity = rule.value.severity
-          cluster = "{{ $labels.cluster }}"
+          cluster  = "{{ $labels.cluster }}"
         },
         lookup(rule.value, "labels", {}),
       )

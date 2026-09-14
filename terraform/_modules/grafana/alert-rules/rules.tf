@@ -224,12 +224,12 @@ locals {
       [
         for cluster in var.clusters : {
           name          = "CriticalScrapeTargetsAbsent-${cluster}"
-          expr          = "(absent(up{job=\"kubelet\", cluster=\"${cluster}\"}) or absent(up{job=\"node-exporter\", cluster=\"${cluster}\"}) or absent(up{job=\"apiserver\", cluster=\"${cluster}\"})) * 1"
+          expr          = "(absent(up{job=\"kubelet\", cluster=\"${cluster}\"}) or absent(up{job=\"node-exporter\", cluster=\"${cluster}\"}) or absent(up{job=\"apiserver\", cluster=\"${cluster}\"}) or absent(up{job=\"etcd\", cluster=\"${cluster}\"}) or absent(up{job=\"kube-state-metrics\", cluster=\"${cluster}\"})) * 1"
           op            = "gt"
           threshold     = 0
           for           = "15m"
           severity      = "critical"
-          summary       = "A critical scrape target (kubelet / node-exporter / apiserver) is absent on ${cluster}."
+          summary       = "A critical scrape target (kubelet / node-exporter / apiserver / etcd / kube-state-metrics) is absent on ${cluster}."
           no_data_state = "OK"
           labels        = { cluster = cluster }
         }
