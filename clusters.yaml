@@ -112,6 +112,9 @@ clusters:
     system_extensions:
       - siderolabs/amd-ucode
 
+    ## Directory Volumes
+      - democratic-csi
+
     ## Cluster Endpoint IP
     endpoint: "https://talos.homelab-lenovo.knlim.dev:6443"
 

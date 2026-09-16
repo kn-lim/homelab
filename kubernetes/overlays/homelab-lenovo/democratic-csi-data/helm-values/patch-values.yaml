@@ -23,7 +23,7 @@ valuesInline:
       - name: local-storage
         hostPath:
           path: /var/mnt/democratic-csi
-          type: DirectoryOrCreate
+          type: Directory
 
   storageClasses:
     - name: local-data

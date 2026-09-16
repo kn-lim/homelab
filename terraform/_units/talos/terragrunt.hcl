@@ -20,6 +20,7 @@ inputs = merge(
   try(values.kubernetes_version, null) != null ? { kubernetes_version = values.kubernetes_version } : {},
   try(values.system_extensions, null) != null ? { system_extensions = values.system_extensions } : {},
   try(values.virtiofs_volumes, null) != null ? { virtiofs_volumes = values.virtiofs_volumes } : {},
+  try(values.directory_volumes, null) != null ? { directory_volumes = values.directory_volumes } : {},
 )
 
 include "root" {

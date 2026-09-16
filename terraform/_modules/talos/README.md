@@ -41,6 +41,7 @@ No modules.
 | ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_cluster_endpoint"></a> [cluster\_endpoint](#input\_cluster\_endpoint) | The endpoint for the Talos cluster | `string` | n/a | yes |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | A name to provide for the Talos cluster | `string` | n/a | yes |
+| <a name="input_directory_volumes"></a> [directory\_volumes](#input\_directory\_volumes) | List of user volume names to create as plain directories on the EPHEMERAL partition, mounted at /var/mnt/<name> | `list(string)` | `[]` | no |
 | <a name="input_dns_server"></a> [dns\_server](#input\_dns\_server) | DNS server | `string` | n/a | yes |
 | <a name="input_gateway"></a> [gateway](#input\_gateway) | Network gateway | `string` | n/a | yes |
 | <a name="input_hardware_addr"></a> [hardware\_addr](#input\_hardware\_addr) | Network interface hardware MAC address for Talos nodes | `string` | n/a | yes |

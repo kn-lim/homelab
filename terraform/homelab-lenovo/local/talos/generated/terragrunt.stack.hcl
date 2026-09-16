@@ -20,6 +20,10 @@ stack "talos" {
         "siderolabs/amd-ucode",
       ]
 
+      directory_volumes = [
+        "democratic-csi",
+      ]
+
       node_data = {
         controlplanes = {
           "10.1.2.20" = {

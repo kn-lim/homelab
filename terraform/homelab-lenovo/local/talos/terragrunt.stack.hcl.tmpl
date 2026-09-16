@@ -44,6 +44,14 @@ stack "talos" {
 {{- end }}
       ]
 {{- end }}
+{{- if (index . "directory_volumes") }}
+
+      directory_volumes = [
+{{- range .directory_volumes }}
+        "{{ . }}",
+{{- end }}
+      ]
+{{- end }}
 
       node_data = {
         controlplanes = {

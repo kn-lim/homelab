@@ -32,6 +32,12 @@ variable "virtiofs_volumes" {
   default     = []
 }
 
+variable "directory_volumes" {
+  description = "List of user volume names to create as plain directories on the EPHEMERAL partition, mounted at /var/mnt/<name>"
+  type        = list(string)
+  default     = []
+}
+
 # Required Variables
 
 variable "cluster_endpoint" {

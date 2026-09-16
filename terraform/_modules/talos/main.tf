@@ -29,6 +29,10 @@ resource "talos_machine_configuration_apply" "controlplane" {
       templatefile("${path.module}/templates/virtiofs.yaml.tmpl", { volume = volume })
     ],
     [
+      for volume in var.directory_volumes :
+      templatefile("${path.module}/templates/directory-volume.yaml.tmpl", { volume = volume })
+    ],
+    [
       # templates/
       templatefile("${path.module}/templates/cluster.yaml.tmpl", {
         node_subnet    = var.node_subnet

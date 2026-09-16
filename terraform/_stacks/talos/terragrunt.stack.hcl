@@ -22,6 +22,7 @@ unit "talos" {
     try(values.talos.kubernetes_version, null) != null ? { kubernetes_version = values.talos.kubernetes_version } : {},
     try(values.talos.system_extensions, null) != null ? { system_extensions = values.talos.system_extensions } : {},
     try(values.talos.virtiofs_volumes, null) != null ? { virtiofs_volumes = values.talos.virtiofs_volumes } : {},
+    try(values.talos.directory_volumes, null) != null ? { directory_volumes = values.talos.directory_volumes } : {},
   )
 }
 
