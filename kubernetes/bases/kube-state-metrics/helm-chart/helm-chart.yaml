@@ -6,7 +6,7 @@ metadata:
 
 name: kube-state-metrics
 # renovate: datasource=helm depName=kube-state-metrics repository=https://prometheus-community.github.io/helm-charts
-version: 8.4.2
+version: 8.5.0
 releaseName: kube-state-metrics
 namespace: kube-state-metrics
 repo: https://prometheus-community.github.io/helm-charts
