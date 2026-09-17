@@ -113,6 +113,7 @@ clusters:
       - siderolabs/amd-ucode
 
     ## Directory Volumes
+    directory_volumes:
       - democratic-csi
 
     ## Cluster Endpoint IP
@@ -163,7 +164,7 @@ clusters:
     tailscale_tailnet_name: "neon-wyrm"
 
     ## Tailscale Nameserver IP
-    tailscale_nameserver_ip: "10.96.159.27"
+    tailscale_nameserver_ip: "10.96.44.5"
 
     ## CoreDNS Cluster IP
     coredns_cluster_ip: "10.96.0.10"
@@ -179,4 +180,5 @@ clusters:
 
     ## Local Services
     local_services:
+      - home-assistant
       - traefik

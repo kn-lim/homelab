@@ -1,0 +1,45 @@
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+
+metadata:
+  name: home-assistant
+
+name: home-assistant
+# renovate: datasource=helm depName=home-assistant repository=https://pajikos.github.io/home-assistant-helm-chart/
+version: 0.3.81
+releaseName: home-assistant
+namespace: home-assistant
+repo: https://pajikos.github.io/home-assistant-helm-chart/
+includeCRDs: true
+valuesInline:
+  hostNetwork: true
+  dnsPolicy: ClusterFirstWithHostNet
+
+  service:
+    port: 8123
+
+  ingress:
+    external: true
+
+  configuration:
+    enabled: true
+
+  persistence:
+    enabled: true
+    storageClass: local-data
+    size: 5Gi
+
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      memory: 2Gi
+
+  startupProbe:
+    httpGet:
+      path: /
+      port: http
+      scheme: HTTP
+    periodSeconds: 10
+    failureThreshold: 30

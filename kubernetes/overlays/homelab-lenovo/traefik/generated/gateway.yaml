@@ -23,6 +23,8 @@ spec:
       tls:
         mode: Terminate
         certificateRefs:
+          - name: home-assistant-homelab-lenovo-knlim-dev-tls
+            kind: Secret
           - name: traefik-homelab-lenovo-knlim-dev-tls
             kind: Secret
       allowedRoutes:
@@ -33,4 +35,5 @@ spec:
               - key: kubernetes.io/metadata.name
                 operator: In
                 values:
+                  - home-assistant
                   - traefik

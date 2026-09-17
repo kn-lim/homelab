@@ -1,0 +1,23 @@
+{{- $config := (datasource "config") -}}
+{{- range $config.clusters -}}
+{{- if eq .name "homelab-lenovo" -}}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+
+metadata:
+  name: home-assistant
+  namespace: home-assistant
+
+spec:
+  parentRefs:
+    - name: traefik
+      namespace: traefik
+      sectionName: websecure
+  hostnames:
+    - home-assistant.{{ .local_domain }}
+  rules:
+    - backendRefs:
+        - name: home-assistant
+          port: 8123
+{{- end }}
+{{- end }}
