@@ -6,7 +6,7 @@ metadata:
 
 name: home-assistant
 # renovate: datasource=helm depName=home-assistant repository=https://pajikos.github.io/home-assistant-helm-chart/
-version: 0.3.81
+version: 0.3.82
 releaseName: home-assistant
 namespace: home-assistant
 repo: https://pajikos.github.io/home-assistant-helm-chart/
