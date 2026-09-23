@@ -1,0 +1,4 @@
+# TODO: Revisit workloadIsolation until talos 1.14.2 releases
+apiVersion: v1alpha1
+kind: SecurityProfileConfig
+workloadIsolation: false

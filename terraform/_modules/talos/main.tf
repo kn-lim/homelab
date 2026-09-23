@@ -21,8 +21,10 @@ resource "talos_machine_configuration_apply" "controlplane" {
     [
       # patches/
       file("${path.module}/patches/cluster.yaml"),
+      file("${path.module}/patches/filesystem.yaml"),
       file("${path.module}/patches/machine.yaml"),
       file("${path.module}/patches/registry.yaml"),
+      file("${path.module}/patches/security.yaml"),
     ],
     [
       for volume in var.virtiofs_volumes :

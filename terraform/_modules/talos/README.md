@@ -9,13 +9,13 @@
 | Name | Version |
 | ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.15 |
-| <a name="requirement_talos"></a> [talos](#requirement\_talos) | 0.11.0 |
+| <a name="requirement_talos"></a> [talos](#requirement\_talos) | 0.12.0 |
 
 ## Providers
 
 | Name | Version |
 | ---- | ------- |
-| <a name="provider_talos"></a> [talos](#provider\_talos) | 0.11.0 |
+| <a name="provider_talos"></a> [talos](#provider\_talos) | 0.12.0 |
 
 ## Modules
 
@@ -25,15 +25,15 @@ No modules.
 
 | Name | Type |
 | ---- | ---- |
-| [talos_cluster_kubeconfig.default](https://registry.terraform.io/providers/siderolabs/talos/0.11.0/docs/resources/cluster_kubeconfig) | resource |
-| [talos_image_factory_schematic.default](https://registry.terraform.io/providers/siderolabs/talos/0.11.0/docs/resources/image_factory_schematic) | resource |
-| [talos_machine_bootstrap.default](https://registry.terraform.io/providers/siderolabs/talos/0.11.0/docs/resources/machine_bootstrap) | resource |
-| [talos_machine_configuration_apply.controlplane](https://registry.terraform.io/providers/siderolabs/talos/0.11.0/docs/resources/machine_configuration_apply) | resource |
-| [talos_machine_secrets.default](https://registry.terraform.io/providers/siderolabs/talos/0.11.0/docs/resources/machine_secrets) | resource |
-| [talos_client_configuration.default](https://registry.terraform.io/providers/siderolabs/talos/0.11.0/docs/data-sources/client_configuration) | data source |
-| [talos_image_factory_extensions_versions.default](https://registry.terraform.io/providers/siderolabs/talos/0.11.0/docs/data-sources/image_factory_extensions_versions) | data source |
-| [talos_image_factory_urls.default](https://registry.terraform.io/providers/siderolabs/talos/0.11.0/docs/data-sources/image_factory_urls) | data source |
-| [talos_machine_configuration.controlplane](https://registry.terraform.io/providers/siderolabs/talos/0.11.0/docs/data-sources/machine_configuration) | data source |
+| [talos_cluster_kubeconfig.default](https://registry.terraform.io/providers/siderolabs/talos/0.12.0/docs/resources/cluster_kubeconfig) | resource |
+| [talos_image_factory_schematic.default](https://registry.terraform.io/providers/siderolabs/talos/0.12.0/docs/resources/image_factory_schematic) | resource |
+| [talos_machine_bootstrap.default](https://registry.terraform.io/providers/siderolabs/talos/0.12.0/docs/resources/machine_bootstrap) | resource |
+| [talos_machine_configuration_apply.controlplane](https://registry.terraform.io/providers/siderolabs/talos/0.12.0/docs/resources/machine_configuration_apply) | resource |
+| [talos_machine_secrets.default](https://registry.terraform.io/providers/siderolabs/talos/0.12.0/docs/resources/machine_secrets) | resource |
+| [talos_client_configuration.default](https://registry.terraform.io/providers/siderolabs/talos/0.12.0/docs/data-sources/client_configuration) | data source |
+| [talos_image_factory_extensions_versions.default](https://registry.terraform.io/providers/siderolabs/talos/0.12.0/docs/data-sources/image_factory_extensions_versions) | data source |
+| [talos_image_factory_urls.default](https://registry.terraform.io/providers/siderolabs/talos/0.12.0/docs/data-sources/image_factory_urls) | data source |
+| [talos_machine_configuration.controlplane](https://registry.terraform.io/providers/siderolabs/talos/0.12.0/docs/data-sources/machine_configuration) | data source |
 
 ## Inputs
 
@@ -52,7 +52,7 @@ No modules.
 | <a name="input_pod_subnet"></a> [pod\_subnet](#input\_pod\_subnet) | Pod subnet for Kubernetes pods | `string` | n/a | yes |
 | <a name="input_service_subnet"></a> [service\_subnet](#input\_service\_subnet) | Service subnet for Kubernetes services | `string` | n/a | yes |
 | <a name="input_system_extensions"></a> [system\_extensions](#input\_system\_extensions) | List of official Talos system extensions to include in the image | `list(string)` | `[]` | no |
-| <a name="input_talos_version"></a> [talos\_version](#input\_talos\_version) | Talos version for machine configuration schema | `string` | `"v1.13.5"` | no |
+| <a name="input_talos_version"></a> [talos\_version](#input\_talos\_version) | Talos version for machine configuration schema | `string` | `"v1.14.1"` | no |
 | <a name="input_virtiofs_volumes"></a> [virtiofs\_volumes](#input\_virtiofs\_volumes) | List of virtiofs tags to mount as external volumes (VM hosts only) | `list(string)` | `[]` | no |
 
 ## Outputs
