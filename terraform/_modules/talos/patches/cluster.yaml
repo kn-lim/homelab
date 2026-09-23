@@ -1,4 +1,43 @@
-cluster:
-  allowSchedulingOnControlPlanes: true
-  coreDNS:
-    disabled: true
+# Cilium replaces Flannel, so remove the bundled CNI document.
+apiVersion: v1alpha1
+kind: KubeFlannelCNIConfig
+$patch: delete
+---
+# Cilium replaces kube-proxy. Cilium finds the API server through
+# KubePrism on localhost:7445, so KubePrismConfig must stay.
+apiVersion: v1alpha1
+kind: KubeProxyConfig
+enabled: false
+---
+# ArgoCD deploys CoreDNS with a Helm chart. Cilium does not do this.
+apiVersion: v1alpha1
+kind: KubeCoreDNSConfig
+enabled: false
+---
+# The cluster has one node, so the node must run workloads.
+apiVersion: v1alpha1
+kind: KubeNodeConfig
+taints:
+  node-role.kubernetes.io/control-plane:
+    $patch: delete
+---
+apiVersion: v1alpha1
+kind: KubeAPIServerConfig
+extraArgs:
+  enable-aggregator-routing: "true"
+---
+apiVersion: v1alpha1
+kind: KubeControllerManagerConfig
+extraArgs:
+  bind-address: 0.0.0.0
+---
+apiVersion: v1alpha1
+kind: KubeSchedulerConfig
+extraArgs:
+  bind-address: 0.0.0.0
+---
+# The cluster does not use the discovery service.
+apiVersion: v1alpha1
+kind: DiscoveryServiceConfig
+name: default
+$patch: delete

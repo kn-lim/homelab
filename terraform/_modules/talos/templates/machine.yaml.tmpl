@@ -1,12 +1,21 @@
-machine:
-  install:
-    disk: ${install_disk}
-    image: ${installer_image}
-  kubelet:
-    clusterDNS: [${cluster_dns}]
-    extraConfig:
-      serializeImagePulls: false
-      serverTLSBootstrap: true
-    nodeIP:
-      validSubnets:
-        - ${node_subnet}
+apiVersion: v1alpha1
+kind: UnattendedInstallConfig
+installer:
+  image: ${installer_image}
+provisioning:
+  diskSelector:
+    match: disk.dev_path == "${install_disk}" || "${install_disk}" in disk.symlinks
+---
+apiVersion: v1alpha1
+kind: KubeletConfig
+clusterDNS:
+  - ${cluster_dns}
+config:
+  serializeImagePulls: false
+  serverTLSBootstrap: true
+---
+apiVersion: v1alpha1
+kind: KubeNodeConfig
+nodeIP:
+  validSubnets:
+    - ${node_subnet}
