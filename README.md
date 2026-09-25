@@ -23,7 +23,7 @@ I have two goals in mind for this homelab:
 
 A Kubernetes cluster deployed with [Talos Linux](https://github.com/siderolabs/talos) and [ArgoCD](https://github.com/argoproj/argo-cd) using [GitHub](https://github.com) as the Git provider, [1Password](https://1password.com) to manage secrets and [Tailscale](https://tailscale.com/) as the primary way for application access.
 
-This repository is managed by [mise](https://github.com/jdx/mise) and [pre-commit](https://github.com/pre-commit/pre-commit) to ensure a standardized environment, alongside [Renovate](https://github.com/apps/renovate) to automate dependency management.
+This repository is managed by [mise](https://github.com/jdx/mise) and [prek](https://github.com/j178/prek) to ensure a standardized environment, alongside [Renovate](https://github.com/apps/renovate) to automate dependency management.
 
 [Task](https://github.com/go-task/task) and [gomplate](https://github.com/hairyhenderson/gomplate) are used to generate Kubernetes manifests and Terragrunt HCL files for values to be centrally managed and easily modifiable.
 

@@ -14,9 +14,9 @@ tasks:
     dir: "{{ .ROOT_DIR }}"
 
   pre-commit:
-    desc: Runs pre-commit on all files
+    desc: Runs prek (pre-commit hooks) on all files
     aliases: [pc]
-    cmd: 'pre-commit run --all-files'
+    cmd: 'prek run --all-files'
 
   wiki-sync:
     desc: Force syncs the otterwiki repository with GitHub
