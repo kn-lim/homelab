@@ -28,5 +28,5 @@ include "root" {
 }
 
 terraform {
-  source = "tfr:///terraform-aws-modules/lambda/aws?version=8.8.2"
+  source = "tfr:///terraform-aws-modules/lambda/aws?version=8.9.0"
 }
