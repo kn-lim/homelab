@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: romm-config
+  namespace: romm
+
+data:
+  config.yml: |
+    filesystem:
+      structure:
+        default: "roms/{platform}/{game}"
+        firmware: "bios/{platform}"
