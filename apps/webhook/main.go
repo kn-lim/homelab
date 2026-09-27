@@ -24,8 +24,6 @@ var (
 	client        *sqs.Client
 	webhookSecret []byte
 	sqsURL        string
-
-	logger = slog.New(slog.NewJSONHandler(os.Stderr, nil))
 )
 
 type Message struct {
@@ -36,22 +34,24 @@ type Message struct {
 }
 
 func init() {
+	slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stderr, nil)))
+
 	secret := os.Getenv("GITHUB_WEBHOOK_SECRET")
 	if secret == "" {
-		logger.Error("GITHUB_WEBHOOK_SECRET is not set")
+		slog.Error("GITHUB_WEBHOOK_SECRET is not set")
 		os.Exit(1)
 	}
 	webhookSecret = []byte(secret)
 
 	sqsURL = os.Getenv("AWS_SQS_URL")
 	if sqsURL == "" {
-		logger.Error("AWS_SQS_URL is not set")
+		slog.Error("AWS_SQS_URL is not set")
 		os.Exit(1)
 	}
 
 	cfg, err := config.LoadDefaultConfig(context.Background())
 	if err != nil {
-		logger.Error("failed to load AWS config",
+		slog.Error("failed to load AWS config",
 			"error", err,
 		)
 		os.Exit(1)
@@ -60,6 +60,9 @@ func init() {
 }
 
 func handler(ctx context.Context, request events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
+	// Add the GitHub delivery ID to every log line of this request
+	logger := slog.With("delivery", request.Headers["x-github-delivery"])
+
 	// Check if API Gateway request is base64 encoded
 	bodyBytes := []byte(request.Body)
 	if request.IsBase64Encoded {
