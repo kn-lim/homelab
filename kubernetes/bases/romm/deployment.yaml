@@ -63,6 +63,10 @@ spec:
               mountPath: /romm/assets
             - name: config
               mountPath: /romm/config
+            - name: config-file
+              mountPath: /romm/config/config.yml
+              subPath: config.yml
+              readOnly: true
             - name: library
               mountPath: /romm/library
       volumes:
@@ -75,6 +79,9 @@ spec:
         - name: config
           persistentVolumeClaim:
             claimName: romm-config
+        - name: config-file
+          configMap:
+            name: romm-config
         - name: library
           hostPath:
             path: /var/mnt/media/games
