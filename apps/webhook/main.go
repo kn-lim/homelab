@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
+	"log/slog"
 	"net/http"
 	"os"
 	"strings"
@@ -15,7 +16,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
 	"github.com/google/go-github/v92/github"
-	"go.uber.org/zap"
 )
 
 const delay int32 = 5 // seconds
@@ -24,8 +24,6 @@ var (
 	client        *sqs.Client
 	webhookSecret []byte
 	sqsURL        string
-
-	logger = zap.Must(zap.NewProduction()).Sugar()
 )
 
 type Message struct {
@@ -36,28 +34,34 @@ type Message struct {
 }
 
 func init() {
+	slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stderr, nil)))
+
 	secret := os.Getenv("GITHUB_WEBHOOK_SECRET")
 	if secret == "" {
-		logger.Fatal("GITHUB_WEBHOOK_SECRET is not set")
+		slog.Error("GITHUB_WEBHOOK_SECRET is not set")
+		os.Exit(1)
 	}
 	webhookSecret = []byte(secret)
 
 	sqsURL = os.Getenv("AWS_SQS_URL")
 	if sqsURL == "" {
-		logger.Fatal("AWS_SQS_URL is not set")
+		slog.Error("AWS_SQS_URL is not set")
+		os.Exit(1)
 	}
 
 	cfg, err := config.LoadDefaultConfig(context.Background())
 	if err != nil {
-		logger.Fatalw("failed to load AWS config",
+		slog.Error("failed to load AWS config",
 			"error", err,
 		)
+		os.Exit(1)
 	}
 	client = sqs.NewFromConfig(cfg)
 }
 
 func handler(ctx context.Context, request events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
-	defer func() { _ = logger.Sync() }()
+	// Add the GitHub delivery ID to every log line of this request
+	logger := slog.With("delivery", request.Headers["x-github-delivery"])
 
 	// Check if API Gateway request is base64 encoded
 	bodyBytes := []byte(request.Body)
@@ -65,7 +69,7 @@ func handler(ctx context.Context, request events.APIGatewayV2HTTPRequest) (event
 		var decodeErr error
 		bodyBytes, decodeErr = base64.StdEncoding.DecodeString(request.Body)
 		if decodeErr != nil {
-			logger.Errorw("failed to decode base64 body",
+			logger.Error("failed to decode base64 body",
 				"error", decodeErr,
 			)
 			return events.APIGatewayV2HTTPResponse{
@@ -88,7 +92,7 @@ func handler(ctx context.Context, request events.APIGatewayV2HTTPRequest) (event
 	// Validate the request
 	payload, err := github.ValidatePayload(httpRequest, webhookSecret)
 	if err != nil {
-		logger.Errorw("signature validation failed",
+		logger.Error("signature validation failed",
 			"error", err,
 		)
 		return events.APIGatewayV2HTTPResponse{
@@ -96,7 +100,7 @@ func handler(ctx context.Context, request events.APIGatewayV2HTTPRequest) (event
 		}, nil
 	}
 
-	logger.Infow("received request",
+	logger.Info("received request",
 		"method", httpRequest.Method,
 		"path", httpRequest.URL.Path,
 	)
@@ -104,7 +108,7 @@ func handler(ctx context.Context, request events.APIGatewayV2HTTPRequest) (event
 	// Handle Github webhook events
 	event, err := github.ParseWebHook(github.WebHookType(httpRequest), payload)
 	if err != nil {
-		logger.Errorw("failed to parse webhook",
+		logger.Error("failed to parse webhook",
 			"error", err,
 		)
 		return events.APIGatewayV2HTTPResponse{
@@ -112,7 +116,7 @@ func handler(ctx context.Context, request events.APIGatewayV2HTTPRequest) (event
 		}, nil
 	}
 
-	logger.Infow("received event",
+	logger.Info("received event",
 		"type", github.WebHookType(httpRequest),
 	)
 
@@ -132,7 +136,7 @@ func handler(ctx context.Context, request events.APIGatewayV2HTTPRequest) (event
 		ref := strings.TrimPrefix(event.GetRef(), "refs/heads/")
 		// Check for non-target branches (main and develop)
 		if ref != "main" && ref != "develop" {
-			logger.Infow("ignoring push to non-target branch",
+			logger.Info("ignoring push to non-target branch",
 				"ref", ref,
 			)
 			return events.APIGatewayV2HTTPResponse{
@@ -147,7 +151,7 @@ func handler(ctx context.Context, request events.APIGatewayV2HTTPRequest) (event
 			After:  event.GetAfter(),
 		}
 	default:
-		logger.Infow("unsupported event type",
+		logger.Info("unsupported event type",
 			"type", github.WebHookType(httpRequest),
 		)
 		return events.APIGatewayV2HTTPResponse{
@@ -157,7 +161,7 @@ func handler(ctx context.Context, request events.APIGatewayV2HTTPRequest) (event
 
 	body, err := json.Marshal(msg)
 	if err != nil {
-		logger.Errorw("failed to marshal message",
+		logger.Error("failed to marshal message",
 			"error", err,
 		)
 		return events.APIGatewayV2HTTPResponse{
@@ -172,16 +176,16 @@ func handler(ctx context.Context, request events.APIGatewayV2HTTPRequest) (event
 		QueueUrl:     aws.String(sqsURL),
 	})
 	if err != nil {
-		logger.Errorw("failed to send SQS message",
+		logger.Error("failed to send SQS message",
 			"error", err,
 		)
 		return events.APIGatewayV2HTTPResponse{
 			StatusCode: http.StatusInternalServerError,
 		}, nil
 	}
-	logger.Infow("sent SQS message",
+	logger.Info("sent SQS message",
 		"messageId", aws.ToString(result.MessageId),
-		"msg", msg,
+		"payload", msg,
 	)
 
 	return events.APIGatewayV2HTTPResponse{
