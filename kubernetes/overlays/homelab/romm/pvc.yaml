@@ -42,3 +42,18 @@ spec:
   resources:
     requests:
       storage: 5Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+
+metadata:
+  name: romm-webstation-config
+  namespace: romm
+
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-data
+  resources:
+    requests:
+      storage: 20Gi

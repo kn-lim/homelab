@@ -56,6 +56,11 @@ spec:
                 secretKeyRef:
                   name: romm-secret
                   key: igdb-client-secret
+            - name: STREAMING_BROKER_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: romm-secret
+                  key: streaming-broker-secret
           volumeMounts:
             - name: resources
               mountPath: /romm/resources

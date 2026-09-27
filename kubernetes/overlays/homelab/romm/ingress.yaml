@@ -14,6 +14,16 @@ spec:
       name: romm
       port:
         number: 8080
+  rules:
+    - http:
+        paths:
+          - path: /streaming
+            pathType: Prefix
+            backend:
+              service:
+                name: webstation
+                port:
+                  number: 3000
   tls:
     - hosts:
         - romm
