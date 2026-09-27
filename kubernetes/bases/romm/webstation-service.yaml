@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: webstation
+  namespace: romm
+
+spec:
+  selector:
+    app: webstation
+  ports:
+    - port: 3000
+      targetPort: 3000

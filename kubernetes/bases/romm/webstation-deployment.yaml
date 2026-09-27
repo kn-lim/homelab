@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: webstation
+  namespace: romm
+
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: webstation
+  template:
+    metadata:
+      labels:
+        app: webstation
+    spec:
+      enableServiceLinks: false
+      runtimeClassName: nvidia
+      containers:
+        - name: webstation
+          image: lscr.io/linuxserver/webstation
+          ports:
+            - containerPort: 3000
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: Etc/UTC
+            - name: SUBFOLDER
+              value: /streaming/
+            - name: NVIDIA_DRIVER_CAPABILITIES
+              value: all
+            - name: BROKER_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: romm-secret
+                  key: streaming-broker-secret
+          resources:
+            limits:
+              nvidia.com/gpu: 1
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: library
+              mountPath: /romm/library
+              readOnly: true
+            - name: shm
+              mountPath: /dev/shm
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: romm-webstation-config
+        - name: library
+          hostPath:
+            path: /var/mnt/media/games
+            type: Directory
+        - name: shm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 1Gi

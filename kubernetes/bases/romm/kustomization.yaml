@@ -5,7 +5,11 @@ resources:
   - configmap.yaml
   - deployment.yaml
   - service.yaml
+  - webstation-deployment.yaml
+  - webstation-service.yaml
 
 images:
   - name: ghcr.io/rommapp/romm
     newTag: 5.3.1
+  - name: lscr.io/linuxserver/webstation
+    newTag: 0.10.0-romm

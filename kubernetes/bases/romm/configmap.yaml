@@ -11,3 +11,15 @@ data:
       structure:
         default: "roms/{platform}/{game}"
         firmware: "bios/{platform}"
+    streaming:
+      enabled: true
+      containers:
+        - protocol: webstation
+          host: /streaming
+          subfolder: /streaming
+          broker_host: http://webstation.romm.svc.cluster.local:3000
+          label: Webstation
+          platforms:
+            ngc:
+              emulator: dolphin
+              memory_card_sync: true

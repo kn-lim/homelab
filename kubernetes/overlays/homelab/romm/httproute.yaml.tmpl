@@ -16,6 +16,13 @@ spec:
   hostnames:
     - romm.{{ .local_domain }}
   rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /streaming
+      backendRefs:
+        - name: webstation
+          port: 3000
     - backendRefs:
         - name: romm
           port: 8080
