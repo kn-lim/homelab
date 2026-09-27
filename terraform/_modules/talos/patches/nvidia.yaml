@@ -9,6 +9,9 @@ name: nvidia_uvm
 apiVersion: v1alpha1
 kind: KernelModuleConfig
 name: nvidia_drm
+parameters:
+  - modeset=1
+  - fbdev=1
 ---
 apiVersion: v1alpha1
 kind: KernelModuleConfig
