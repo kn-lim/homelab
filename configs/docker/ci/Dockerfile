@@ -15,8 +15,7 @@ ARG MISE_VERSION=2026.9.14
 RUN curl -fsSL https://mise.run | MISE_VERSION="${MISE_VERSION}" MISE_INSTALL_PATH=/usr/local/bin/mise sh
 
 ENV MISE_SHIMS_DIR=/usr/local/share/mise/shims \
-    MISE_TRUSTED_CONFIG_PATHS=/workdir/src \
-    MISE_YES=1
+    MISE_TRUSTED_CONFIG_PATHS=/workdir/src
 ENV PATH="${MISE_SHIMS_DIR}:${PATH}"
 
 COPY .mise.toml /tmp/mise.toml
