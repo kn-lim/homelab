@@ -8,7 +8,6 @@ require (
 	github.com/aws/aws-sdk-go-v2/config v1.33.6
 	github.com/aws/aws-sdk-go-v2/service/sqs v1.52.1
 	github.com/google/go-github/v92 v92.0.0
-	go.uber.org/zap v1.28.0
 )
 
 require (
@@ -25,5 +24,5 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/sts v1.51.1 // indirect
 	github.com/aws/smithy-go v1.28.1 // indirect
 	github.com/google/go-querystring v1.2.0 // indirect
-	go.uber.org/multierr v1.11.0 // indirect
+	github.com/stretchr/testify v1.8.1 // indirect
 )
