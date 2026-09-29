@@ -18,11 +18,11 @@ ENV MISE_SHIMS_DIR=/usr/local/share/mise/shims \
     MISE_TRUSTED_CONFIG_PATHS=/workdir/src
 ENV PATH="${MISE_SHIMS_DIR}:${PATH}"
 
-COPY .mise.toml /tmp/mise.toml
-
 # Keep only [tools]: the [env] section holds local kubeconfig paths.
+# A bind mount keeps .mise.toml out of the image layers.
 RUN --mount=type=secret,id=github_token,env=GITHUB_TOKEN \
+    --mount=type=bind,source=.mise.toml,target=/tmp/mise.toml \
     mkdir -p /etc/mise \
     && awk '/^\[/ { keep = ($0 == "[tools]") } keep' /tmp/mise.toml > /etc/mise/config.toml \
     && mise install --system \
-    && rm -rf /tmp/mise.toml "$(mise cache path)"
+    && rm -rf "$(mise cache path)"
