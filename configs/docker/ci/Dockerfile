@@ -19,7 +19,6 @@ ENV MISE_SHIMS_DIR=/usr/local/share/mise/shims \
 ENV PATH="${MISE_SHIMS_DIR}:${PATH}"
 
 # Keep only [tools]: the [env] section holds local kubeconfig paths.
-# A bind mount keeps .mise.toml out of the image layers.
 RUN --mount=type=secret,id=github_token,env=GITHUB_TOKEN \
     --mount=type=bind,source=.mise.toml,target=/tmp/mise.toml \
     mkdir -p /etc/mise \
