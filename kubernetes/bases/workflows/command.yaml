@@ -42,12 +42,11 @@ spec:
               default: ""
             globalName: ci-targets
       script:
-        image: debian
+        image: ghcr.io/kn-lim/homelab-ci
+        imagePullPolicy: Always
         command: [bash]
         source: |
           set -eo pipefail
-          DEBIAN_FRONTEND=noninteractive apt-get update -qq 1>&2 && apt-get install -y --no-install-recommends ca-certificates git 1>&2
-          source /workdir/mise-env.sh
           task --yes --list > /dev/null
           task ci:parse PATHS="{{inputs.parameters.paths}}" | tee /tmp/commands.json
           jq -r '[.[].command | (capture("(APPLICATION|DIRECTORY)=(?<v>[^ ]+)") | .v)?] | join(", ")' \
@@ -59,8 +58,6 @@ spec:
         volumeMounts:
           - name: workdir
             mountPath: /workdir
-          - name: mise-cache
-            mountPath: /mise-cache
 
     - name: run
       inputs:
@@ -69,14 +66,12 @@ spec:
           - name: workdir
             default: /workdir/src
       container:
-        image: debian
+        image: ghcr.io/kn-lim/homelab-ci
+        imagePullPolicy: Always
         command: [bash, -c]
         args:
           - |
             set -eo pipefail
-            DEBIAN_FRONTEND=noninteractive apt-get update -qq && apt-get install -y --no-install-recommends ca-certificates git zip
-            [ -f /workdir/mise-env.sh ] || { echo "ERROR: /workdir/mise-env.sh not found — did the setup task run?"; exit 1; }
-            source /workdir/mise-env.sh
             task --yes --list > /dev/null
             {{inputs.parameters.command}}
         workingDir: "{{inputs.parameters.workdir}}"
@@ -89,45 +84,3 @@ spec:
         volumeMounts:
           - name: workdir
             mountPath: /workdir
-          - name: mise-cache
-            mountPath: /mise-cache
-
-    - name: setup
-      script:
-        image: debian
-        command: [bash]
-        source: |
-          set -eo pipefail
-          DEBIAN_FRONTEND=noninteractive apt-get update -qq && apt-get install -y --no-install-recommends curl ca-certificates
-
-          # renovate: datasource=github-releases depName=jdx/mise
-          MISE_VERSION="2026.9.15"
-          export MISE_VERSION
-
-          REPO_SLUG=$(echo "{{workflow.parameters.repo}}" | tr '/' '-' | tr -cd 'A-Za-z0-9._-')
-          [ -n "$REPO_SLUG" ] || { echo "ERROR: could not derive cache slug from repo '{{workflow.parameters.repo}}'"; exit 1; }
-
-          CACHE="/mise-cache/$REPO_SLUG"
-          mkdir -p "$CACHE/bin"
-          export MISE_DATA_DIR="$CACHE/data"
-          export MISE_INSTALL_PATH="$CACHE/bin/mise"
-
-          if [ "$("$MISE_INSTALL_PATH" version 2>/dev/null | head -n1 | cut -d' ' -f1)" != "${MISE_VERSION#v}" ]; then
-            curl https://mise.run | sh
-          fi
-
-          "$MISE_INSTALL_PATH" trust
-          "$MISE_INSTALL_PATH" install
-          "$MISE_INSTALL_PATH" prune --yes
-          "$MISE_INSTALL_PATH" env -s bash > /workdir/mise-env.sh
-          echo "export MISE_DATA_DIR=$MISE_DATA_DIR" >> /workdir/mise-env.sh
-          [ -s /workdir/mise-env.sh ] || { echo "mise env produced empty output"; exit 1; }
-        workingDir: /workdir/src
-        envFrom:
-          - secretRef:
-              name: environment-variables
-        volumeMounts:
-          - name: workdir
-            mountPath: /workdir
-          - name: mise-cache
-            mountPath: /mise-cache
