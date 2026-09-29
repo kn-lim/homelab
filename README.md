@@ -62,6 +62,7 @@ This repository is managed by [mise](https://github.com/jdx/mise) and [prek](htt
 <b>Monitoring</b>
 </summary>
 
+- [alloy](https://github.com/grafana/alloy)
 - [grafana](https://github.com/grafana/grafana)
 - [metrics server](https://github.com/kubernetes-sigs/metrics-server)
 - [prometheus](https://github.com/prometheus-community/helm-charts/)
