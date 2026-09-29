@@ -1,0 +1,60 @@
+name: Build CI Image
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  IMAGE: ghcr.io/kn-lim/homelab-ci
+
+jobs:
+  build:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+
+      - name: Log in to GHCR
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build image
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          file: configs/docker/ci/Dockerfile
+          platforms: linux/amd64
+          load: true
+          push: false
+          secrets: |
+            github_token=${{ secrets.GITHUB_TOKEN }}
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+          tags: |
+            ${{ env.IMAGE }}:latest
+            ${{ env.IMAGE }}:${{ github.sha }}
+
+      - name: Smoke test image
+        run: |
+          docker run --rm "$IMAGE:$GITHUB_SHA" bash -c '
+            set -euo pipefail
+            mise ls --installed
+            task --version
+            terragrunt --version
+            kubectl version --client
+          '
+
+      - name: Push image
+        run: docker push --all-tags "$IMAGE"
