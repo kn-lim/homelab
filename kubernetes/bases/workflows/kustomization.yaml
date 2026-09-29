@@ -6,14 +6,13 @@ resources:
   - command.yaml
   - discord.yaml
   - git.yaml
-  - pvc.yaml
 
 configurations:
   - configurations.yaml
 
 images:
-  - name: debian
-    newTag: "13.7-slim"
+  - name: ghcr.io/kn-lim/homelab-ci
+    newTag: latest
   - name: alpine
     newTag: "3.24"
   - name: alpine/git
