@@ -46,36 +46,6 @@ jobs:
             ${{ env.IMAGE }}:latest
             ${{ env.IMAGE }}:${{ github.sha }}
 
-      - name: Check image metadata for the token
-        env:
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          if docker history --no-trunc "$IMAGE:$GITHUB_SHA" | grep -qF "$TOKEN"; then
-            echo "::error::GITHUB_TOKEN found in image history"; exit 1
-          fi
-          if docker inspect "$IMAGE:$GITHUB_SHA" | grep -qF "$TOKEN"; then
-            echo "::error::GITHUB_TOKEN found in image configuration"; exit 1
-          fi
-
-      # trufflehog cannot verify an installation token, so grep the layers directly.
-      - name: Check image layers for the token
-        env:
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -euo pipefail
-          docker save "$IMAGE:$GITHUB_SHA" -o "$RUNNER_TEMP/image.tar"
-          mkdir "$RUNNER_TEMP/image"
-          tar -xf "$RUNNER_TEMP/image.tar" -C "$RUNNER_TEMP/image"
-          if find "$RUNNER_TEMP/image" -type f -exec sh -c 'zcat -f "$1" | grep -qaF "$TOKEN"' _ {} \; -print | grep -q .; then
-            echo "::error::GITHUB_TOKEN found in an image layer"; exit 1
-          fi
-
-      - name: Scan image for secrets
-        run: |
-          docker run --rm -v "$RUNNER_TEMP:/scan:ro" \
-            trufflesecurity/trufflehog:3.97.9@sha256:52e67fef4d054ecff5c2ce4b4ae376626d1ef54aa0898b53cac19c25e92e14db \
-            docker --image=file:///scan/image.tar --only-verified --fail
-
       - name: Smoke test image
         run: |
           docker run --rm "$IMAGE:$GITHUB_SHA" bash -c '

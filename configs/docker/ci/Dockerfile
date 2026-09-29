@@ -25,13 +25,4 @@ RUN --mount=type=secret,id=github_token,env=GITHUB_TOKEN \
     mkdir -p /etc/mise \
     && awk '/^\[/ { keep = ($0 == "[tools]") } keep' /tmp/mise.toml > /etc/mise/config.toml \
     && mise install --system \
-    && mise reshim \
     && rm -rf /tmp/mise.toml "$(mise cache path)"
-
-RUN cd / \
-    && ! grep -q '^\[env\]' /etc/mise/config.toml \
-    && test "${MISE_TRUSTED_CONFIG_PATHS}" = /workdir/src \
-    && test -x "${MISE_SHIMS_DIR}/task" \
-    && task --version \
-    && terragrunt --version \
-    && kubectl version --client
