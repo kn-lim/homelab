@@ -53,9 +53,6 @@ spec:
           jq -r '[.[].command | (capture("(APPLICATION|DIRECTORY)=(?<v>[^ ]+)") | .v)?] | join(", ")' \
             /tmp/commands.json > /tmp/targets.txt 2>/dev/null || : > /tmp/targets.txt
         workingDir: /workdir/src
-        env:
-          - name: TASK_X_REMOTE_TASKFILES
-            value: "1"
         envFrom:
           - secretRef:
               name: environment-variables
@@ -84,8 +81,6 @@ spec:
             {{inputs.parameters.command}}
         workingDir: "{{inputs.parameters.workdir}}"
         env:
-          - name: TASK_X_REMOTE_TASKFILES
-            value: "1"
           - name: AWS_REGION
             value: "us-west-2"
         envFrom:
