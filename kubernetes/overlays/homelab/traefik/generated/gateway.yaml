@@ -39,6 +39,8 @@ spec:
             kind: Secret
           - name: traefik-knlim-dev-tls
             kind: Secret
+          - name: versitygw-knlim-dev-tls
+            kind: Secret
           - name: vikunja-knlim-dev-tls
             kind: Secret
           - name: wiki-knlim-dev-tls
@@ -59,5 +61,6 @@ spec:
                   - photos
                   - romm
                   - traefik
+                  - versitygw
                   - vikunja
                   - wiki
