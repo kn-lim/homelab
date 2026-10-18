@@ -10,7 +10,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # renovate: datasource=github-releases depName=jdx/mise
-ARG MISE_VERSION=2026.10.13
+ARG MISE_VERSION=2026.10.14
 
 RUN curl -fsSL https://mise.run | MISE_VERSION="${MISE_VERSION}" MISE_INSTALL_PATH=/usr/local/bin/mise sh
 
