@@ -1,0 +1,109 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: '3'
+
+# Input Variables:
+#   NAMESPACES: Space-separated namespaces to back up (e.g. "otterwiki")
+#   CONTEXT:    (Optional) kubectl context to target (e.g. admin@homelab-lenovo); defaults to the current context
+#
+# Cold backup flow: cold-prepare stops the workloads and starts a holder pod that mounts every PVC,
+# cold-backup runs the Velero backup, cold-finish restores the workloads. Run cold-finish even if a step fails.
+# Namespaces with a CloudNativePG Cluster must be left out. The pg_dumpall hook covers them in normal backups.
+
+vars:
+  KUBECTL: 'kubectl{{if .CONTEXT}} --context {{.CONTEXT}}{{end}}'
+  VELERO: 'velero{{if .CONTEXT}} --kubecontext {{.CONTEXT}}{{end}}'
+
+tasks:
+  cold-prepare:
+    desc: Stop workloads in NAMESPACES and start a holder pod that mounts their PVCs
+    requires:
+      vars: [NAMESPACES]
+    cmds:
+      - cmd: |
+          set -eu
+          K="{{.KUBECTL}}"
+          CTX=$($K config current-context)
+          for ns in {{.NAMESPACES}}; do
+            if $K get clusters.postgresql.cnpg.io -n "$ns" -o name 2>/dev/null | grep -q .; then
+              echo "Namespace $ns has a CloudNativePG Cluster. Leave it out of NAMESPACES; normal backups cover it." >&2
+              exit 1
+            fi
+          done
+          if [ "$CTX" = "admin@homelab" ]; then
+            echo "Stopping ArgoCD controller (also stops sync for homelab-lenovo)"
+            $K -n argocd scale statefulset argocd-application-controller --replicas=0
+            $K -n argocd wait --for=delete pod -l app.kubernetes.io/name=argocd-application-controller --timeout=120s
+          fi
+          for ns in {{.NAMESPACES}}; do
+            for kind in deployment statefulset; do
+              for name in $($K -n "$ns" get "$kind" -o jsonpath='{.items[*].metadata.name}'); do
+                if [ -z "$($K -n "$ns" get "$kind" "$name" -o jsonpath='{.metadata.annotations.velero\.homelab/replicas}')" ]; then
+                  replicas=$($K -n "$ns" get "$kind" "$name" -o jsonpath='{.spec.replicas}')
+                  $K -n "$ns" annotate "$kind" "$name" "velero.homelab/replicas=$replicas"
+                fi
+                $K -n "$ns" scale "$kind" "$name" --replicas=0
+              done
+            done
+            $K -n "$ns" wait --for=delete pod --all --field-selector=status.phase!=Succeeded,status.phase!=Failed --timeout=180s
+            pvcs=$($K -n "$ns" get pvc -o jsonpath='{.items[*].metadata.name}')
+            if [ -z "$pvcs" ]; then
+              echo "No PVCs in $ns"
+              continue
+            fi
+            {
+              printf 'apiVersion: v1\nkind: Pod\nmetadata:\n  name: velero-holder\n  namespace: %s\n  labels:\n    velero.homelab/holder: "true"\nspec:\n  containers:\n    - name: holder\n      image: busybox\n      command: ["sleep", "infinity"]\n      volumeMounts:\n' "$ns"
+              i=0
+              for pvc in $pvcs; do
+                printf '        - name: v%s\n          mountPath: /pvc/%s\n' "$i" "$pvc"
+                i=$((i + 1))
+              done
+              printf '  volumes:\n'
+              i=0
+              for pvc in $pvcs; do
+                printf '    - name: v%s\n      persistentVolumeClaim:\n        claimName: %s\n' "$i" "$pvc"
+                i=$((i + 1))
+              done
+            } | $K apply -f -
+            $K -n "$ns" wait --for=condition=Ready pod/velero-holder --timeout=180s
+          done
+
+  cold-backup:
+    desc: Run a Velero backup of NAMESPACES (run cold-prepare first)
+    requires:
+      vars: [NAMESPACES]
+    cmds:
+      - cmd: |
+          set -eu
+          CTX=$({{.KUBECTL}} config current-context)
+          NAME="cold-${CTX#admin@}-$(date +%Y%m%d-%H%M%S)"
+          echo "Backup name: $NAME"
+          {{.VELERO}} backup create "$NAME" \
+            --include-namespaces "$(echo '{{.NAMESPACES}}' | xargs | tr ' ' ',')" \
+            --resource-policies-configmap velero-volume-policy \
+            --ttl 2160h --wait
+
+  cold-finish:
+    desc: Delete holder pods and scale workloads in NAMESPACES back up
+    requires:
+      vars: [NAMESPACES]
+    cmds:
+      - cmd: |
+          set -u
+          K="{{.KUBECTL}}"
+          CTX=$($K config current-context)
+          for ns in {{.NAMESPACES}}; do
+            $K -n "$ns" delete pod -l velero.homelab/holder=true --ignore-not-found
+            for kind in deployment statefulset; do
+              for name in $($K -n "$ns" get "$kind" -o jsonpath='{.items[*].metadata.name}'); do
+                replicas=$($K -n "$ns" get "$kind" "$name" -o jsonpath='{.metadata.annotations.velero\.homelab/replicas}')
+                if [ -n "$replicas" ]; then
+                  $K -n "$ns" scale "$kind" "$name" --replicas="$replicas"
+                  $K -n "$ns" annotate "$kind" "$name" velero.homelab/replicas-
+                fi
+              done
+            done
+          done
+          if [ "$CTX" = "admin@homelab" ]; then
+            $K -n argocd scale statefulset argocd-application-controller --replicas=1
+          fi
