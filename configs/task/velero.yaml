@@ -8,11 +8,12 @@ version: '3'
 #
 # Cold backup flow: cold-prepare stops the workloads and starts a holder pod that mounts every PVC,
 # cold-backup runs the Velero backup, cold-finish restores the workloads. Run cold-finish even if a step fails.
+# The homelab ArgoCD manages both clusters, so cold-prepare always pauses it with the admin@homelab context.
 # Namespaces with a CloudNativePG Cluster must be left out. The pg_dumpall hook covers them in normal backups.
 
 vars:
-  KUBECTL: 'kubectl{{if .CONTEXT}} --context {{.CONTEXT}}{{end}}'
-  VELERO: 'velero{{if .CONTEXT}} --kubecontext {{.CONTEXT}}{{end}}'
+  # renovate: datasource=docker depName=busybox
+  HOLDER_IMAGE: busybox:1.37.0
 
 tasks:
   cold-prepare:
@@ -22,18 +23,28 @@ tasks:
     cmds:
       - cmd: |
           set -eu
-          K="{{.KUBECTL}}"
-          CTX=$($K config current-context)
+          CTX="{{.CONTEXT}}"
+          [ -n "$CTX" ] || CTX=$(kubectl config current-context)
+          K="kubectl --context $CTX"
+          A="kubectl --context admin@homelab -n argocd"
           for ns in {{.NAMESPACES}}; do
             if $K get clusters.postgresql.cnpg.io -n "$ns" -o name 2>/dev/null | grep -q .; then
               echo "Namespace $ns has a CloudNativePG Cluster. Leave it out of NAMESPACES; normal backups cover it." >&2
               exit 1
             fi
           done
-          if [ "$CTX" = "admin@homelab" ]; then
-            echo "Stopping ArgoCD controller (also stops sync for homelab-lenovo)"
-            $K -n argocd scale statefulset argocd-application-controller --replicas=0
-            $K -n argocd wait --for=delete pod -l app.kubernetes.io/name=argocd-application-controller --timeout=120s
+          echo "Stopping the homelab ArgoCD controller (it manages both clusters)"
+          argo_replicas=$($A get statefulset argocd-application-controller -o jsonpath='{.spec.replicas}')
+          if [ "$argo_replicas" -gt 0 ]; then
+            if [ -z "$($A get statefulset argocd-application-controller -o jsonpath='{.metadata.annotations.velero\.homelab/replicas}')" ]; then
+              $A annotate statefulset argocd-application-controller "velero.homelab/replicas=$argo_replicas"
+            fi
+            $A scale statefulset argocd-application-controller --replicas=0
+          fi
+          $A wait --for=delete pod -l app.kubernetes.io/name=argocd-application-controller --timeout=120s
+          if [ -n "$($A get pod -l app.kubernetes.io/name=argocd-application-controller -o name)" ]; then
+            echo "ArgoCD controller pod is still running" >&2
+            exit 1
           fi
           for ns in {{.NAMESPACES}}; do
             for kind in deployment statefulset; do
@@ -45,14 +56,14 @@ tasks:
                 $K -n "$ns" scale "$kind" "$name" --replicas=0
               done
             done
-            $K -n "$ns" wait --for=delete pod --all --field-selector=status.phase!=Succeeded,status.phase!=Failed --timeout=180s
+            $K -n "$ns" wait --for=delete pod --all -l 'velero.homelab/holder!=true' --field-selector=status.phase!=Succeeded,status.phase!=Failed --timeout=180s
             pvcs=$($K -n "$ns" get pvc -o jsonpath='{.items[*].metadata.name}')
             if [ -z "$pvcs" ]; then
               echo "No PVCs in $ns"
               continue
             fi
             {
-              printf 'apiVersion: v1\nkind: Pod\nmetadata:\n  name: velero-holder\n  namespace: %s\n  labels:\n    velero.homelab/holder: "true"\nspec:\n  containers:\n    - name: holder\n      image: busybox\n      command: ["sleep", "infinity"]\n      volumeMounts:\n' "$ns"
+              printf 'apiVersion: v1\nkind: Pod\nmetadata:\n  name: velero-holder\n  namespace: %s\n  labels:\n    velero.homelab/holder: "true"\nspec:\n  containers:\n    - name: holder\n      image: %s\n      imagePullPolicy: IfNotPresent\n      command: ["sleep", "infinity"]\n      volumeMounts:\n' "$ns" "{{.HOLDER_IMAGE}}"
               i=0
               for pvc in $pvcs; do
                 printf '        - name: v%s\n          mountPath: /pvc/%s\n' "$i" "$pvc"
@@ -75,10 +86,11 @@ tasks:
     cmds:
       - cmd: |
           set -eu
-          CTX=$({{.KUBECTL}} config current-context)
+          CTX="{{.CONTEXT}}"
+          [ -n "$CTX" ] || CTX=$(kubectl config current-context)
           NAME="cold-${CTX#admin@}-$(date +%Y%m%d-%H%M%S)"
           echo "Backup name: $NAME"
-          {{.VELERO}} backup create "$NAME" \
+          velero --kubecontext "$CTX" backup create "$NAME" \
             --include-namespaces "$(echo '{{.NAMESPACES}}' | xargs | tr ' ' ',')" \
             --resource-policies-configmap velero-volume-policy \
             --ttl 2160h --wait
@@ -90,8 +102,10 @@ tasks:
     cmds:
       - cmd: |
           set -u
-          K="{{.KUBECTL}}"
-          CTX=$($K config current-context)
+          CTX="{{.CONTEXT}}"
+          [ -n "$CTX" ] || CTX=$(kubectl config current-context)
+          K="kubectl --context $CTX"
+          A="kubectl --context admin@homelab -n argocd"
           for ns in {{.NAMESPACES}}; do
             $K -n "$ns" delete pod -l velero.homelab/holder=true --ignore-not-found
             for kind in deployment statefulset; do
@@ -104,6 +118,8 @@ tasks:
               done
             done
           done
-          if [ "$CTX" = "admin@homelab" ]; then
-            $K -n argocd scale statefulset argocd-application-controller --replicas=1
+          argo_replicas=$($A get statefulset argocd-application-controller -o jsonpath='{.metadata.annotations.velero\.homelab/replicas}')
+          if [ -n "$argo_replicas" ]; then
+            $A scale statefulset argocd-application-controller --replicas="$argo_replicas"
+            $A annotate statefulset argocd-application-controller velero.homelab/replicas-
           fi
