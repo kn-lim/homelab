@@ -13,6 +13,7 @@ repo: https://vmware-tanzu.github.io/helm-charts
 includeCRDs: true
 
 valuesInline:
+  upgradeCRDs: false
   deployNodeAgent: true
   snapshotsEnabled: false
   configuration:
