@@ -1,6 +1,62 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-resources:
-  - deployment.yaml
-  - service.yaml
+helmCharts:
+  - name: versitygw
+    # renovate: datasource=docker depName=ghcr.io/versity/versitygw/charts/versitygw
+    version: 0.4.5
+    repo: oci://ghcr.io/versity/versitygw/charts
+    releaseName: versitygw
+    namespace: versitygw
+    includeCRDs: false
+    valuesInline:
+      image:
+        repository: versity/versitygw
+        # renovate: datasource=docker depName=versity/versitygw
+        tag: v1.9.0
+
+      strategy:
+        type: Recreate
+
+      # The Unraid array share is owned by root
+      podSecurityContext:
+        fsGroup: 0
+      securityContext:
+        runAsNonRoot: false
+        runAsUser: 0
+        runAsGroup: 0
+
+      auth:
+        existingSecret: versitygw-root
+
+      gateway:
+        backend:
+          type: posix
+          args: /mnt/buckets
+        port: 7070
+
+      iam:
+        enabled: true
+        type: internal
+        dir: /mnt/iam
+
+      webui:
+        s3Prefix: /ui
+        apiGateways:
+          - https://versitygw.knlim.dev
+
+      persistence:
+        enabled: true
+        create: false
+        hostPath: /var/mnt/kubernetes-array/versitygw
+
+      # Keeps the existing buckets/ directory on the share
+      extraVolumeMounts:
+        - name: data
+          mountPath: /mnt/buckets
+          subPath: buckets
+        - name: tmp
+          mountPath: /tmp
+      extraVolumes:
+        - name: tmp
+          emptyDir: {}
