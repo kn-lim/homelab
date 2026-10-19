@@ -19,8 +19,6 @@ includes:
   utilities:
     taskfile: ./configs/task/utilities.yaml
     aliases: [utils]
-  velero:
-    taskfile: ./configs/task/velero.yaml
 
 tasks:
   default: task --list
