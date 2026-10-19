@@ -15,3 +15,15 @@ valuesInline:
           region: us-east-1
           s3ForcePathStyle: "true"
           s3Url: https://versitygw.knlim.dev
+          publicUrl: https://versitygw.knlim.dev
+  schedules:
+    daily:
+      disabled: false
+      schedule: "0 3 * * *"
+      template:
+        ttl: 336h
+        defaultVolumesToFsBackup: true
+        resourcePolicy:
+          kind: configmap
+          name: velero-volume-policy
+        excludedNamespaces: [velero]
