@@ -42,6 +42,8 @@ This repository is managed by [mise](https://github.com/jdx/mise) and [prek](htt
 - [gpu-operator](https://github.com/nvidia/gpu-operator)
 - [kubelet-serving-cert-approver](https://github.com/alex1989hu/kubelet-serving-cert-approver)
 - [reloader](https://github.com/stakater/Reloader)
+- [velero](https://github.com/vmware-tanzu/velero)
+- [versitygw](https://github.com/versity/versitygw)
 </details>
 
 <details>
@@ -105,6 +107,114 @@ As some services require direct access rather than through Tailscale, [Traefik](
 
 As Tailscale can be used to authenticate users, [tsidp](https://github.com/tailscale/tsidp) acts as the identity provider for any application that allows for SSO.
 
+### Backups
+
+[Velero](https://github.com/vmware-tanzu/velero) backs up both clusters. [versitygw](https://github.com/versity/versitygw) in `homelab` is the S3 target. It stores each object as a plain file on the `kubernetes-array` share, so the backups are readable without Velero. Each cluster has its own bucket and IAM user (`velero-homelab` and `velero-homelab-lenovo`). The laptop reaches the gateway at `https://versitygw.knlim.dev`. A daily schedule runs at 03:00 and keeps each backup for 14 days.
+
+#### Gateway Setup
+
+Do this only if `/data/iam` is lost. Use the root credentials from the `versitygw` pod. Create one user per cluster. The role `user` cannot create buckets, so create each bucket with `-o` set to the owner's access key.
+
+```bash
+kubectl -n versitygw exec deploy/versitygw -- sh -c '
+  versitygw admin --endpoint-url http://localhost:7070 -a $ROOT_ACCESS_KEY -s $ROOT_SECRET_KEY \
+    create-user -a <access key> -s <secret key> -r user
+  versitygw admin --endpoint-url http://localhost:7070 -a $ROOT_ACCESS_KEY -s $ROOT_SECRET_KEY \
+    create-bucket --bucket velero-<cluster> -o <access key>'
+```
+
+#### Kopia Password
+
+The `repository_password` field in each cluster's 1Password item encrypts that cluster's backups. Never change it.
+
+#### Excluded Data
+
+Velero skips these volumes:
+
+- `hostPath` volumes, which are the media share (immich library, romm games, jellyfin media)
+- The immich ML `cache` and `ollama-data`
+- `ext-vchord`, `scratch-data` and `shm` on Postgres
+
+Postgres runs `pg_dumpall` to `/var/lib/postgresql/data/velero-dumpall.sql` in a pre-backup hook. The dump is part of the data volume backup.
+
+#### Manual Backup
+
+```bash
+velero backup create <name> --exclude-namespaces velero,versitygw \
+  --resource-policies-configmap velero-volume-policy --ttl 2160h --wait
+```
+
+#### Cold Backup Before a Migration
+
+Velero copies only volumes that a running pod mounts. For a clean backup of stateful apps, stop the apps and mount their volumes with a holder pod.
+
+1. Pause ArgoCD. It manages both clusters.
+
+   ```bash
+   kubectl --context admin@homelab -n argocd scale statefulset argocd-application-controller --replicas 0
+   ```
+
+2. Scale the Deployments and StatefulSets of each stateful app to 0. Skip Postgres, which uses the hook.
+3. Create a `velero-holder` pod in each namespace. It must mount every PVC of that namespace.
+
+   ```yaml
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     name: velero-holder
+     namespace: <namespace>
+   spec:
+     containers:
+       - name: holder
+         image: busybox:1.37.0
+         command: ["sleep", "infinity"]
+         volumeMounts:
+           - name: data
+             mountPath: /data
+     volumes:
+       - name: data
+         persistentVolumeClaim:
+           claimName: <pvc>
+   ```
+
+   Do not use `immich` or `ollama` here unless you want their caches. Holder pods ignore the exclude annotations.
+4. Run the manual backup.
+5. Delete the holder pods and scale the apps back up.
+6. Scale ArgoCD back to 1 replica.
+
+#### Restore
+
+```bash
+velero restore create --from-backup <backup> --include-namespaces <namespace> \
+  --resource-modifier-configmap argocd-tracking-strip
+```
+
+Velero restores volume data through the restored pods. The restore must include the workload or the holder pod, not only the PVC. Restore after ArgoCD is gone or paused. The modifier ConfigMap drops the ArgoCD tracking annotations.
+
+#### Renamed Apps
+
+To rename a namespace, add `--namespace-mappings old:new`. Velero has no flag to rename a PVC or a workload. Restore into `old-restore`, scale the workload to 0, copy the data into the new PVC with a one-off pod, then delete the staging namespace. The simplest way is to keep the PVC names.
+
+#### Cautions After a Restore
+
+- A namespace-mapped restore of `postgres` also copies the cnpg operator Deployment. Scale it to 0 in the new namespace.
+- A restored `otterwiki` brings back its git sync CronJob. Suspend it.
+- Never start a restored copy of an app with a Tailscale sidecar (`adguardhome`) while the original runs. Both would use the same tailnet identity.
+- Restored PVCs on `local-data` leave Released PVs behind after you delete the namespace.
+
+#### Cluster Rename
+
+Create a new bucket and user for the new cluster name. Add the old bucket as a second BackupStorageLocation with `accessMode: ReadOnly`. If the storage class names change, map them with the Velero change-storage-class ConfigMap.
+
+#### Rebuild Order for `homelab`
+
+1. External Secrets
+2. democratic-csi
+3. versitygw
+4. Velero, from Git
+
+Velero then sees the existing backups on the array. Restore the stateful apps one by one.
+
 ### Terraform/Terragrunt
 
 Talos Linux is managed with [Terragrunt](https://github.com/gruntwork-io/terragrunt) using the official [Talos Linux Terraform provider](https://github.com/siderolabs/terraform-provider-talos).
@@ -140,6 +250,9 @@ The [talos stack](https://github.com/kn-lim/homelab/blob/main/terraform/_stacks/
 | `tailscale-kubernetes-operator` | Tailscale Kubernetes Operator Credentials |
 | `terraform-*` | Credentials for Terraform Providers |
 | `tsidp-*` | Tailscale IDP Client Credentials |
+| `velero-homelab` | Velero Credentials for the `homelab` Bucket |
+| `velero-homelab-lenovo` | Velero Credentials for the `homelab-lenovo` Bucket |
+| `versitygw` | versitygw Root Credentials |
 
 ### Procedure
 
