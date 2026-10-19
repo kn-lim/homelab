@@ -93,6 +93,7 @@ clusters:
       - photos
       - romm
       - traefik
+      - versitygw
       - vikunja
       - wiki
 

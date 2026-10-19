@@ -33,6 +33,9 @@ valuesInline:
   machine-learning:
     controllers:
       main:
+        pod:
+          annotations:
+            backup.velero.io/backup-volumes-excludes: cache
         containers:
           main:
             resources:

@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: versitygw
+  namespace: versitygw
+
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: versitygw
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: versitygw
+    spec:
+      initContainers:
+        - name: mkdirs
+          # renovate: datasource=docker depName=versity/versitygw
+          image: versity/versitygw:v1.9.0
+          command: [sh, -c, mkdir -p /data/buckets /data/iam]
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      containers:
+        - name: versitygw
+          # renovate: datasource=docker depName=versity/versitygw
+          image: versity/versitygw:v1.9.0
+          args:
+            - --port
+            - ":7070"
+            - --iam-dir
+            - /data/iam
+            - posix
+            - /data/buckets
+          envFrom:
+            - secretRef:
+                name: versitygw-root
+          ports:
+            - name: s3
+              containerPort: 7070
+          readinessProbe:
+            tcpSocket:
+              port: s3
+          livenessProbe:
+            tcpSocket:
+              port: s3
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      volumes:
+        - name: data
+          hostPath:
+            path: /var/mnt/kubernetes-array/versitygw
+            type: Directory

@@ -9,6 +9,8 @@ metadata:
 
 valuesInline:
   runtimeClassName: nvidia
+  podAnnotations:
+    backup.velero.io/backup-volumes-excludes: ollama-data
   resources:
     limits:
       nvidia.com/gpu: 1
