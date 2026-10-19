@@ -109,7 +109,7 @@ As Tailscale can be used to authenticate users, [tsidp](https://github.com/tails
 
 ### Backups
 
-[Velero](https://github.com/vmware-tanzu/velero) backs up both clusters. [versitygw](https://github.com/versity/versitygw) in `homelab` is the S3 target. It stores each object as a plain file on the `kubernetes-array` share, so the backups are readable without Velero. Each cluster has its own bucket and IAM user (`velero-homelab` and `velero-homelab-lenovo`). The laptop reaches the gateway at `https://versitygw.knlim.dev`. A daily schedule runs at 03:00 and keeps each backup for 14 days.
+[Velero](https://github.com/vmware-tanzu/velero) backs up both clusters. [versitygw](https://github.com/versity/versitygw) in `homelab` is the S3 target. It stores each object as a plain file on the `kubernetes-array` share, so the backups are readable without Velero. Each cluster has its own bucket and IAM user (`velero-homelab` and `velero-homelab-lenovo`). The laptop reaches the gateway at `https://versitygw.knlim.dev`. The `velero-daily` schedule runs at 03:00 and keeps each backup for 14 days.
 
 #### Gateway Setup
 

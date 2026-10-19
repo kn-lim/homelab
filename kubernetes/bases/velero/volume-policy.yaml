@@ -12,5 +12,6 @@ data:
       - conditions:
           volumeTypes:
             - hostPath
+            - emptyDir
         action:
           type: skip
