@@ -33,6 +33,7 @@ valuesInline:
   machine-learning:
     controllers:
       main:
+        strategy: Recreate
         pod:
           annotations:
             backup.velero.io/backup-volumes-excludes: cache

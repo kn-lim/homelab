@@ -42,6 +42,8 @@ This repository is managed by [mise](https://github.com/jdx/mise) and [prek](htt
 - [gpu-operator](https://github.com/nvidia/gpu-operator)
 - [kubelet-serving-cert-approver](https://github.com/alex1989hu/kubelet-serving-cert-approver)
 - [reloader](https://github.com/stakater/Reloader)
+- [velero](https://github.com/vmware-tanzu/velero)
+- [versitygw](https://github.com/versity/versitygw)
 </details>
 
 <details>
