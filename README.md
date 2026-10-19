@@ -109,7 +109,7 @@ As Tailscale can be used to authenticate users, [tsidp](https://github.com/tails
 
 ### Backups
 
-[Velero](https://github.com/vmware-tanzu/velero) backs up both clusters. [versitygw](https://github.com/versity/versitygw) in `homelab` is the S3 target. It stores each object as a plain file on the `kubernetes-array` share, so the backups are readable without Velero. Each cluster has its own bucket and IAM user (`velero-homelab` and `velero-homelab-lenovo`). The laptop reaches the gateway at `https://versitygw.knlim.dev`. The `velero-daily` schedule runs at 03:00 and keeps each backup for 14 days.
+[Velero](https://github.com/vmware-tanzu/velero) backs up both clusters. [versitygw](https://github.com/versity/versitygw) in `homelab` is the S3 target. It stores each object as a plain file on the `kubernetes-array` share, so the backups are readable without Velero. Each cluster has its own bucket and IAM user (`velero-homelab` and `velero-homelab-lenovo`). The laptop reaches the gateway at `https://versitygw.knlim.dev`. The `velero-daily` schedule runs at 03:00 Pacific time and keeps each backup for 14 days.
 
 #### Gateway Setup
 
@@ -132,6 +132,7 @@ The `repository_password` field in each cluster's 1Password item encrypts that c
 Velero skips these volumes:
 
 - `hostPath` volumes, which are the media share (immich library, romm games, jellyfin media)
+- `emptyDir` volumes, including those of the Talos static control-plane pods
 - The immich ML `cache` and `ollama-data`
 - `ext-vchord`, `scratch-data` and `shm` on Postgres
 
@@ -140,9 +141,12 @@ Postgres runs `pg_dumpall` to `/var/lib/postgresql/data/velero-dumpall.sql` in a
 #### Manual Backup
 
 ```bash
-velero backup create <name> --exclude-namespaces velero,versitygw \
+velero --kubecontext <context> backup create <name> \
+  --exclude-namespaces velero,versitygw,argo-workflows \
   --resource-policies-configmap velero-volume-policy --ttl 2160h --wait
 ```
+
+On `homelab-lenovo`, leave out `versitygw,argo-workflows` from the namespace list. Those namespaces exist only in `homelab`. Argo CI pods in `argo-workflows` mount PVCs that Argo already deleted. Velero reports an error for each of them.
 
 #### Cold Backup Before a Migration
 
@@ -169,13 +173,20 @@ Velero copies only volumes that a running pod mounts. For a clean backup of stat
          image: busybox:1.37.0
          command: ["sleep", "infinity"]
          volumeMounts:
-           - name: data
-             mountPath: /data
+           - name: data-1
+             mountPath: /data-1
+           - name: data-2
+             mountPath: /data-2
      volumes:
-       - name: data
+       - name: data-1
          persistentVolumeClaim:
-           claimName: <pvc>
+           claimName: <pvc-1>
+       - name: data-2
+         persistentVolumeClaim:
+           claimName: <pvc-2>
    ```
+
+   Add one volume and one mount for each PVC. `romm` has 4 PVCs and `jellyfin` has 2.
 
    Do not use `immich` or `ollama` here unless you want their caches. Holder pods ignore the exclude annotations.
 4. Run the manual backup.
@@ -184,12 +195,46 @@ Velero copies only volumes that a running pod mounts. For a clean backup of stat
 
 #### Restore
 
+Velero never overwrites an object that exists. If the namespace is still live, a restore skips the existing PVCs and pods and brings no data back. Use one of these two ways:
+
+- Pause ArgoCD, delete the namespace, then restore.
+- Restore with `--namespace-mappings old:new` into a new namespace.
+
 ```bash
-velero restore create --from-backup <backup> --include-namespaces <namespace> \
-  --resource-modifier-configmap argocd-tracking-strip
+velero --kubecontext <context> restore create --from-backup <backup> \
+  --include-namespaces <namespace> \
+  --resource-modifier-configmap argocd-tracking-strip --wait
 ```
 
 Velero restores volume data through the restored pods. The restore must include the workload or the holder pod, not only the PVC. Restore after ArgoCD is gone or paused. The modifier ConfigMap drops the ArgoCD tracking annotations.
+
+A cold backup brings back the holder pods and the workloads at 0 replicas. After the restore finishes, delete the holder pods. Then scale the workloads up.
+
+#### Postgres Restore
+
+Restore the `postgres` namespace as above. Then check that the CNPG Cluster comes up healthy.
+
+```bash
+kubectl --context <context> -n postgres get cluster postgres
+```
+
+If it does not, load the dump into a new empty Cluster. The dump is on the restored data volume, not on the new one.
+
+1. Hibernate the restored Cluster. This stops its pods and keeps its PVCs, so another pod can mount them.
+
+   ```bash
+   kubectl --context <context> -n postgres annotate cluster postgres cnpg.io/hibernation=on
+   ```
+
+2. Create a new Cluster from `kubernetes/overlays/homelab/cloudnative-pg/cluster.yaml`. Give it another name, for example `postgres-new`. Wait until it is ready.
+3. Run a pod with the Postgres image that mounts the restored PVC (see `kubectl -n postgres get pvc`) at `/var/lib/postgresql/data`.
+4. In that pod, load the dump into the new primary with the superuser credentials of the new Cluster.
+
+   ```bash
+   psql -h postgres-new-rw -U postgres -f /var/lib/postgresql/data/velero-dumpall.sql
+   ```
+
+5. Delete the test pod and point the apps at `postgres-new-rw`.
 
 #### Renamed Apps
 
@@ -214,6 +259,8 @@ Create a new bucket and user for the new cluster name. Add the old bucket as a s
 4. Velero, from Git
 
 Velero then sees the existing backups on the array. Restore the stateful apps one by one.
+
+Do not let ArgoCD or Flux sync a stateful app before you restore it. The sync creates empty PVCs, and the restore then skips them.
 
 ### Terraform/Terragrunt
 
