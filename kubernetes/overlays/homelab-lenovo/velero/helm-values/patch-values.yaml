@@ -1,0 +1,17 @@
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+
+metadata:
+  name: velero
+
+valuesInline:
+  configuration:
+    backupStorageLocation:
+      - name: default
+        provider: aws
+        bucket: velero-homelab-lenovo
+        default: true
+        config:
+          region: us-east-1
+          s3ForcePathStyle: "true"
+          s3Url: https://versitygw.knlim.dev
