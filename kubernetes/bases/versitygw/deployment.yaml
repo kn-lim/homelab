@@ -32,6 +32,8 @@ spec:
           args:
             - --port
             - ":7070"
+            - --webui-s3-prefix
+            - /ui
             - --iam-dir
             - /data/iam
             - posix
