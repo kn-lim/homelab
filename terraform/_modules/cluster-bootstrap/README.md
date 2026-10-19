@@ -6,14 +6,14 @@
 | Name | Version |
 | ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.15 |
-| <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | 3.2.1 |
+| <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | 3.3.0 |
 | <a name="requirement_onepassword"></a> [onepassword](#requirement\_onepassword) | 3.3.1 |
 
 ## Providers
 
 | Name | Version |
 | ---- | ------- |
-| <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | 3.2.1 |
+| <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | 3.3.0 |
 | <a name="provider_onepassword"></a> [onepassword](#provider\_onepassword) | 3.3.1 |
 
 ## Modules
@@ -24,10 +24,10 @@ No modules.
 
 | Name | Type |
 | ---- | ---- |
-| [kubernetes_cluster_role_binding_v1.argocd_manager](https://registry.terraform.io/providers/hashicorp/kubernetes/3.2.1/docs/resources/cluster_role_binding_v1) | resource |
-| [kubernetes_secret_v1.argocd_manager](https://registry.terraform.io/providers/hashicorp/kubernetes/3.2.1/docs/resources/secret_v1) | resource |
-| [kubernetes_secret_v1.token](https://registry.terraform.io/providers/hashicorp/kubernetes/3.2.1/docs/resources/secret_v1) | resource |
-| [kubernetes_service_account_v1.argocd_manager](https://registry.terraform.io/providers/hashicorp/kubernetes/3.2.1/docs/resources/service_account_v1) | resource |
+| [kubernetes_cluster_role_binding_v1.argocd_manager](https://registry.terraform.io/providers/hashicorp/kubernetes/3.3.0/docs/resources/cluster_role_binding_v1) | resource |
+| [kubernetes_secret_v1.argocd_manager](https://registry.terraform.io/providers/hashicorp/kubernetes/3.3.0/docs/resources/secret_v1) | resource |
+| [kubernetes_secret_v1.token](https://registry.terraform.io/providers/hashicorp/kubernetes/3.3.0/docs/resources/secret_v1) | resource |
+| [kubernetes_service_account_v1.argocd_manager](https://registry.terraform.io/providers/hashicorp/kubernetes/3.3.0/docs/resources/service_account_v1) | resource |
 | [onepassword_item.argocd_registration](https://registry.terraform.io/providers/1Password/onepassword/3.3.1/docs/resources/item) | resource |
 | [onepassword_vault.argocd_registration](https://registry.terraform.io/providers/1Password/onepassword/3.3.1/docs/data-sources/vault) | data source |
 

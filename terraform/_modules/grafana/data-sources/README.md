@@ -6,13 +6,13 @@
 | Name | Version |
 | ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.15 |
-| <a name="requirement_grafana"></a> [grafana](#requirement\_grafana) | 4.46.0 |
+| <a name="requirement_grafana"></a> [grafana](#requirement\_grafana) | 4.50.0 |
 
 ## Providers
 
 | Name | Version |
 | ---- | ------- |
-| <a name="provider_grafana"></a> [grafana](#provider\_grafana) | 4.46.0 |
+| <a name="provider_grafana"></a> [grafana](#provider\_grafana) | 4.50.0 |
 
 ## Modules
 
@@ -22,7 +22,7 @@ No modules.
 
 | Name | Type |
 | ---- | ---- |
-| [grafana_data_source.prometheus](https://registry.terraform.io/providers/grafana/grafana/4.46.0/docs/resources/data_source) | resource |
+| [grafana_data_source.prometheus](https://registry.terraform.io/providers/grafana/grafana/4.50.0/docs/resources/data_source) | resource |
 
 ## Inputs
 
