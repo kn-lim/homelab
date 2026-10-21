@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+#MISE description="Bootstrap a cluster from a running Kubernetes API to Flux"
+#USAGE arg "<cluster>" help="The cluster to bootstrap" {
+#USAGE   choices "henesys" "ellinia"
+#USAGE }
+set -euo pipefail
+
+cluster="${usage_cluster:-${1:-}}"
+case "${cluster}" in
+  henesys | ellinia) ;;
+  *)
+    echo "ERROR: the cluster must be henesys or ellinia, not '${cluster}'" >&2
+    exit 1
+    ;;
+esac
+context="admin@${cluster}"
+
+log() {
+  echo "==> $*"
+}
+
+if ! kubectl config get-contexts "${context}" &>/dev/null; then
+  echo "ERROR: the kube context ${context} does not exist" >&2
+  exit 1
+fi
+
+log "Waiting for the nodes to register"
+# The nodes become Ready=True only after the CNI is healthy, so Ready=False also counts.
+if ! kubectl --context "${context}" wait nodes --for=condition=Ready=True --all --timeout=10s &>/dev/null; then
+  deadline=$((SECONDS + 600))
+  until kubectl --context "${context}" wait nodes --for=condition=Ready=False --all --timeout=10s &>/dev/null; do
+    if ((SECONDS >= deadline)); then
+      echo "ERROR: the nodes did not register in 10 minutes" >&2
+      exit 1
+    fi
+    sleep 5
+  done
+fi
+
+# The 1Password token for External Secrets. Flux never manages this Secret.
+onepassword=$(yq -o json -I0 ".clusters[] | select((.next.name // .name) == \"${cluster}\") | .external_secrets[].onepassword[]" clusters.yaml)
+if [[ -z "${onepassword}" ]]; then
+  echo "ERROR: clusters.yaml has no external_secrets[].onepassword block for ${cluster}" >&2
+  exit 1
+fi
+vault_name=$(yq '.vault_name' <<<"${onepassword}")
+secret_name=$(yq '.secret_name' <<<"${onepassword}")
+token_namespace=$(yq '.namespace' <<<"${onepassword}")
+token_secret_name=$(yq '.token_secret_name' <<<"${onepassword}")
+
+log "Creating the namespaces of the CRD app list"
+mapfile -t namespaces < <(
+  {
+    yq '.resources[]' "kubernetes/clusters/${cluster}/crds/kustomization.yaml" | sed -E 's#^.*apps/([^/]+)/.*$#\1#'
+    echo "${token_namespace}"
+  } | sort -u
+)
+for namespace in "${namespaces[@]}"; do
+  kubectl --context "${context}" create namespace "${namespace}" --dry-run=client -o yaml \
+    | kubectl --context "${context}" apply --server-side -f -
+done
+
+log "Creating the Secret ${token_namespace}/${token_secret_name}"
+token=$(op read "op://${vault_name}/${secret_name}/credential")
+printf '%s' "${token}" \
+  | kubectl --context "${context}" create secret generic "${token_secret_name}" \
+    --namespace "${token_namespace}" --from-file=token=/dev/stdin --dry-run=client -o yaml \
+  | kubectl --context "${context}" apply --server-side -f -
+
+log "Installing cilium, coredns, flux-operator, and flux-instance"
+helmfile --file bootstrap/helmfile/apps.yaml --environment "${cluster}" --kube-context "${context}" sync --hide-notes
+
+log "Waiting for FluxInstance/flux to be Ready"
+kubectl --context "${context}" --namespace flux-system wait fluxinstance/flux --for=condition=Ready --timeout=10m
+
+log "Failed Kustomizations"
+flux --context "${context}" get kustomizations --all-namespaces --status-selector ready=false
+log "Failed HelmReleases"
+flux --context "${context}" get helmreleases --all-namespaces --status-selector ready=false
