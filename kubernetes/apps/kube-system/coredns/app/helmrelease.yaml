@@ -1,0 +1,97 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+
+metadata:
+  name: coredns
+
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: coredns
+  interval: 1h
+  values:
+    # https://github.com/siderolabs/talos/discussions/10012
+    isClusterService: true
+
+    prometheus:
+      service:
+        enabled: true
+      monitor:
+        enabled: true
+
+    serviceType: ClusterIP
+
+    service:
+      name: kube-dns
+      clusterIP: ${COREDNS_CLUSTER_IP}
+
+    serviceAccount:
+      create: true
+
+    k8sAppLabelOverride: kube-dns
+
+    replicaCount: 2
+
+    # No PodDisruptionBudget: on a single-node cluster, a PDB stalls the drain of a Talos upgrade.
+    podDisruptionBudget: {}
+
+    servers:
+      # Tailscale Nameserver
+      - zones:
+          - zone: ts.net
+        port: 53
+        plugins:
+          - name: errors
+          - name: forward
+            parameters: . ${TAILSCALE_NAMESERVER_IP}
+
+      # Talos Linux Defaults
+      - zones:
+          - zone: .
+        port: 53
+        plugins:
+          - name: errors
+          - name: health
+            configBlock: |-
+              lameduck 5s
+          - name: ready
+          - name: log
+            parameters: .
+            configBlock: |-
+              class error
+          - name: prometheus
+            parameters: :9153
+          - name: kubernetes
+            parameters: cluster.local in-addr.arpa ip6.arpa
+            configBlock: |-
+              pods insecure
+              fallthrough in-addr.arpa ip6.arpa
+              ttl 30
+          - name: forward
+            parameters: . /etc/resolv.conf
+            configBlock: |-
+              max_concurrent 1000
+          - name: cache
+            parameters: "30"
+            configBlock: |-
+              disable success cluster.local
+              disable denial cluster.local
+          - name: loop
+          - name: reload
+          - name: loadbalance
+
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: node-role.kubernetes.io/control-plane
+                  operator: Exists
+
+    tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+        effect: NoSchedule
+      - key: node.cloudprovider.kubernetes.io/uninitialized
+        operator: Exists
+        effect: NoSchedule
