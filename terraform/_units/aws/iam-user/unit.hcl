@@ -1,3 +1,0 @@
-locals {
-  unit = "iam-user"
-}
