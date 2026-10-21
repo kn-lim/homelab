@@ -1,0 +1,26 @@
+{{- $config := (datasource "config") -}}
+{{- range $config.clusters -}}
+{{- /* Until the rename, the keys in next override the top-level keys. */ -}}
+{{- $cluster := . -}}
+{{- if has . "next" -}}
+{{- $cluster = coll.Merge .next . -}}
+{{- end -}}
+{{- if eq $cluster.name "henesys" -}}
+{{- $controlplane := index $cluster.controlplanes 0 -}}
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: cluster-settings
+  namespace: flux-system
+
+data:
+  CLUSTER_NAME: "{{ $cluster.name }}"
+  CONTROLPLANE_IP: "{{ $controlplane.ip }}"
+  CONTROLPLANE_HOSTNAME: "{{ $controlplane.hostname }}"
+  LOCAL_DOMAIN: "{{ $cluster.local_domain }}"
+  LOCAL_VIP: "{{ $cluster.local_vip }}"
+  POD_SUBNET: "{{ $cluster.pod_subnet }}"
+  TAILSCALE_NAMESERVER_IP: "{{ $cluster.tailscale_nameserver_ip }}"
+{{- end }}
+{{- end }}

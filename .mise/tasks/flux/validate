@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+#MISE description="Render each cluster entry point with flate and validate the output with flux-schema"
+#USAGE arg "[cluster]" help="Validate only this cluster. Default: every directory in kubernetes/clusters/"
+set -euo pipefail
+
+# Changed-only flate test against this git revision. flate build stays a full render, so it must not see FLATE_BASE.
+base="${FLATE_BASE:-origin/main}"
+unset FLATE_BASE
+
+# Prints the sorted names of the Flux Kustomizations in a kustomize directory.
+flux_kustomizations() {
+  kustomize build --load-restrictor LoadRestrictionsNone "$1" \
+    | yq -N 'select(.apiVersion == "kustomize.toolkit.fluxcd.io/*" and .kind == "Kustomization") | .metadata.name' \
+    | sort
+}
+
+clusters=("${usage_cluster:-${1:-}}")
+if [[ -z "${clusters[0]}" ]]; then
+  mapfile -t clusters < <(find kubernetes/clusters -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort)
+fi
+if [[ ${#clusters[@]} -eq 0 ]]; then
+  echo "ERROR: no cluster entry point in kubernetes/clusters/" >&2
+  exit 1
+fi
+
+for cluster in "${clusters[@]}"; do
+  dir="kubernetes/clusters/${cluster}"
+  echo "==> ${cluster}"
+  if [[ ! -f "${dir}/kustomization.yaml" ]]; then
+    echo "ERROR: ${dir}/kustomization.yaml does not exist" >&2
+    exit 1
+  fi
+
+  # An app on both the CRD app list and the cluster app list is applied twice.
+  crd_apps=$(flux_kustomizations "${dir}/crds")
+  cluster_apps=$(flux_kustomizations "${dir}/apps")
+  duplicates=$(comm -12 <(echo "${crd_apps}") <(echo "${cluster_apps}"))
+  if [[ -n "${duplicates}" ]]; then
+    echo "ERROR: these Kustomizations are on the CRD app list and the cluster app list of ${cluster}:" >&2
+    echo "${duplicates}" >&2
+    exit 1
+  fi
+
+  flate test all --no-progress -p "${dir}" --base "${base}"
+  flate build all --no-progress -p "${dir}" \
+    | flux-schema validate --schema-location default --schema-location ecosystem
+done

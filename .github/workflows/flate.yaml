@@ -1,0 +1,96 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: "Flate"
+
+on:
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  filter:
+    name: Flate - Filter
+    runs-on: ubuntu-latest
+    outputs:
+      changed-files: ${{ steps.changed-files.outputs.changed_files }}
+    steps:
+      - name: Get Changed Files
+        id: changed-files
+        uses: bjw-s-labs/action-changed-files@147be9638332cf68fd60714a610509d7a9360d60 # v0.7.0
+        with:
+          patterns: |
+            .github/workflows/flate.yaml
+            .mise.toml
+            .mise/tasks/flux/**
+            kubernetes/**/*
+
+  flate:
+    if: ${{ needs.filter.outputs.changed-files != '[]' }}
+    needs: filter
+    name: Flate - ${{ matrix.cluster }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        cluster:
+          - henesys
+          - ellinia
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Read Tool Versions
+        id: versions
+        run: |
+          echo "flate=$(yq -p toml -oy '.tools["github:home-operations/flate"]' .mise.toml)" >> "${GITHUB_OUTPUT}"
+          echo "flux-schema=$(yq -p toml -oy '.tools["github:fluxcd/flux-schema"]' .mise.toml)" >> "${GITHUB_OUTPUT}"
+
+      - name: Install Flate
+        uses: home-operations/flate/action@631b76b69c4e58c6f4d1cb01e23616fa61aebafa # v0.6.5
+        with:
+          base: origin/main
+          cache: true
+          version: ${{ steps.versions.outputs.flate }}
+
+      - name: Install Flux Schema
+        uses: fluxcd/flux-schema/actions/setup@5a0846e4358013c06804d249d659cbf3fae59292 # v0.16.0
+        with:
+          version: ${{ steps.versions.outputs.flux-schema }}
+
+      - name: Validate
+        run: .mise/tasks/flux/validate "${{ matrix.cluster }}"
+
+      - name: Diff
+        env:
+          CLUSTER_PATH: kubernetes/clusters/${{ matrix.cluster }}
+        run: |
+          # flate diff fails if main has no entry point for this cluster yet.
+          if ! git cat-file -e "origin/main:${CLUSTER_PATH}" 2>/dev/null; then
+            echo "No ${CLUSTER_PATH} on main, nothing to diff." >> "${GITHUB_STEP_SUMMARY}"
+            exit 0
+          fi
+          flate diff all --no-progress -o github -p "${CLUSTER_PATH}" >> "${GITHUB_STEP_SUMMARY}"
+
+  success:
+    if: ${{ !cancelled() }}
+    needs: [filter, flate]
+    name: Flate - Success
+    runs-on: ubuntu-latest
+    steps:
+      - name: Any jobs failed?
+        if: ${{ contains(needs.*.result, 'failure') }}
+        run: exit 1
+
+      - name: All jobs passed or skipped?
+        if: ${{ !(contains(needs.*.result, 'failure')) }}
+        run: echo "All jobs passed or skipped" && echo "${{ toJSON(needs.*.result) }}"
