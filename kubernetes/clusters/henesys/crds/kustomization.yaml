@@ -1,0 +1,6 @@
+# CRD app list: the apps that cluster-crds makes healthy before cluster-apps starts.
+# An app on this list must not be on the cluster app list (apps/).
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources: []

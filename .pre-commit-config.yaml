@@ -36,6 +36,14 @@ repos:
         language: system
         pass_filenames: false
         stages: ["pre-commit"]
+      - id: flux-validate
+        name: Flux validate
+        description: Render the Flux cluster entry points and validate the output.
+        entry: bash -c 'mise run flux:validate'
+        language: system
+        files: '^kubernetes/'
+        pass_filenames: false
+        stages: ["pre-commit"]
       - id: golangci-lint
         name: golangci-lint
         description: Lint Go code.

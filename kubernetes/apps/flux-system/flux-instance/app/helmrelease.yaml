@@ -1,0 +1,61 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+
+metadata:
+  name: flux-instance
+
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: flux-instance
+  interval: 1h
+  values:
+    instance:
+      distribution:
+        # renovate: datasource=github-releases depName=fluxcd/flux2
+        version: 2.9.6
+      components:
+        - source-controller
+        - kustomize-controller
+        - helm-controller
+        - notification-controller
+      cluster:
+        size: small
+      sync:
+        kind: GitRepository
+        url: https://github.com/kn-lim/homelab.git
+        ref: refs/heads/main
+        path: kubernetes/clusters/${CLUSTER_NAME}
+        interval: 1m
+      kustomize:
+        patches:
+          - # Watch configmaps and secrets attached to HelmReleases and Kustomizations
+            patch: |-
+              - op: add
+                path: /spec/template/spec/containers/0/args/-
+                value: --watch-configs-label-selector=owner!=helm
+            target:
+              kind: Deployment
+              name: (helm-controller|kustomize-controller)
+          - # Flux near OOM detection for Helm
+            patch: |-
+              - op: add
+                path: /spec/template/spec/containers/0/args/-
+                value: --feature-gates=OOMWatch=true
+              - op: add
+                path: /spec/template/spec/containers/0/args/-
+                value: --oom-watch-memory-threshold=95
+              - op: add
+                path: /spec/template/spec/containers/0/args/-
+                value: --oom-watch-interval=500ms
+            target:
+              kind: Deployment
+              name: helm-controller
+          - # Cancel health checks on new Kustomization revisions
+            patch: |-
+              - op: add
+                path: /spec/template/spec/containers/0/args/-
+                value: --feature-gates=CancelHealthCheckOnNewRevision=true
+            target:
+              kind: Deployment
+              name: kustomize-controller

@@ -97,6 +97,15 @@ clusters:
       - vikunja
       - wiki
 
+    ## Flux values after the rename (temporary, the rename pull request folds them into the top-level keys)
+    next:
+      name: "henesys"
+      tailscale_nameserver_ip: "10.96.0.53"
+      controlplanes:
+        - ip: "10.1.2.11"
+          install_disk: "/dev/vda"
+          hostname: "henesys"
+
     ## Cluster Name
   - name: "homelab-lenovo"
 
@@ -183,3 +192,13 @@ clusters:
     local_services:
       - home-assistant
       - traefik
+
+    ## Flux values after the rename (temporary, the rename pull request folds them into the top-level keys)
+    next:
+      name: "ellinia"
+      local_domain: "ellinia.knlim.dev"
+      tailscale_nameserver_ip: "10.96.0.53"
+      controlplanes:
+        - ip: "10.1.2.20"
+          install_disk: "/dev/nvme0n1"
+          hostname: "ellinia"
