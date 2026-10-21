@@ -3,8 +3,7 @@
 #USAGE arg "[cluster]" help="Validate only this cluster. Default: every directory in kubernetes/clusters/"
 set -euo pipefail
 
-# Changed-only flate test against this git revision. flate build stays a full
-# render, so it must not see FLATE_BASE (the flate GitHub Action exports it).
+# Changed-only flate test against this git revision. flate build stays a full render, so it must not see FLATE_BASE.
 base="${FLATE_BASE:-origin/main}"
 unset FLATE_BASE
 
