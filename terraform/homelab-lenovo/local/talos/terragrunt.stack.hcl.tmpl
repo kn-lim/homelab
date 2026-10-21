@@ -71,25 +71,6 @@ stack "talos" {
       service_subnet = "{{ .service_subnet }}"
       pod_subnet     = "{{ .pod_subnet }}"
     }
-
-    cluster-bootstrap = {
-{{- range .external_secrets }}
-{{- if (index . "onepassword") -}}
-{{- range .onepassword }}
-      namespace         = "{{ .namespace }}"
-      vault_name        = "{{ .vault_name }}"
-      secret_name       = "{{ .secret_name }}"
-      token_secret_name = "{{ .token_secret_name }}"
-{{- end }}
-{{- end }}
-{{- end }}
-
-      argocd_registration = {
-        cluster_endpoint = "{{ .endpoint }}"
-        vault_name       = "{{ .vault_name }}"
-        secret_name      = "argocd-cluster-{{ .name }}"
-      }
-    }
   }
 }
 {{- end }}
