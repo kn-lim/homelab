@@ -1,0 +1,13 @@
+# Lets pods reach tsidp at idp.<tailnet>.ts.net, for example for OIDC logins.
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: tsidp-egress
+  annotations:
+    tailscale.com/tailnet-fqdn: idp.${TAILSCALE_TAILNET_NAME}.ts.net
+    tailscale.com/hostname: tsidp-egress-${CLUSTER_NAME}
+
+spec:
+  externalName: placeholder   # will be overwritten by operator
+  type: ExternalName

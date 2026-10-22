@@ -8,4 +8,5 @@ resources:
   - ../../../apps/flux-system
   - ../../../apps/kube-system
   - ../../../apps/network
+  - ../../../apps/network/tsidp/ks.yaml
   - ../../../apps/observability

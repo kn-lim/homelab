@@ -1,0 +1,14 @@
+# The Tailscale auth key of the sidecar comes from 1Password.
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+
+metadata:
+  name: adguardhome
+  namespace: flux-system
+
+spec:
+  dependsOn:
+    - name: onepassword
+  interval: 1h
+  path: ./kubernetes/apps/network/adguardhome/app
+  targetNamespace: network
