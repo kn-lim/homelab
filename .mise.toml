@@ -28,3 +28,36 @@ TALOSCONFIG = "{{config_root}}/homelab-local.talosconfig"
 "github:fluxcd/flux-schema" = "0.16.0"
 "github:home-operations/flate" = "0.6.5"
 go = "1.27.2"
+
+[tasks."flux:reconcile"]
+description = "Reconcile a Flux Kustomization with its source. Default: flux-system"
+usage = '''
+arg "<cluster>" help="The cluster to reconcile" {
+  choices "henesys" "ellinia"
+}
+arg "[kustomization]" help="The Kustomization in flux-system to reconcile" default="flux-system"
+'''
+run = 'flux --context "admin@${usage_cluster}" reconcile kustomization "${usage_kustomization}" --with-source'
+
+[tasks."template:clean"]
+description = "Delete all generated directories"
+run = 'find . -type d -name generated -prune -printf "Deleting: %p\n" -exec rm -rf {} +'
+
+[tasks."terraform:plan"]
+description = "Plan a Terragrunt stack"
+usage = 'arg "<dir>" help="The stack directory, for example terraform/homelab/local/talos/generated"'
+run = 'cd "${usage_dir}" && terragrunt stack run plan'
+
+[tasks."terraform:apply"]
+description = "Apply a Terragrunt stack with no Terragrunt prompt"
+usage = 'arg "<dir>" help="The stack directory, for example terraform/homelab/local/talos/generated"'
+confirm = "Apply the Terragrunt stack in {{usage.dir}}?"
+run = 'cd "${usage_dir}" && terragrunt stack run apply --non-interactive'
+
+[tasks."utilities:prek"]
+description = "Run the prek hooks on all files"
+run = "prek run --all-files"
+
+[tasks."utilities:clean"]
+description = "Delete all .terragrunt-stack directories"
+run = 'find . -type d -name .terragrunt-stack -prune -printf "Deleting: %p\n" -exec rm -rf {} +'

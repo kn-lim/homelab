@@ -32,7 +32,7 @@ repos:
       - id: check-generated-templates
         name: Check generated templates
         description: Verify generated templates are up to date.
-        entry: bash -c 'mise exec -- task template:check'
+        entry: bash -c 'mise run template:check'
         language: system
         pass_filenames: false
         stages: ["pre-commit"]
