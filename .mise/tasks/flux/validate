@@ -3,8 +3,7 @@
 #USAGE arg "[cluster]" help="Validate only this cluster. Default: every directory in kubernetes/clusters/"
 set -euo pipefail
 
-# Full-tree flate test and build. In changed-only mode, flate does not find a dependsOn target on the
-# unchanged CRD app list. The flate Action sets FLATE_BASE, so unset it.
+# Full-tree flate test and build. The flate Action sets FLATE_BASE, so unset it.
 unset FLATE_BASE
 
 # Prints the sorted names of the Flux Kustomizations in a kustomize directory.
