@@ -4,7 +4,6 @@
     // https://github.com/home-operations/renovate-presets
     "github>home-operations/renovate-presets#8.1.0",
     "github>home-operations/renovate-presets//apps/cnpg.json5#8.1.0",
-    ":semanticCommits",
     // ArgoCD-specific config
     "github>kn-lim/homelab//configs/renovate/argocd.json5",
   ],
@@ -23,42 +22,8 @@
     },
     {
       // TODO: Remove rule when no longer using a NVIDIA GTX 1080 GPU
-      matchDatasources: ["helm"],
       matchDepNames: ["gpu-operator"],
       enabled: false,
-    },
-    {
-      matchUpdateTypes: ["major"],
-      addLabels: ["type/major"],
-    },
-    {
-      matchUpdateTypes: ["minor"],
-      addLabels: ["type/minor"],
-    },
-    {
-      matchUpdateTypes: ["patch"],
-      addLabels: ["type/patch"],
-    },
-    {
-      matchUpdateTypes: ["digest"],
-      addLabels: ["type/digest"],
-    },
-    {
-      matchDatasources: ["docker"],
-      addLabels: ["renovate/container"],
-    },
-    {
-      matchDatasources: ["helm"],
-      addLabels: ["renovate/helm"],
-    },
-    {
-      matchDatasources: ["github-releases"],
-      addLabels: ["renovate/github-release"],
-    },
-    {
-      matchManagers: ["pre-commit"],
-      semanticCommitType: "chore",
-      semanticCommitScope: "pre-commit",
     },
   ],
   customManagers: [
