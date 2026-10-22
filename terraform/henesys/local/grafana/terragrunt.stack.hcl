@@ -7,7 +7,7 @@ unit "data-sources" {
     prometheus_sources = {
       homelab = {
         uid        = "prometheus-homelab"
-        url        = "http://prometheus-server.prometheus.svc.cluster.local:80"
+        url        = "http://prometheus-server.observability.svc.cluster.local:80"
         is_default = true
       }
     }
