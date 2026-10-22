@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+#MISE description="Check that the generated templates are up to date"
+set -euo pipefail
+
+before=$(mktemp)
+after=$(mktemp)
+trap 'rm -f "${before}" "${after}"' EXIT
+
+find . -type f -not -path "./.git/*" -print0 | xargs -0 md5sum | sort >"${before}"
+mise run template:generate
+find . -type f -not -path "./.git/*" -print0 | xargs -0 md5sum | sort >"${after}"
+
+if ! changes=$(diff "${before}" "${after}"); then
+  echo "ERROR: these files changed:" >&2
+  grep "^>" <<<"${changes}" | sed 's/^> [a-f0-9]*  /  /' >&2
+  exit 1
+fi
+echo "Generated templates are up to date."

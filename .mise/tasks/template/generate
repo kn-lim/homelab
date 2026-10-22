@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+#MISE description="Generate all templates in kubernetes/ and terraform/ from clusters.yaml"
+set -euo pipefail
+
+find ./kubernetes/ ./terraform/ -name "*.tmpl" -type f \
+  ! -path "*/charts/*" \
+  ! -path "*/.terragrunt-stack/*" \
+  ! -path "*/_modules/*" \
+  ! -path "*/_stacks/*" \
+  ! -path "*/_units/*" \
+  | while read -r tmpl_file; do
+    dir=$(dirname "${tmpl_file}")
+    file_name=$(basename "${tmpl_file}" .tmpl)
+    mkdir -p "${dir}/generated"
+    echo "Generating: ${dir}/generated/${file_name}"
+    gomplate -f "${tmpl_file}" -o "${dir}/generated/${file_name}" -d config="./clusters.yaml"
+  done
