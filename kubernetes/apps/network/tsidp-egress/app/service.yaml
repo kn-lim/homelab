@@ -1,0 +1,15 @@
+# Lets pods reach tsidp at idp.<tailnet>.ts.net, for example for OIDC logins.
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: tsidp-egress
+  annotations:
+    # The operator rewrites spec.externalName. Flux creates the Service once and does not reset it.
+    kustomize.toolkit.fluxcd.io/ssa: IfNotPresent
+    tailscale.com/tailnet-fqdn: idp.${TAILSCALE_TAILNET_NAME}.ts.net
+    tailscale.com/hostname: tsidp-egress-${CLUSTER_NAME}
+
+spec:
+  externalName: placeholder   # will be overwritten by operator
+  type: ExternalName

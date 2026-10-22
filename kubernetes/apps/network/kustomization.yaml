@@ -4,3 +4,5 @@ kind: Kustomization
 resources:
   - ./namespace
   - ./gateway/ks.yaml
+  - ./tailscale-operator/ks.yaml
+  - ./tsidp-egress/ks.yaml
