@@ -10,6 +10,23 @@ spec:
   dependsOn:
     - name: gpu-operator
     - name: onepassword
+    - name: immich-db
   interval: 1h
   path: ./kubernetes/apps/media/immich/app
   targetNamespace: media
+---
+# The database needs the CNPG Cluster. The role password comes from 1Password.
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+
+metadata:
+  name: immich-db
+  namespace: flux-system
+
+spec:
+  dependsOn:
+    - name: cloudnative-pg-cluster
+    - name: onepassword
+  interval: 1h
+  path: ./kubernetes/apps/media/immich/db
+  targetNamespace: database

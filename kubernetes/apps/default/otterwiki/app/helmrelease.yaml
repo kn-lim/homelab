@@ -1,0 +1,73 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+
+metadata:
+  name: otterwiki
+
+spec:
+  chart:
+    spec:
+      chart: otterwiki
+      version: 0.1.4
+      sourceRef:
+        kind: HelmRepository
+        name: otterwiki
+  interval: 1h
+  values:
+    image:
+      tag: "2.26.0"
+
+    config:
+      SITE_NAME: "Homelab Wiki"
+      READ_ACCESS: ANONYMOUS
+      WRITE_ACCESS: REGISTERED
+      REPOSITORY: /app-data/repository
+
+    persistence:
+      enabled: true
+      existingClaim: otterwiki
+
+    ingress:
+      enabled: false
+
+  # The chart has no value for init containers. The init container clones the wiki repository on the first start.
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: Deployment
+              name: otterwiki
+            patch: |
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                name: otterwiki
+              spec:
+                template:
+                  spec:
+                    initContainers:
+                      - name: git-clone
+                        image: alpine/git:v2.54.0
+                        command: ["sh", "-c"]
+                        args:
+                          - |
+                            set -e
+                            mkdir -p /root/.ssh
+                            cp /etc/otterwiki-deploy-key/ssh-privatekey /root/.ssh/id_ed25519
+                            [ -z "$(tail -c1 /root/.ssh/id_ed25519)" ] || echo >> /root/.ssh/id_ed25519
+                            chmod 600 /root/.ssh/id_ed25519
+                            export GIT_SSH_COMMAND="ssh -i /root/.ssh/id_ed25519 -o StrictHostKeyChecking=no"
+                            if [ ! -d /app-data/repository/.git ]; then
+                              git clone git@github.com:kn-lim/homelab-wiki.git /app-data/repository
+                            fi
+                        volumeMounts:
+                          - name: data
+                            mountPath: /app-data
+                          - name: deploy-key
+                            mountPath: /etc/otterwiki-deploy-key
+                            readOnly: true
+                    volumes:
+                      - name: deploy-key
+                        secret:
+                          secretName: otterwiki-deploy-key
+                          defaultMode: 0400

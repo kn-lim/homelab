@@ -1,0 +1,31 @@
+# The secrets come from 1Password. Vikunja stores its data in the vikunja database.
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+
+metadata:
+  name: vikunja
+  namespace: flux-system
+
+spec:
+  dependsOn:
+    - name: onepassword
+    - name: vikunja-db
+  interval: 1h
+  path: ./kubernetes/apps/default/vikunja/app
+  targetNamespace: default
+---
+# The database needs the CNPG Cluster. The role password comes from 1Password.
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+
+metadata:
+  name: vikunja-db
+  namespace: flux-system
+
+spec:
+  dependsOn:
+    - name: cloudnative-pg-cluster
+    - name: onepassword
+  interval: 1h
+  path: ./kubernetes/apps/default/vikunja/db
+  targetNamespace: database
