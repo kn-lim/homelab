@@ -5,8 +5,8 @@ unit "data-sources" {
 
   values = {
     prometheus_sources = {
-      homelab = {
-        uid        = "prometheus-homelab"
+      henesys = {
+        uid        = "prometheus-henesys"
         url        = "http://prometheus-server.observability.svc.cluster.local:80"
         is_default = true
       }
@@ -25,7 +25,7 @@ unit "dashboards" {
 
       mock_outputs = {
         uids = {
-          homelab = "prometheus-homelab"
+          henesys = "prometheus-henesys"
         }
       }
 
@@ -33,7 +33,7 @@ unit "dashboards" {
     }
 
     inputs = {
-      datasource_uid = dependency.data-sources.outputs.uids["homelab"]
+      datasource_uid = dependency.data-sources.outputs.uids["henesys"]
     }
   }
 
@@ -154,7 +154,7 @@ unit "alert-rules" {
 
       mock_outputs = {
         uids = {
-          homelab = "prometheus-homelab"
+          henesys = "prometheus-henesys"
         }
       }
 
@@ -162,7 +162,7 @@ unit "alert-rules" {
     }
 
     inputs = {
-      datasource_uid = dependency.data-sources.outputs.uids["homelab"]
+      datasource_uid = dependency.data-sources.outputs.uids["henesys"]
     }
   }
 }
