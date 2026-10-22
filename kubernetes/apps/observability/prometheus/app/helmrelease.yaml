@@ -1,0 +1,59 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+
+metadata:
+  name: prometheus
+
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: prometheus
+  interval: 1h
+  values:
+    server:
+      podAnnotations:
+        secret.reloader.stakater.com/auto: "true"
+        configmap.reloader.stakater.com/auto: "true"
+      retention: 15d
+      persistentVolume:
+        enabled: true
+        existingClaim: prometheus-server
+      extraFlags:
+        - web.enable-lifecycle
+        - web.enable-remote-write-receiver
+
+    # Disable all default scrape jobs since Alloy manages all scraping.
+    # Per-job disables are the only mechanism that renders correctly here (`scrape_configs: []` and `scrapeConfigs: null` both fail).
+    scrapeConfigs:
+      prometheus:
+        enabled: false
+      kubernetes-api-servers:
+        enabled: false
+      kubernetes-nodes:
+        enabled: false
+      kubernetes-nodes-cadvisor:
+        enabled: false
+      kubernetes-service-endpoints:
+        enabled: false
+      kubernetes-service-endpoints-slow:
+        enabled: false
+      kubernetes-services:
+        enabled: false
+      kubernetes-pods:
+        enabled: false
+      kubernetes-pods-slow:
+        enabled: false
+      prometheus-pushgateway:
+        enabled: false
+
+    alertmanager:
+      enabled: false
+
+    kube-state-metrics:
+      enabled: false
+
+    prometheus-node-exporter:
+      enabled: false
+
+    prometheus-pushgateway:
+      enabled: false
