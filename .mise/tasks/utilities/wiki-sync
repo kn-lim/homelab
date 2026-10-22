@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#MISE description="Sync the otterwiki repository with GitHub now"
+set -euo pipefail
+
+job="otterwiki-sync-manual-$(date +%s)"
+kubectl --namespace default create job --from=cronjob/otterwiki-sync "${job}"
+kubectl --namespace default wait --for=condition=complete --timeout=120s "job/${job}"
+kubectl --namespace default logs "job/${job}"
+kubectl --namespace default delete job "${job}"

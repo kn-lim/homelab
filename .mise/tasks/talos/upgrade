@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+#MISE description="Upgrade Talos on a single-node cluster to talos_version in clusters.yaml"
+#USAGE arg "<cluster>" help="The cluster to upgrade" {
+#USAGE   choices "henesys" "ellinia"
+#USAGE }
+set -euo pipefail
+
+cluster="${usage_cluster:-${1:-}}"
+case "${cluster}" in
+  henesys | ellinia) ;;
+  *)
+    echo "ERROR: the cluster must be henesys or ellinia, not '${cluster}'" >&2
+    exit 1
+    ;;
+esac
+
+talosconfig="${cluster}-local.talosconfig"
+if [[ ! -f "${talosconfig}" ]]; then
+  echo "ERROR: the talosconfig ${talosconfig} does not exist" >&2
+  exit 1
+fi
+
+# The temporary next: map holds the values after the rename.
+entry=".clusters[] | select((.next.name // .name) == \"${cluster}\")"
+mapfile -t node_ips < <(yq "${entry} | (.next.controlplanes // .controlplanes)[].ip" clusters.yaml)
+if [[ ${#node_ips[@]} -ne 1 ]]; then
+  echo "ERROR: ${cluster} has ${#node_ips[@]} nodes in clusters.yaml. The task upgrades only a single-node cluster." >&2
+  exit 1
+fi
+node_ip="${node_ips[0]}"
+# talos_version already has the leading v.
+version=$(yq "${entry} | .talos_version" clusters.yaml)
+
+# Keep the installed image and change only its tag.
+image=$(talosctl --talosconfig "${talosconfig}" get machineconfig --nodes "${node_ip}" -o yaml \
+  | yq 'select(di == 0) | .spec | from_yaml | .machine.install.image')
+
+talosctl --talosconfig "${talosconfig}" upgrade --nodes "${node_ip}" --image "${image%:*}:${version}"
