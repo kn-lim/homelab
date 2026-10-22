@@ -1,36 +1,32 @@
 # Cluster app list: the namespaces and apps that this cluster runs.
-#
-# Restore hold: the stateful apps stay off this list until Velero restores their PVCs.
-# The <app>-db Kustomizations are in the ks.yaml of their app, so they stay off too,
-# until the Postgres dump is in the new Cluster. The cutover adds them in a separate pull request:
-#   - ../../../apps/ai/open-webui/ks.yaml
-#   - ../../../apps/default/otterwiki/ks.yaml
-#   - ../../../apps/default/vikunja/ks.yaml
-#   - ../../../apps/media/immich/ks.yaml
-#   - ../../../apps/media/jellyfin/ks.yaml
-#   - ../../../apps/media/romm/ks.yaml
-#   - ../../../apps/network/tsidp/ks.yaml
-#   - ../../../apps/observability/grafana/ks.yaml
-#   - ../../../apps/observability/prometheus/ks.yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
   - ../../../apps/ai
   - ../../../apps/ai/ollama/ks.yaml
+  - ../../../apps/ai/open-webui/ks.yaml
   - ../../../apps/cert-manager
   - ../../../apps/database
   - ../../../apps/database/cloudnative-pg/ks.yaml
   - ../../../apps/database/valkey/ks.yaml
   - ../../../apps/default
+  - ../../../apps/default/otterwiki/ks.yaml
+  - ../../../apps/default/vikunja/ks.yaml
   - ../../../apps/external-secrets
   - ../../../apps/flux-system
   - ../../../apps/gpu-operator
   - ../../../apps/gpu-operator/gpu-operator/ks.yaml
   - ../../../apps/kube-system
   - ../../../apps/media
+  - ../../../apps/media/immich/ks.yaml
+  - ../../../apps/media/jellyfin/ks.yaml
+  - ../../../apps/media/romm/ks.yaml
   - ../../../apps/network
+  - ../../../apps/network/tsidp/ks.yaml
   - ../../../apps/observability
+  - ../../../apps/observability/grafana/ks.yaml
+  - ../../../apps/observability/prometheus/ks.yaml
   - ../../../apps/storage
   - ../../../apps/storage/democratic-csi-array/ks.yaml
   - ../../../apps/storage/versitygw/ks.yaml
