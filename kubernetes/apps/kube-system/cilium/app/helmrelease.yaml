@@ -1,0 +1,86 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+
+metadata:
+  name: cilium
+
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: cilium
+  interval: 1h
+  values:
+    # https://docs.siderolabs.com/kubernetes-guides/cni/deploying-cilium
+    kubeProxyReplacement: true
+
+    securityContext:
+      capabilities:
+        ciliumAgent:
+          - CHOWN
+          - KILL
+          - NET_ADMIN
+          - NET_RAW
+          - IPC_LOCK
+          - SYS_ADMIN
+          - SYS_RESOURCE
+          - DAC_OVERRIDE
+          - FOWNER
+          - SETGID
+          - SETUID
+        cleanCiliumState:
+          - NET_ADMIN
+          - SYS_ADMIN
+          - SYS_RESOURCE
+
+    cgroup:
+      autoMount:
+        enabled: false
+      hostRoot: /sys/fs/cgroup
+
+    k8sServiceHost: localhost
+    k8sServicePort: 7445
+
+    cni:
+      resources:
+        limits:
+          # The chart default is the number 1, which the Kubernetes schema rejects
+          cpu: "1"
+
+    ipv4NativeRoutingCIDR: ${POD_SUBNET}
+
+    # https://docs.siderolabs.com/kubernetes-guides/cni/deploying-cilium#method-1:-helm-install
+    ipam:
+      mode: kubernetes
+
+    l2announcements:
+      enabled: true
+
+    # https://tailscale.com/kb/1236/kubernetes-operator#cilium-in-kube-proxy-replacement-mode
+    # routingMode: native
+    # socketLB:
+    #   hostNamespaceOnly: true
+
+    prometheus:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+        # The cluster-crds Kustomization installs the ServiceMonitor CRD; skip the chart's check
+        trustCRDsExist: true
+
+    operator:
+      replicas: 1
+      prometheus:
+        serviceMonitor:
+          enabled: true
+
+    hubble:
+      metrics:
+        enabled:
+          - dns
+          - drop
+          - tcp
+          - flow
+          - icmp
+          - httpV2
+        serviceMonitor:
+          enabled: true

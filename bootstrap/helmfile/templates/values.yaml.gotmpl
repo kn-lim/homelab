@@ -1,0 +1,10 @@
+{{- /* Substitute each ${KEY} from cluster-settings, as the Flux postBuild does. */ -}}
+{{- $settings := (fromYaml (readFile (printf "../../../kubernetes/clusters/%s/generated/cluster-settings.yaml" .Environment.Name))).data -}}
+{{- $helmrelease := readFile (printf "../../../kubernetes/apps/%s/%s/app/helmrelease.yaml" .Release.Namespace .Release.Name) -}}
+{{- range $key, $value := $settings -}}
+{{- $helmrelease = $helmrelease | replace (printf "${%s}" $key) $value -}}
+{{- end -}}
+{{- with regexFind `\$\{[A-Za-z_][A-Za-z0-9_]*\}` $helmrelease -}}
+{{- fail (printf "%s is not in cluster-settings" .) -}}
+{{- end -}}
+{{ dig "spec" "values" (dict) (fromYaml $helmrelease) | toYaml }}

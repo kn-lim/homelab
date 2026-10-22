@@ -18,6 +18,7 @@ data:
   CLUSTER_NAME: "{{ $cluster.name }}"
   CONTROLPLANE_IP: "{{ $controlplane.ip }}"
   CONTROLPLANE_HOSTNAME: "{{ $controlplane.hostname }}"
+  COREDNS_CLUSTER_IP: "{{ $cluster.coredns_cluster_ip }}"
   LOCAL_DOMAIN: "{{ $cluster.local_domain }}"
   LOCAL_VIP: "{{ $cluster.local_vip }}"
   POD_SUBNET: "{{ $cluster.pod_subnet }}"

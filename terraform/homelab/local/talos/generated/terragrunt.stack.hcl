@@ -41,12 +41,5 @@ stack "talos" {
       service_subnet = "10.96.0.0/16"
       pod_subnet     = "10.244.0.0/16"
     }
-
-    cluster-bootstrap = {
-      namespace         = "external-secrets"
-      vault_name        = "Homelab"
-      secret_name       = "op-sa-kubernetes"
-      token_secret_name = "onepassword-token"
-    }
   }
 }

@@ -1,0 +1,61 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/helmfile
+
+# Installs the releases that Flux needs before its own reconciliation begins.
+# Run it with -e <cluster>. Flux then adopts these releases.
+
+environments:
+  henesys: {}
+  ellinia: {}
+
+---
+helmDefaults:
+  cleanupOnFail: true
+  forceConflicts: true
+  wait: true
+  waitForJobs: true
+
+bases:
+  - default.yaml
+
+releases:
+  - name: cilium
+    namespace: kube-system
+    inherit:
+      - template: default
+    # The ServiceMonitor CRD does not exist yet. Flux turns the ServiceMonitors on after cluster-crds is ready.
+    values:
+      - prometheus:
+          serviceMonitor:
+            enabled: false
+        operator:
+          prometheus:
+            serviceMonitor:
+              enabled: false
+        hubble:
+          metrics:
+            serviceMonitor:
+              enabled: false
+
+  - name: coredns
+    namespace: kube-system
+    inherit:
+      - template: default
+    needs: ["kube-system/cilium"]
+    # The ServiceMonitor CRD does not exist yet. Flux turns the ServiceMonitor on after cluster-crds is ready.
+    values:
+      - prometheus:
+          monitor:
+            enabled: false
+
+  - name: flux-operator
+    namespace: flux-system
+    inherit:
+      - template: default
+    needs: ["kube-system/coredns"]
+
+  - name: flux-instance
+    namespace: flux-system
+    inherit:
+      - template: default
+    needs: ["flux-system/flux-operator"]

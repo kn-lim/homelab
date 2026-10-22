@@ -26,10 +26,6 @@ terraform:
     #     - terraform/_units/onepassword-secret-read
     - application: talos
       whenModified:
-        - terraform/_modules/cluster-bootstrap
-        - terraform/_modules/onepassword-secret-read
         - terraform/_modules/talos
         - terraform/_stacks/talos
-        - terraform/_units/cluster-bootstrap
-        - terraform/_units/onepassword-secret-read
         - terraform/_units/talos

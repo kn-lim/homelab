@@ -8,9 +8,6 @@ locals {
   # Backend configuration
   backend_bucket = "${get_env("TG_BUCKET", "")}"
   backend_region = "us-west-2"
-
-  # Kubernetes
-  kubeconfig_path = "${get_repo_root()}/${local.platform}-${local.region}.kubeconfig"
 }
 
 generate "provider" {
@@ -29,14 +26,6 @@ provider "aws" {
 
   region = "${local.region}"
 }
-%{endif}
-
-%{if local.unit == "cluster-bootstrap"}
-provider "kubernetes" {
-  config_path = "${local.kubeconfig_path}"
-}
-
-provider "onepassword" {}
 %{endif}
 
 %{if startswith(local.unit, "grafana-")}
