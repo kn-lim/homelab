@@ -5,3 +5,7 @@ metadata:
   name: observability
   annotations:
     kustomize.toolkit.fluxcd.io/prune: disabled
+  # Alloy mounts host paths and uses the host PID namespace.
+  labels:
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/warn: privileged

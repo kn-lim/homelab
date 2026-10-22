@@ -23,6 +23,7 @@ data:
   LOCAL_DOMAIN: "{{ $cluster.local_domain }}"
   LOCAL_VIP: "{{ $cluster.local_vip }}"
   POD_SUBNET: "{{ $cluster.pod_subnet }}"
+  PROMETHEUS_REMOTE_WRITE_URL: "{{ $cluster.prometheus_remote_write_url }}"
   TAILSCALE_NAMESERVER_IP: "{{ $cluster.tailscale_nameserver_ip }}"
   TAILSCALE_TAILNET_NAME: "{{ $cluster.tailscale_tailnet_name }}"
   VELERO_COLD_BACKUP_BUCKET: "{{ $cluster.velero_cold_backup_bucket }}"

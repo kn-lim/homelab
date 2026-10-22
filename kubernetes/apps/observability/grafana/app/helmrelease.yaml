@@ -1,0 +1,41 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+
+metadata:
+  name: grafana
+
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: grafana
+  interval: 1h
+  values:
+    podAnnotations:
+      secret.reloader.stakater.com/auto: "true"
+      configmap.reloader.stakater.com/auto: "true"
+
+    envValueFrom:
+      GF_AUTH_GENERIC_OAUTH_CLIENT_ID:
+        secretKeyRef:
+          name: grafana-tsidp
+          key: client_id
+      GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET:
+        secretKeyRef:
+          name: grafana-tsidp
+          key: client_secret
+
+    grafana.ini:
+      server:
+        root_url: "https://grafana.${TAILSCALE_TAILNET_NAME}.ts.net"
+      auth.generic_oauth:
+        name: "tsidp"
+        enabled: true
+        allow_sign_up: true
+        scopes: openid email profile
+        auth_url: "https://idp.${TAILSCALE_TAILNET_NAME}.ts.net/authorize"
+        token_url: "https://idp.${TAILSCALE_TAILNET_NAME}.ts.net/token"
+        api_url: "https://idp.${TAILSCALE_TAILNET_NAME}.ts.net/userinfo"
+
+    persistence:
+      enabled: true
+      existingClaim: grafana

@@ -14,6 +14,7 @@ data:
   LOCAL_DOMAIN: "knlim.dev"
   LOCAL_VIP: "10.1.2.12"
   POD_SUBNET: "10.244.0.0/16"
+  PROMETHEUS_REMOTE_WRITE_URL: "http://prometheus-server.observability.svc.cluster.local:80/api/v1/write"
   TAILSCALE_NAMESERVER_IP: "10.96.0.53"
   TAILSCALE_TAILNET_NAME: "neon-wyrm"
   VELERO_COLD_BACKUP_BUCKET: "velero-homelab"

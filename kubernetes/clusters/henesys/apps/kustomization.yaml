@@ -10,6 +10,8 @@ resources:
   - ../../../apps/network
   - ../../../apps/network/tsidp/ks.yaml
   - ../../../apps/observability
+  - ../../../apps/observability/grafana/ks.yaml
+  - ../../../apps/observability/prometheus/ks.yaml
   - ../../../apps/storage
   - ../../../apps/storage/democratic-csi-array/ks.yaml
   - ../../../apps/storage/versitygw/ks.yaml

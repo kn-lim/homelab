@@ -1,0 +1,19 @@
+# The Alloy of ellinia sends remote-write traffic to this device through prometheus-egress.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+
+metadata:
+  name: prometheus
+  annotations:
+    tailscale.com/tags: "tag:k8s-prometheus"
+
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: prometheus-server
+      port:
+        number: 80
+  tls:
+    - hosts:
+        - prometheus

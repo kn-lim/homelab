@@ -96,6 +96,7 @@ clusters:
     next:
       name: "henesys"
       tailscale_nameserver_ip: "10.96.0.53"
+      prometheus_remote_write_url: "http://prometheus-server.observability.svc.cluster.local:80/api/v1/write"
       controlplanes:
         - ip: "10.1.2.11"
           install_disk: "/dev/vda"
