@@ -4,6 +4,9 @@ kind: Kustomization
 
 resources:
   - ../../../apps/cert-manager
+  - ../../../apps/database
+  - ../../../apps/database/cloudnative-pg/ks.yaml
+  - ../../../apps/database/valkey/ks.yaml
   - ../../../apps/external-secrets
   - ../../../apps/flux-system
   - ../../../apps/kube-system
