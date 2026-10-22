@@ -1,0 +1,42 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+
+metadata:
+  name: open-webui
+
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: open-webui
+  interval: 1h
+  values:
+    ollama:
+      enabled: false
+
+    ollamaUrls:
+      - http://ollama.ai.svc.cluster.local:11434
+
+    persistence:
+      enabled: true
+      existingClaim: open-webui
+
+    enableOpenaiApi: false
+
+    pipelines:
+      enabled: false
+
+    websocket:
+      enabled: true
+      manager: redis
+      url: "redis://valkey.database.svc.cluster.local:6379"
+      redis:
+        enabled: false
+
+    extraEnvVars:
+      - name: WEBUI_SECRET_KEY
+        valueFrom:
+          secretKeyRef:
+            name: open-webui-secret
+            key: webui-secret-key
+      - name: WEBUI_URL
+        value: "https://chat.${LOCAL_DOMAIN}"

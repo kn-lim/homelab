@@ -1,0 +1,10 @@
+# Jellyfin publishes no public OCI chart.
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+
+metadata:
+  name: jellyfin
+
+spec:
+  interval: 1h
+  url: https://jellyfin.github.io/jellyfin-helm

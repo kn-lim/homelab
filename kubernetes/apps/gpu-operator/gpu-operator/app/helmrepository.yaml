@@ -1,0 +1,10 @@
+# The NVIDIA OCI registry needs a login.
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+
+metadata:
+  name: nvidia
+
+spec:
+  interval: 1h
+  url: https://helm.ngc.nvidia.com/nvidia

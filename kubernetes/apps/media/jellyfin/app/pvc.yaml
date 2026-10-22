@@ -1,0 +1,28 @@
+# Velero restores these PVCs by name.
+apiVersion: v1
+kind: PersistentVolumeClaim
+
+metadata:
+  name: jellyfin-config
+
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-data
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+
+metadata:
+  name: jellyfin-cache
+
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-data
+  resources:
+    requests:
+      storage: 20Gi
