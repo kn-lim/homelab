@@ -1,4 +1,4 @@
-# The secrets come from 1Password. Webstation uses the nvidia RuntimeClass from the GPU Operator.
+# The secrets come from 1Password. Webstation uses the nvidia RuntimeClass from the GPU Operator. The PVCs need the local-array and local-data StorageClasses from democratic-csi-array and democratic-csi-data.
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 
@@ -8,6 +8,8 @@ metadata:
 
 spec:
   dependsOn:
+    - name: democratic-csi-array
+    - name: democratic-csi-data
     - name: gpu-operator
     - name: onepassword
     - name: romm-db

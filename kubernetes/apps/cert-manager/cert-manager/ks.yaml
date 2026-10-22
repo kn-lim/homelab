@@ -22,6 +22,11 @@ spec:
   dependsOn:
     - name: cert-manager
     - name: onepassword
+  # kstatus does not read the Ready condition of a ClusterIssuer, so dependsOn would not wait for the ACME account.
+  healthCheckExprs:
+    - apiVersion: cert-manager.io/v1
+      kind: ClusterIssuer
+      current: status.conditions.exists(e, e.type == 'Ready' && e.status == 'True')
   interval: 1h
   path: ./kubernetes/apps/cert-manager/cert-manager/issuers
   targetNamespace: cert-manager

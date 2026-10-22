@@ -8,6 +8,11 @@ metadata:
 spec:
   dependsOn:
     - name: external-secrets
+  # kstatus does not read the Ready condition of a ClusterSecretStore, so dependsOn would not wait for a working store.
+  healthCheckExprs:
+    - apiVersion: external-secrets.io/v1
+      kind: ClusterSecretStore
+      current: status.conditions.exists(e, e.type == 'Ready' && e.status == 'True')
   interval: 1h
   path: ./kubernetes/apps/external-secrets/onepassword/app
   targetNamespace: external-secrets
