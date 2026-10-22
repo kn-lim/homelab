@@ -38,7 +38,7 @@ repos:
         stages: ["pre-commit"]
       - id: flux-validate
         name: Flux validate
-        description: Render the Flux cluster entry points and validate the output.
+        description: Check for duplicate apps and test the Flux cluster entry points with flate.
         entry: bash -c 'mise run flux:validate'
         language: system
         files: '^kubernetes/'

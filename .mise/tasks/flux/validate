@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#MISE description="Test each cluster entry point with flate, as the Flate workflow does"
+#MISE description="Check for duplicate apps and test each cluster entry point with flate"
 #USAGE arg "[cluster]" help="Validate only this cluster. Default: every directory in kubernetes/clusters/"
 set -euo pipefail
 
