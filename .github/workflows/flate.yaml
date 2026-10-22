@@ -79,7 +79,16 @@ jobs:
             echo "No ${CLUSTER_PATH} on main, nothing to diff." >> "${GITHUB_STEP_SUMMARY}"
             exit 0
           fi
-          flate diff all --no-progress -o github -p "${CLUSTER_PATH}" >> "${GITHUB_STEP_SUMMARY}"
+          # GitHub renders the -o github format only inside a diff code fence.
+          {
+            echo "<details><summary>${CLUSTER_PATH} diff</summary>"
+            echo
+            echo '```diff'
+            flate diff all --no-progress -o github -p "${CLUSTER_PATH}"
+            echo '```'
+            echo
+            echo '</details>'
+          } >> "${GITHUB_STEP_SUMMARY}"
 
   success:
     if: ${{ !cancelled() }}
