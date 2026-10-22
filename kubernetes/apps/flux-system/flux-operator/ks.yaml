@@ -9,3 +9,19 @@ spec:
   interval: 1h
   path: ./kubernetes/apps/flux-system/flux-operator/app
   targetNamespace: flux-system
+---
+# The web UI config needs the 1Password store. A separate Kustomization keeps flux-operator healthy without it.
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+
+metadata:
+  name: flux-operator-web
+  namespace: flux-system
+
+spec:
+  dependsOn:
+    - name: flux-operator
+    - name: onepassword
+  interval: 1h
+  path: ./kubernetes/apps/flux-system/flux-operator/web
+  targetNamespace: flux-system

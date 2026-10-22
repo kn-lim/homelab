@@ -3,5 +3,8 @@ kind: Kustomization
 
 namespace: kube-system
 
+components:
+  - ../../../components/alerts
+
 resources:
   - ./namespace.yaml

@@ -3,5 +3,8 @@ kind: Kustomization
 
 namespace: cert-manager
 
+components:
+  - ../../../components/alerts
+
 resources:
   - ./namespace.yaml
