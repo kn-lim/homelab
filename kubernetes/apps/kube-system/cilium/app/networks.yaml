@@ -15,8 +15,10 @@ metadata:
   name: local-gateway-policy
 
 spec:
+  # Envoy Gateway sets these labels on the proxy Service of Gateway network/envoy
   serviceSelector:
     matchLabels:
-      app.kubernetes.io/name: traefik
+      gateway.envoyproxy.io/owning-gateway-name: envoy
+      gateway.envoyproxy.io/owning-gateway-namespace: network
   externalIPs: false
   loadBalancerIPs: true

@@ -2,6 +2,8 @@
 {{- range $config.clusters -}}
 {{- if eq .name "homelab-lenovo" -}}
 {{- $cluster := . -}}
+{{- /* clusters.yaml has no host list for Traefik. This list keeps the ArgoCD Traefik overlay unchanged until the cutover. */ -}}
+{{- $traefik_hosts := coll.Slice "home-assistant" "traefik" -}}
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 
@@ -27,7 +29,7 @@ spec:
       tls:
         mode: Terminate
         certificateRefs:
-{{- range $cluster.local_services }}
+{{- range $traefik_hosts }}
           - name: {{ . }}-{{ $cluster.local_domain | strings.ReplaceAll "." "-" }}-tls
             kind: Secret
 {{- end }}
@@ -39,7 +41,7 @@ spec:
               - key: kubernetes.io/metadata.name
                 operator: In
                 values:
-{{- range $cluster.local_services }}
+{{- range $traefik_hosts }}
                   - {{ . }}
 {{- end }}
 {{- end }}

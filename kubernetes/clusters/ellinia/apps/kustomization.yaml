@@ -7,4 +7,5 @@ resources:
   - ../../../apps/external-secrets
   - ../../../apps/flux-system
   - ../../../apps/kube-system
+  - ../../../apps/network
   - ../../../apps/observability

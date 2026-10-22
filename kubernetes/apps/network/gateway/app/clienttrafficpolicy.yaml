@@ -1,0 +1,22 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: ClientTrafficPolicy
+
+metadata:
+  name: envoy
+
+spec:
+  clientIPDetection:
+    xForwardedFor:
+      trustedCIDRs:
+        - "${POD_SUBNET}"
+  http2:
+    onInvalidMessage: TerminateStream
+  targetSelectors:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+  tcpKeepalive: {}
+  tls:
+    minVersion: "1.2"
+    alpnProtocols:
+      - h2
+      - http/1.1

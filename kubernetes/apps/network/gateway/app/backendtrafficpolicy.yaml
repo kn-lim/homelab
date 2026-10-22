@@ -1,0 +1,20 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: BackendTrafficPolicy
+
+metadata:
+  name: envoy
+
+spec:
+  retry:
+    numRetries: 2
+    retryOn:
+      triggers:
+        - reset
+  targetSelectors:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+  tcpKeepalive: {}
+  timeout:
+    http:
+      # Envoy ends requests after 15s by default. Traefik had no limit.
+      requestTimeout: 0s

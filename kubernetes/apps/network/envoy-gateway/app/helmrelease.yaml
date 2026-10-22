@@ -1,0 +1,23 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+
+metadata:
+  name: envoy-gateway
+
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: envoy-gateway
+  interval: 1h
+  values:
+    # Installs the Envoy Gateway CRDs and the Gateway API CRDs
+    crds:
+      enabled: true
+    config:
+      envoyGateway:
+        provider:
+          type: Kubernetes
+          kubernetes:
+            deploy:
+              # The proxy of each Gateway runs in the namespace of the Gateway
+              type: GatewayNamespace
