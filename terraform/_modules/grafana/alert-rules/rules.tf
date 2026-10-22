@@ -104,28 +104,6 @@ locals {
 
     platform = [
       {
-        # Filtered query: empty result (NoData) means everything is healthy
-        name          = "ArgoAppNotHealthy"
-        expr          = "sum by (cluster, name) (argocd_app_info{health_status!=\"Healthy\"})"
-        op            = "gt"
-        threshold     = 0
-        for           = "15m"
-        severity      = "warning"
-        summary       = "ArgoCD application is not Healthy."
-        no_data_state = "OK"
-      },
-      {
-        # Filtered query: empty result (NoData) means everything is healthy
-        name          = "ArgoAppOutOfSync"
-        expr          = "sum by (cluster, name) (argocd_app_info{sync_status!=\"Synced\"})"
-        op            = "gt"
-        threshold     = 0
-        for           = "1h"
-        severity      = "warning"
-        summary       = "ArgoCD application has been OutOfSync for 1 hour."
-        no_data_state = "OK"
-      },
-      {
         name      = "CertificateExpiringSoon"
         expr      = "min by (cluster, namespace, name) ((certmanager_certificate_expiration_timestamp_seconds - time()) / 86400)"
         op        = "lt"
