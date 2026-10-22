@@ -57,10 +57,12 @@ unit "dashboards" {
           "https://grafana.com/api/dashboards/1860/revisions/latest/download",
         ]
       }
-      # https://grafana.com/grafana/dashboards/17346-traefik-official-standalone-dashboard/
-      traefik = {
+      # https://github.com/envoyproxy/gateway/tree/main/charts/gateway-addons-helm/dashboards
+      # Pinned to the Envoy Gateway chart version in kubernetes/apps/network/envoy-gateway/
+      envoy = {
         urls = [
-          "https://grafana.com/api/dashboards/17346/revisions/latest/download",
+          "https://raw.githubusercontent.com/envoyproxy/gateway/v1.9.2/charts/gateway-addons-helm/dashboards/envoy-proxy-global.json",
+          "https://raw.githubusercontent.com/envoyproxy/gateway/v1.9.2/charts/gateway-addons-helm/dashboards/envoy-gateway-global.json",
         ]
       }
       # https://github.com/adinhodovic/argo-cd-mixin
