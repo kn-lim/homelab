@@ -1,0 +1,39 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+
+metadata:
+  name: valkey
+
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: valkey
+  interval: 1h
+  values:
+    image:
+      # renovate: datasource=docker depName=valkey/valkey
+      tag: "9.1.2"
+
+    resources:
+      limits:
+        memory: 256Mi
+        cpu: 250m
+      requests:
+        memory: 64Mi
+        cpu: 50m
+
+    metrics:
+      enabled: true
+      exporter:
+        image:
+          # renovate: datasource=docker depName=ghcr.io/oliver006/redis_exporter
+          tag: "v1.94.0"
+        resources:
+          limits:
+            memory: 128Mi
+            cpu: 100m
+          requests:
+            memory: 32Mi
+            cpu: 25m
+      serviceMonitor:
+        enabled: true
