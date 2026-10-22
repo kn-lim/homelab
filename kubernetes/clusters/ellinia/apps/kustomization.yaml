@@ -1,14 +1,19 @@
 # Cluster app list: the namespaces and apps that this cluster runs.
+#
+# Restore hold: the stateful apps stay off this list until Velero restores their PVCs.
+# The cutover adds them in a separate pull request:
+#   - ../../../apps/default/home-assistant/ks.yaml
+#   - ../../../apps/network/adguardhome/ks.yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
   - ../../../apps/cert-manager
+  - ../../../apps/default
   - ../../../apps/external-secrets
   - ../../../apps/flux-system
   - ../../../apps/kube-system
   - ../../../apps/network
-  - ../../../apps/network/adguardhome/ks.yaml
   - ../../../apps/observability
   - ../../../apps/observability/prometheus-egress/ks.yaml
   - ../../../apps/storage
