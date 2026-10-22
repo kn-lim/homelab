@@ -1,0 +1,72 @@
+# The array share exists only on henesys.
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+
+metadata:
+  name: democratic-csi-array
+
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: democratic-csi-array
+  interval: 1h
+  values:
+    csiDriver:
+      name: org.democratic-csi.local-array
+      attachRequired: false
+      fsGroupPolicy: File
+      storageCapacity: true
+
+    controller:
+      strategy: node
+      driver:
+        image:
+          # renovate: datasource=docker depName=ghcr.io/democratic-csi/democratic-csi
+          tag: v1.9.5
+      externalAttacher:
+        enabled: false
+      externalResizer:
+        enabled: false
+      externalSnapshotter:
+        enabled: false
+      externalProvisioner:
+        extraArgs:
+          - --leader-election=false
+          - --node-deployment=true
+          - --node-deployment-immediate-binding=true
+          - --feature-gates=Topology=true
+          - --strict-topology=true
+          - --enable-capacity=true
+          - --capacity-ownerref-level=1
+
+    node:
+      driver:
+        image:
+          # renovate: datasource=docker depName=ghcr.io/democratic-csi/democratic-csi
+          tag: v1.9.5
+        extraVolumeMounts:
+          - name: local-storage
+            mountPath: /var/mnt/kubernetes-array/democratic-csi
+            mountPropagation: Bidirectional
+      extraVolumes:
+        - name: local-storage
+          hostPath:
+            path: /var/mnt/kubernetes-array/democratic-csi
+            type: Directory
+
+    driver:
+      config:
+        driver: local-hostpath
+        local-hostpath:
+          shareBasePath: /var/mnt/kubernetes-array/democratic-csi
+          controllerBasePath: /var/mnt/kubernetes-array/democratic-csi
+          dirPermissionsMode: "0777"
+          dirPermissionsUser: 0
+          dirPermissionsGroup: 0
+
+    storageClasses:
+      - name: local-array
+        defaultClass: false
+        reclaimPolicy: Retain
+        volumeBindingMode: WaitForFirstConsumer
+        allowVolumeExpansion: false
