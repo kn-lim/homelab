@@ -2,7 +2,9 @@
 {{- range $config.clusters -}}
 {{- if eq .name "homelab-lenovo" -}}
 {{- $cluster := . -}}
-{{- range $cluster.local_services -}}
+{{- /* clusters.yaml has no host list for Traefik. This list keeps the ArgoCD Traefik overlay unchanged until the cutover. */ -}}
+{{- $traefik_hosts := coll.Slice "home-assistant" "traefik" -}}
+{{- range $traefik_hosts -}}
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate

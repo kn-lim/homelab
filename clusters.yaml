@@ -83,20 +83,6 @@ clusters:
     ## Local VIP
     local_vip: "10.1.2.12"
 
-    ## Local Services
-    local_services:
-      - chat
-      - immich
-      - jellyfin
-      - open-webui
-      - otterwiki
-      - photos
-      - romm
-      - traefik
-      - versitygw
-      - vikunja
-      - wiki
-
     ## Flux values after the rename (temporary, the rename pull request folds them into the top-level keys)
     next:
       name: "henesys"
@@ -187,11 +173,6 @@ clusters:
 
     ## Local VIP
     local_vip: "10.1.2.21"
-
-    ## Local Services
-    local_services:
-      - home-assistant
-      - traefik
 
     ## Flux values after the rename (temporary, the rename pull request folds them into the top-level keys)
     next:
