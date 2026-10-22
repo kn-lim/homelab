@@ -3,5 +3,8 @@ kind: Kustomization
 
 namespace: observability
 
+components:
+  - ../../../components/alerts
+
 resources:
   - ./namespace.yaml

@@ -3,8 +3,7 @@
 #USAGE arg "[cluster]" help="Validate only this cluster. Default: every directory in kubernetes/clusters/"
 set -euo pipefail
 
-# Changed-only flate test against this git revision. flate build stays a full render, so it must not see FLATE_BASE.
-base="${FLATE_BASE:-origin/main}"
+# Full-tree flate test and build. The flate Action sets FLATE_BASE, so unset it.
 unset FLATE_BASE
 
 # Prints the sorted names of the Flux Kustomizations in a kustomize directory.
@@ -41,7 +40,7 @@ for cluster in "${clusters[@]}"; do
     exit 1
   fi
 
-  flate test all --no-progress -p "${dir}" --base "${base}"
+  flate test all --no-progress -p "${dir}"
   flate build all --no-progress -p "${dir}" \
     | flux-schema validate --schema-location default --schema-location ecosystem
 done

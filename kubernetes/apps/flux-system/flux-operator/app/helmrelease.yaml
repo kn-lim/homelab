@@ -9,3 +9,7 @@ spec:
     kind: OCIRepository
     name: flux-operator
   interval: 1h
+  values:
+    web:
+      # The flux-operator-web Kustomization creates this Secret. Until it exists, only the web UI API is down.
+      configSecretName: flux-operator-web-config

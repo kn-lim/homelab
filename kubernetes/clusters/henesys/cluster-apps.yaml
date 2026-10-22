@@ -11,6 +11,11 @@ spec:
   deletionPolicy: WaitForTermination
   interval: 1h
   path: ./kubernetes/clusters/henesys/apps
+  # This Kustomization renders the namespace directories, and their alerts component needs ${CLUSTER_NAME}
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-settings
   prune: true
   sourceRef:
     kind: GitRepository

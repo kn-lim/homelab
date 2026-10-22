@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+
+metadata:
+  name: flux-operator-web
+
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: flux-operator
+      port:
+        number: 9080
+  tls:
+    - hosts:
+        - flux-${CLUSTER_NAME}

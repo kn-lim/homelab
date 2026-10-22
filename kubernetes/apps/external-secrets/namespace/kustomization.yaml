@@ -3,5 +3,8 @@ kind: Kustomization
 
 namespace: external-secrets
 
+components:
+  - ../../../components/alerts
+
 resources:
   - ./namespace.yaml
