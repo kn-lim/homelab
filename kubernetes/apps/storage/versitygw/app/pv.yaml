@@ -1,0 +1,20 @@
+# The buckets and IAM users stay on the array share, so they survive a rebuild.
+apiVersion: v1
+kind: PersistentVolume
+
+metadata:
+  name: versitygw
+
+spec:
+  capacity:
+    storage: 1Ti
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  hostPath:
+    path: /var/mnt/kubernetes-array/versitygw
+    type: Directory
+  claimRef:
+    name: versitygw
+    namespace: storage
