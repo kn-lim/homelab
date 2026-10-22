@@ -1,0 +1,10 @@
+# metrics-server publishes no OCI chart.
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+
+metadata:
+  name: metrics-server
+
+spec:
+  interval: 1h
+  url: https://kubernetes-sigs.github.io/metrics-server/

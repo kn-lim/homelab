@@ -1,0 +1,27 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+
+metadata:
+  name: reloader
+
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: reloader
+  interval: 1h
+  values:
+    reloader:
+      reloadOnCreate: true
+      syncAfterRestart: true
+
+      # TODO: Setup Discord alert webhook
+      # logLevel: debug
+      # deployment:
+      #   env:
+      #     existing:
+      #       reloader-alert-webhook:
+      #         ALERT_WEBHOOK_URL: url
+      #     secret:
+      #       ALERT_ON_RELOAD: "true"
+      #       ALERT_SINK: "slack"
+      #       ALERT_ADDITIONAL_INFO: "test123"

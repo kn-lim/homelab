@@ -26,6 +26,8 @@ spec:
           name: _
         spec:
           deletionPolicy: WaitForTermination
+          # Health-check every child, so that dependsOn waits for a healthy dependency
+          wait: true
           prune: true
           sourceRef:
             kind: GitRepository
