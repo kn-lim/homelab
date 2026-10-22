@@ -15,7 +15,7 @@ spec:
   interval: 1h
   values:
     operatorConfig:
-      # The device name carries the cluster name
+      # The device name carries the cluster name.
       hostname: tailscale-operator-${CLUSTER_NAME}
       podAnnotations:
         secret.reloader.stakater.com/auto: "true"

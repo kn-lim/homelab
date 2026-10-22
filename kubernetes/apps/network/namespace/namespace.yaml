@@ -5,7 +5,7 @@ metadata:
   name: network
   annotations:
     kustomize.toolkit.fluxcd.io/prune: disabled
-  # The Tailscale proxies and the AdGuard Home sidecar need NET_ADMIN
+  # The Tailscale proxies and the AdGuard Home sidecar need NET_ADMIN.
   labels:
     pod-security.kubernetes.io/enforce: privileged
     pod-security.kubernetes.io/warn: privileged

@@ -10,6 +10,6 @@ spec:
       repo: tailscale/k8s-nameserver
       # renovate: datasource=docker depName=tailscale/k8s-nameserver
       tag: v1.104.1
-    # CoreDNS forwards ts.net to this fixed IP
+    # CoreDNS forwards ts.net to this fixed IP.
     service:
       clusterIP: ${TAILSCALE_NAMESERVER_IP}
