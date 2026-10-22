@@ -157,13 +157,14 @@ locals {
       },
       {
         # No 5xx samples yet (or no traffic) renders NoData: that is healthy
-        name          = "TraefikHigh5xxRate"
-        expr          = "sum by (cluster) (rate(traefik_service_requests_total{code=~\"5..\"}[5m])) / sum by (cluster) (rate(traefik_service_requests_total[5m]))"
+        # The prefix filter drops the admin, stats, and readiness listeners of the Envoy proxy
+        name          = "EnvoyHigh5xxRate"
+        expr          = "sum by (cluster) (rate(envoy_http_downstream_rq_xx{envoy_response_code_class=\"5\", envoy_http_conn_manager_prefix!~\"admin|eg-.*\"}[5m])) / sum by (cluster) (rate(envoy_http_downstream_rq_xx{envoy_http_conn_manager_prefix!~\"admin|eg-.*\"}[5m]))"
         op            = "gt"
         threshold     = 0.05
         for           = "10m"
         severity      = "warning"
-        summary       = "More than 5% of Traefik requests are 5xx."
+        summary       = "More than 5% of Envoy Gateway requests are 5xx."
         no_data_state = "OK"
       },
     ]
