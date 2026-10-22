@@ -3,15 +3,6 @@
 *.kubeconfig
 *.talosconfig
 
-# Go
-bootstrap
-bootstrap.zip
-!/bootstrap/
-!/.mise/tasks/bootstrap
-
-# Helm
-charts/
-
 # Terraform
 .terraform.lock.hcl
 

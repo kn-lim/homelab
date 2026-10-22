@@ -3,7 +3,6 @@
 set -euo pipefail
 
 find ./kubernetes/ ./terraform/ -name "*.tmpl" -type f \
-  ! -path "*/charts/*" \
   ! -path "*/.terragrunt-stack/*" \
   ! -path "*/_modules/*" \
   ! -path "*/_stacks/*" \
