@@ -17,5 +17,4 @@ data:
   PROMETHEUS_REMOTE_WRITE_URL: "https://prometheus.neon-wyrm.ts.net/api/v1/write"
   TAILSCALE_NAMESERVER_IP: "10.96.0.53"
   TAILSCALE_TAILNET_NAME: "neon-wyrm"
-  VELERO_COLD_BACKUP_BUCKET: "velero-homelab-lenovo"
   VELERO_S3_URL: "https://versitygw.knlim.dev"

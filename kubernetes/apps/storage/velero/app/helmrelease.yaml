@@ -30,20 +30,6 @@ spec:
             s3ForcePathStyle: "true"
             s3Url: ${VELERO_S3_URL}
             publicUrl: https://versitygw.knlim.dev
-        # The bucket of the cluster before the rebuild, read only for the cutover restore.
-        # Phase 3 of the Flux migration deletes this location.
-        - name: cold-backup
-          provider: aws
-          bucket: ${VELERO_COLD_BACKUP_BUCKET}
-          accessMode: ReadOnly
-          credential:
-            name: velero-cold-backup-credentials
-            key: cloud
-          config:
-            region: us-east-1
-            s3ForcePathStyle: "true"
-            s3Url: ${VELERO_S3_URL}
-            publicUrl: https://versitygw.knlim.dev
     credentials:
       existingSecret: velero-credentials
     initContainers:

@@ -38,7 +38,7 @@ if ! kubectl --context "${context}" wait nodes --for=condition=Ready=True --all 
 fi
 
 # The 1Password token for External Secrets. Flux never manages this Secret.
-onepassword=$(yq -o json -I0 ".clusters[] | select((.next.name // .name) == \"${cluster}\") | .external_secrets[].onepassword[]" clusters.yaml)
+onepassword=$(yq -o json -I0 ".clusters[] | select(.name == \"${cluster}\") | .external_secrets[].onepassword[]" clusters.yaml)
 if [[ -z "${onepassword}" ]]; then
   echo "ERROR: clusters.yaml has no external_secrets[].onepassword block for ${cluster}" >&2
   exit 1

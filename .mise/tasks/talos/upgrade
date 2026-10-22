@@ -20,9 +20,8 @@ if [[ ! -f "${talosconfig}" ]]; then
   exit 1
 fi
 
-# The temporary next: map holds the values after the rename.
-entry=".clusters[] | select((.next.name // .name) == \"${cluster}\")"
-mapfile -t node_ips < <(yq "${entry} | (.next.controlplanes // .controlplanes)[].ip" clusters.yaml)
+entry=".clusters[] | select(.name == \"${cluster}\")"
+mapfile -t node_ips < <(yq "${entry} | .controlplanes[].ip" clusters.yaml)
 if [[ ${#node_ips[@]} -ne 1 ]]; then
   echo "ERROR: ${cluster} has ${#node_ips[@]} nodes in clusters.yaml. The task upgrades only a single-node cluster." >&2
   exit 1

@@ -89,9 +89,6 @@ clusters:
     ## Velero S3 URL
     velero_s3_url: "http://versitygw.storage.svc.cluster.local:7070"
 
-    ## Velero Cold Backup Bucket (temporary, Phase 3 of the Flux migration deletes it)
-    velero_cold_backup_bucket: "velero-homelab"
-
     ## Cluster Name
   - name: "ellinia"
 
@@ -179,6 +176,3 @@ clusters:
 
     ## Velero S3 URL
     velero_s3_url: "https://versitygw.knlim.dev"
-
-    ## Velero Cold Backup Bucket (temporary, Phase 3 of the Flux migration deletes it)
-    velero_cold_backup_bucket: "velero-homelab-lenovo"
