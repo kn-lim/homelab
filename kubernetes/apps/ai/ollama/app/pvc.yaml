@@ -1,0 +1,14 @@
+# Velero does not restore the models. Ollama downloads them again.
+apiVersion: v1
+kind: PersistentVolumeClaim
+
+metadata:
+  name: ollama
+
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-data
+  resources:
+    requests:
+      storage: 50Gi

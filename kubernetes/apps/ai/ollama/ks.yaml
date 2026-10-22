@@ -1,0 +1,14 @@
+# Ollama uses the nvidia RuntimeClass and the GPU from the GPU Operator.
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+
+metadata:
+  name: ollama
+  namespace: flux-system
+
+spec:
+  dependsOn:
+    - name: gpu-operator
+  interval: 1h
+  path: ./kubernetes/apps/ai/ollama/app
+  targetNamespace: ai

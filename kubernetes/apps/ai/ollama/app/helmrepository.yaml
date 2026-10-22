@@ -1,0 +1,10 @@
+# Ollama publishes no public OCI chart.
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+
+metadata:
+  name: otwld
+
+spec:
+  interval: 1h
+  url: https://otwld.github.io/ollama-helm/

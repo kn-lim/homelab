@@ -1,0 +1,20 @@
+# The photo library stays on the media share, so it survives a rebuild.
+apiVersion: v1
+kind: PersistentVolume
+
+metadata:
+  name: immich-library
+
+spec:
+  capacity:
+    storage: 10Ti
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  hostPath:
+    path: /var/mnt/media/images
+    type: Directory
+  claimRef:
+    name: immich-library
+    namespace: media

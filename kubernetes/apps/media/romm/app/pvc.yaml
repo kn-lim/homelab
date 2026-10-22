@@ -1,0 +1,56 @@
+# Velero restores these PVCs by name.
+apiVersion: v1
+kind: PersistentVolumeClaim
+
+metadata:
+  name: romm-resources
+
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-data
+  resources:
+    requests:
+      storage: 20Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+
+metadata:
+  name: romm-config
+
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-data
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+
+metadata:
+  name: romm-assets
+
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-array
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+
+metadata:
+  name: romm-webstation-config
+
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-data
+  resources:
+    requests:
+      storage: 20Gi
