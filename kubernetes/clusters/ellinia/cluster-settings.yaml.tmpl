@@ -19,10 +19,13 @@ data:
   CONTROLPLANE_IP: "{{ $controlplane.ip }}"
   CONTROLPLANE_HOSTNAME: "{{ $controlplane.hostname }}"
   COREDNS_CLUSTER_IP: "{{ $cluster.coredns_cluster_ip }}"
+  DEMOCRATIC_CSI_DATA_PATH: "{{ $cluster.democratic_csi_data_path }}"
   LOCAL_DOMAIN: "{{ $cluster.local_domain }}"
   LOCAL_VIP: "{{ $cluster.local_vip }}"
   POD_SUBNET: "{{ $cluster.pod_subnet }}"
   TAILSCALE_NAMESERVER_IP: "{{ $cluster.tailscale_nameserver_ip }}"
   TAILSCALE_TAILNET_NAME: "{{ $cluster.tailscale_tailnet_name }}"
+  VELERO_COLD_BACKUP_BUCKET: "{{ $cluster.velero_cold_backup_bucket }}"
+  VELERO_S3_URL: "{{ $cluster.velero_s3_url }}"
 {{- end }}
 {{- end }}

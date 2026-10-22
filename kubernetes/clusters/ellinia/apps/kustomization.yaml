@@ -10,3 +10,4 @@ resources:
   - ../../../apps/network
   - ../../../apps/network/adguardhome/ks.yaml
   - ../../../apps/observability
+  - ../../../apps/storage

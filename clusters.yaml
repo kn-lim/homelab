@@ -83,6 +83,15 @@ clusters:
     ## Local VIP
     local_vip: "10.1.2.12"
 
+    ## democratic-csi Data Path
+    democratic_csi_data_path: "/var/mnt/kubernetes-data/democratic-csi"
+
+    ## Velero S3 URL
+    velero_s3_url: "http://versitygw.storage.svc.cluster.local:7070"
+
+    ## Velero Cold Backup Bucket (temporary, Phase 3 of the Flux migration deletes it)
+    velero_cold_backup_bucket: "velero-homelab"
+
     ## Flux values after the rename (temporary, the rename pull request folds them into the top-level keys)
     next:
       name: "henesys"
@@ -173,6 +182,15 @@ clusters:
 
     ## Local VIP
     local_vip: "10.1.2.21"
+
+    ## democratic-csi Data Path
+    democratic_csi_data_path: "/var/mnt/democratic-csi"
+
+    ## Velero S3 URL
+    velero_s3_url: "https://versitygw.knlim.dev"
+
+    ## Velero Cold Backup Bucket (temporary, Phase 3 of the Flux migration deletes it)
+    velero_cold_backup_bucket: "velero-homelab-lenovo"
 
     ## Flux values after the rename (temporary, the rename pull request folds them into the top-level keys)
     next:

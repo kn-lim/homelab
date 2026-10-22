@@ -1,0 +1,77 @@
+# The data path differs per cluster and comes from cluster-settings.
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+
+metadata:
+  name: democratic-csi-data
+
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: democratic-csi-data
+  interval: 1h
+  values:
+    csiDriver:
+      name: org.democratic-csi.local-data
+      attachRequired: false
+      fsGroupPolicy: File
+      storageCapacity: true
+
+    controller:
+      strategy: node
+      driver:
+        image:
+          # renovate: datasource=docker depName=ghcr.io/democratic-csi/democratic-csi
+          tag: v1.9.5
+      externalAttacher:
+        enabled: false
+      externalResizer:
+        enabled: false
+      externalSnapshotter:
+        enabled: false
+      externalProvisioner:
+        extraArgs:
+          - --leader-election=false
+          - --node-deployment=true
+          - --node-deployment-immediate-binding=true
+          - --feature-gates=Topology=true
+          - --strict-topology=true
+          - --enable-capacity=true
+          - --capacity-ownerref-level=1
+
+    node:
+      driver:
+        image:
+          # renovate: datasource=docker depName=ghcr.io/democratic-csi/democratic-csi
+          tag: v1.9.5
+        extraVolumeMounts:
+          - name: local-storage
+            mountPath: ${DEMOCRATIC_CSI_DATA_PATH}
+            mountPropagation: Bidirectional
+      extraVolumes:
+        - name: local-storage
+          hostPath:
+            path: ${DEMOCRATIC_CSI_DATA_PATH}
+            type: Directory
+
+    driver:
+      config:
+        driver: local-hostpath
+        local-hostpath:
+          shareBasePath: ${DEMOCRATIC_CSI_DATA_PATH}
+          controllerBasePath: ${DEMOCRATIC_CSI_DATA_PATH}
+          dirPermissionsMode: "0777"
+          dirPermissionsUser: 0
+          dirPermissionsGroup: 0
+
+    storageClasses:
+      - name: local-data
+        defaultClass: true
+        reclaimPolicy: Retain
+        volumeBindingMode: WaitForFirstConsumer
+        allowVolumeExpansion: false
+      - name: local-data-delete
+        defaultClass: false
+        reclaimPolicy: Delete
+        volumeBindingMode: WaitForFirstConsumer
+        allowVolumeExpansion: false
