@@ -25,11 +25,7 @@ jobs:
         id: changed-files
         uses: bjw-s-labs/action-changed-files@147be9638332cf68fd60714a610509d7a9360d60 # v0.7.0
         with:
-          patterns: |
-            .github/workflows/flate.yaml
-            .mise.toml
-            .mise/tasks/flux/**
-            kubernetes/**/*
+          patterns: kubernetes/**/*
 
   flate:
     if: ${{ needs.filter.outputs.changed-files != '[]' }}
@@ -49,50 +45,20 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
 
-      - name: Read Tool Versions
-        id: versions
-        run: |
-          echo "flate=$(yq -p toml -oy '.tools["github:home-operations/flate"]' .mise.toml)" >> "${GITHUB_OUTPUT}"
-          echo "flux-schema=$(yq -p toml -oy '.tools["github:fluxcd/flux-schema"]' .mise.toml)" >> "${GITHUB_OUTPUT}"
-
       - name: Install Flate
         uses: home-operations/flate/action@631b76b69c4e58c6f4d1cb01e23616fa61aebafa # v0.6.5
-        with:
-          base: origin/main
-          cache: true
-          version: ${{ steps.versions.outputs.flate }}
 
-      - name: Install Flux Schema
-        uses: fluxcd/flux-schema/actions/setup@5a0846e4358013c06804d249d659cbf3fae59292 # v0.16.0
-        with:
-          version: ${{ steps.versions.outputs.flux-schema }}
-
-      - name: Validate
-        run: .mise/tasks/flux/validate "${{ matrix.cluster }}"
-
-      - name: Diff
+      - name: Run Flate
+        id: flate
         env:
-          CLUSTER_PATH: kubernetes/clusters/${{ matrix.cluster }}
-        run: |
-          # flate diff fails if main has no entry point for this cluster yet.
-          if ! git cat-file -e "origin/main:${CLUSTER_PATH}" 2>/dev/null; then
-            echo "No ${CLUSTER_PATH} on main, nothing to diff." >> "${GITHUB_STEP_SUMMARY}"
-            exit 0
-          fi
-          # GitHub renders the -o github format only inside a diff code fence.
-          {
-            echo "<details><summary>${CLUSTER_PATH} diff</summary>"
-            echo
-            echo '```diff'
-            flate diff all --no-progress -o github -p "${CLUSTER_PATH}"
-            echo '```'
-            echo
-            echo '</details>'
-          } >> "${GITHUB_STEP_SUMMARY}"
+          # Full-tree test. The Action sets FLATE_BASE, and in changed-only mode flate does not find
+          # a dependsOn target on the unchanged CRD app list.
+          FLATE_BASE: ""
+        run: flate test all -p ./kubernetes/clusters/${{ matrix.cluster }}
 
   success:
     if: ${{ !cancelled() }}
-    needs: [filter, flate]
+    needs: flate
     name: Flate - Success
     runs-on: ubuntu-latest
     steps:
