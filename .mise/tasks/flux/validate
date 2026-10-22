@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
-#MISE description="Render each cluster entry point with flate and validate the output with flux-schema"
+#MISE description="Check for duplicate apps, test each cluster entry point with flate, and validate the output with flux-schema"
 #USAGE arg "[cluster]" help="Validate only this cluster. Default: every directory in kubernetes/clusters/"
 set -euo pipefail
-
-# Full-tree flate test and build. The flate Action sets FLATE_BASE, so unset it.
-unset FLATE_BASE
 
 # Prints the sorted names of the Flux Kustomizations in a kustomize directory.
 flux_kustomizations() {
