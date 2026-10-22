@@ -1,0 +1,61 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+
+metadata:
+  name: home-assistant
+
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: home-assistant
+  interval: 1h
+  values:
+    # The chart reads existingClaim only for a Deployment. The StatefulSet always uses a volumeClaimTemplate.
+    controller:
+      type: Deployment
+    # The pod uses the host port 8123, so a second pod cannot start next to the old one.
+    deploymentStrategy: Recreate
+
+    hostNetwork: true
+    dnsPolicy: ClusterFirstWithHostNet
+
+    service:
+      port: 8123
+
+    ingress:
+      external: true
+
+    configuration:
+      enabled: true
+      templateConfig: |-
+        default_config:
+
+        homeassistant:
+          internal_url: https://home-assistant.${LOCAL_DOMAIN}
+          external_url: https://home-assistant.${TAILSCALE_TAILNET_NAME}.ts.net
+
+        frontend:
+          themes: !include_dir_merge_named themes
+
+        automation: !include automations.yaml
+        script: !include scripts.yaml
+        scene: !include scenes.yaml
+
+    persistence:
+      enabled: true
+      existingClaim: home-assistant
+
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        memory: 2Gi
+
+    startupProbe:
+      httpGet:
+        path: /
+        port: http
+        scheme: HTTP
+      periodSeconds: 10
+      failureThreshold: 30
