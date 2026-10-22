@@ -1,9 +1,9 @@
-# Velero restores this PVC by name. The name comes from the old StatefulSet volumeClaimTemplate.
+# Velero restores this PVC by name.
 apiVersion: v1
 kind: PersistentVolumeClaim
 
 metadata:
-  name: home-assistant-home-assistant-0
+  name: home-assistant
 
 spec:
   accessModes:

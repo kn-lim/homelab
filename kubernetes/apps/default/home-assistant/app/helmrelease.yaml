@@ -43,7 +43,7 @@ spec:
 
     persistence:
       enabled: true
-      existingClaim: home-assistant-home-assistant-0
+      existingClaim: home-assistant
 
     resources:
       requests:
