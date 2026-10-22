@@ -1,6 +1,6 @@
 clusters:
     ## Cluster Name
-  - name: "homelab"
+  - name: "henesys"
 
     ## Talos Version
     talos_version: "v1.14.1"
@@ -22,7 +22,7 @@ clusters:
       - media
 
     ## Cluster Endpoint IP
-    endpoint: "https://talos.homelab.knlim.dev:6443"
+    endpoint: "https://talos.henesys.knlim.dev:6443"
 
     ## Cluster DNS Server IP
     dns_server: "1.1.1.3"
@@ -42,7 +42,7 @@ clusters:
         install_disk: "/dev/vda"
 
         ## Node Hostname
-        hostname: "homelab-talos"
+        hostname: "henesys"
 
     ## Node Subnet CIDR
     node_subnet: "10.1.2.0/24"
@@ -69,13 +69,13 @@ clusters:
     tailscale_tailnet_name: "neon-wyrm"
 
     ## Tailscale Nameserver IP
-    tailscale_nameserver_ip: "10.96.131.3"
+    tailscale_nameserver_ip: "10.96.0.53"
 
     ## CoreDNS Cluster IP
     coredns_cluster_ip: "10.96.0.10"
 
     ## Prometheus Remote Write URL
-    prometheus_remote_write_url: "http://prometheus-server.prometheus.svc.cluster.local:80/api/v1/write"
+    prometheus_remote_write_url: "http://prometheus-server.observability.svc.cluster.local:80/api/v1/write"
 
     ## Local Domain
     local_domain: "knlim.dev"
@@ -91,16 +91,6 @@ clusters:
 
     ## Velero Cold Backup Bucket (temporary, Phase 3 of the Flux migration deletes it)
     velero_cold_backup_bucket: "velero-homelab"
-
-    ## Flux values after the rename (temporary, the rename pull request folds them into the top-level keys)
-    next:
-      name: "henesys"
-      tailscale_nameserver_ip: "10.96.0.53"
-      prometheus_remote_write_url: "http://prometheus-server.observability.svc.cluster.local:80/api/v1/write"
-      controlplanes:
-        - ip: "10.1.2.11"
-          install_disk: "/dev/vda"
-          hostname: "henesys"
 
     ## Cluster Name
   - name: "ellinia"
