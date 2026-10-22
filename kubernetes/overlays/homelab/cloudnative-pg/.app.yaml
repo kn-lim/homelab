@@ -1,3 +1,0 @@
-project: platform
-namespace: postgres
-serverSideApply: true

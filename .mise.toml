@@ -1,6 +1,6 @@
 [env]
-KUBECONFIG = "{{config_root}}/homelab-local.kubeconfig:{{config_root}}/ellinia-local.kubeconfig"
-TALOSCONFIG = "{{config_root}}/homelab-local.talosconfig"
+KUBECONFIG = "{{config_root}}/henesys-local.kubeconfig:{{config_root}}/ellinia-local.kubeconfig"
+TALOSCONFIG = "{{config_root}}/henesys-local.talosconfig"
 
 [tools]
 "aqua:1password/cli" = "2.41.0"
@@ -45,12 +45,12 @@ run = 'find . -type d -name generated -prune -printf "Deleting: %p\n" -exec rm -
 
 [tasks."terraform:plan"]
 description = "Plan a Terragrunt stack"
-usage = 'arg "<dir>" help="The stack directory, for example terraform/homelab/local/talos/generated"'
+usage = 'arg "<dir>" help="The stack directory, for example terraform/henesys/local/talos/generated"'
 run = 'cd "${usage_dir}" && terragrunt stack run plan'
 
 [tasks."terraform:apply"]
 description = "Apply a Terragrunt stack with no Terragrunt prompt"
-usage = 'arg "<dir>" help="The stack directory, for example terraform/homelab/local/talos/generated"'
+usage = 'arg "<dir>" help="The stack directory, for example terraform/henesys/local/talos/generated"'
 confirm = "Apply the Terragrunt stack in {{usage.dir}}?"
 run = 'cd "${usage_dir}" && terragrunt stack run apply --non-interactive'
 
