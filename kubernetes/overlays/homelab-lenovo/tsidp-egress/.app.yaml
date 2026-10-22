@@ -1,8 +1,0 @@
-project: platform
-namespace: tsidp
-ignoreDifferences:
-  - group: ""
-    kind: Service
-    name: tsidp-egress
-    jsonPointers:
-      - /spec/externalName
