@@ -1,6 +1,6 @@
 ---
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
-name: "Flate"
+name: "Flux Validate"
 
 on:
   pull_request:
@@ -16,7 +16,7 @@ permissions:
 
 jobs:
   filter:
-    name: Flate - Filter
+    name: Flux Validate - Filter
     runs-on: ubuntu-latest
     outputs:
       changed-files: ${{ steps.changed-files.outputs.changed_files }}
@@ -25,12 +25,16 @@ jobs:
         id: changed-files
         uses: bjw-s-labs/action-changed-files@147be9638332cf68fd60714a610509d7a9360d60 # v0.7.0
         with:
-          patterns: kubernetes/**/*
+          patterns: |
+            .github/workflows/flux-validate.yaml
+            .mise.toml
+            .mise/tasks/flux/**
+            kubernetes/**/*
 
-  flate:
+  validate:
     if: ${{ needs.filter.outputs.changed-files != '[]' }}
     needs: filter
-    name: Flate - ${{ matrix.cluster }}
+    name: Flux Validate - ${{ matrix.cluster }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -43,23 +47,23 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-          fetch-depth: 0
 
-      - name: Install Flate
-        uses: home-operations/flate/action@631b76b69c4e58c6f4d1cb01e23616fa61aebafa # v0.6.5
+      - name: Install Tools
+        uses: jdx/mise-action@8418fedb1110381a0d3ba51a7a415d7c1b884550 # v5.2.2
+        with:
+          install_args: >-
+            aqua:kubernetes-sigs/kustomize
+            aqua:mikefarah/yq
+            github:fluxcd/flux-schema
+            github:home-operations/flate
 
-      - name: Run Flate
-        id: flate
-        env:
-          # Full-tree test. The Action sets FLATE_BASE, and in changed-only mode flate does not find
-          # a dependsOn target on the unchanged CRD app list.
-          FLATE_BASE: ""
-        run: flate test all -p ./kubernetes/clusters/${{ matrix.cluster }}
+      - name: Run Flux Validate
+        run: mise run flux:validate ${{ matrix.cluster }}
 
   success:
     if: ${{ !cancelled() }}
-    needs: flate
-    name: Flate - Success
+    needs: validate
+    name: Flux Validate - Success
     runs-on: ubuntu-latest
     steps:
       - name: Any jobs failed?
