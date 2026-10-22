@@ -1,0 +1,39 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+
+metadata:
+  name: vikunja
+
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: vikunja
+  interval: 1h
+  values:
+    vikunja:
+      persistence:
+        database:
+          enabled: false
+        data:
+          existingClaim: vikunja-data
+
+      ingress:
+        main:
+          enabled: false
+
+      env:
+        VIKUNJA_DATABASE_TYPE: postgres
+        VIKUNJA_DATABASE_HOST: postgres-rw.database.svc.cluster.local
+        VIKUNJA_DATABASE_USER: vikunja
+        VIKUNJA_DATABASE_DATABASE: vikunja
+        VIKUNJA_SERVICE_PUBLICURL: "https://vikunja.${LOCAL_DOMAIN}"
+        VIKUNJA_DATABASE_PASSWORD:
+          valueFrom:
+            secretKeyRef:
+              name: vikunja-secret
+              key: db-password
+        VIKUNJA_SERVICE_JWTSECRET:
+          valueFrom:
+            secretKeyRef:
+              name: vikunja-secret
+              key: jwt-secret

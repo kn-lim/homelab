@@ -1,0 +1,14 @@
+# The secret key and the GitHub deploy key come from 1Password.
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+
+metadata:
+  name: otterwiki
+  namespace: flux-system
+
+spec:
+  dependsOn:
+    - name: onepassword
+  interval: 1h
+  path: ./kubernetes/apps/default/otterwiki/app
+  targetNamespace: default

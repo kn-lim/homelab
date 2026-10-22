@@ -1,0 +1,10 @@
+# Otter Wiki publishes no OCI chart.
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+
+metadata:
+  name: otterwiki
+
+spec:
+  interval: 1h
+  url: https://charts.otterwiki.com

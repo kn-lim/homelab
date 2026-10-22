@@ -1,0 +1,14 @@
+# Velero restores this PVC by name.
+apiVersion: v1
+kind: PersistentVolumeClaim
+
+metadata:
+  name: otterwiki
+
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-data
+  resources:
+    requests:
+      storage: 5Gi
