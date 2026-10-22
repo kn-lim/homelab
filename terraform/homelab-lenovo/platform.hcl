@@ -1,3 +1,0 @@
-locals {
-  platform = "homelab-lenovo"
-}
