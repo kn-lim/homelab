@@ -164,8 +164,7 @@ kubernetes/
 │  │  ├─ apps/                      # cluster app list
 │  │  ├─ crds/                      # crd app list
 │  │  ├─ generated/                 # generated cluster-settings
-├─ components/
-│  ├─ alerts/                       # discord alerts for each namespace
+├─ components/                      # reusable kubernetes resources
 terraform/
 ├─ _modules/                        # terraform modules
 ├─ _stacks/                         # terragrunt stacks
