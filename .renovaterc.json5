@@ -15,6 +15,13 @@
       extractVersion: "^kustomize\\/v(?<version>\\d+\\.\\d+\\.\\d+)$",
     },
     {
+      // 1Password does not publish the CLI on GitHub, so look up its versions on the 1password/op image.
+      matchDepNames: ["aqua:1password/cli"],
+      overrideDatasource: "docker",
+      overridePackageName: "1password/op",
+      allowedVersions: "/^\\d+\\.\\d+\\.\\d+$/",
+    },
+    {
       // TODO: Remove rule when no longer using a NVIDIA GTX 1080 GPU
       matchDepNames: ["gpu-operator"],
       enabled: false,
