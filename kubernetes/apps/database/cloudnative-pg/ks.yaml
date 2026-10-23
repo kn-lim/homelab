@@ -10,7 +10,7 @@ spec:
   path: ./kubernetes/apps/database/cloudnative-pg/app
   targetNamespace: database
 ---
-# The Cluster needs the CNPG CRDs from the operator chart.
+# The Cluster needs the CNPG CRDs from the operator chart. The instance PVCs need the local-data StorageClass from democratic-csi-data.
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 
@@ -21,6 +21,12 @@ metadata:
 spec:
   dependsOn:
     - name: cloudnative-pg
+    - name: democratic-csi-data
+  # kstatus does not read the Ready condition of a CNPG Cluster, so dependsOn would not wait for a running primary.
+  healthCheckExprs:
+    - apiVersion: postgresql.cnpg.io/v1
+      kind: Cluster
+      current: status.conditions.exists(e, e.type == 'Ready' && e.status == 'True')
   interval: 1h
   path: ./kubernetes/apps/database/cloudnative-pg/cluster
   targetNamespace: database

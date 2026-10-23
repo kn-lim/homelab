@@ -1,4 +1,4 @@
-# The secrets come from 1Password. Vikunja stores its data in the vikunja database.
+# The secrets come from 1Password. Vikunja stores its data in the vikunja database. The PVCs need the local-data StorageClass from democratic-csi-data.
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 
@@ -8,6 +8,7 @@ metadata:
 
 spec:
   dependsOn:
+    - name: democratic-csi-data
     - name: onepassword
     - name: vikunja-db
   interval: 1h

@@ -65,14 +65,6 @@ unit "dashboards" {
           "https://raw.githubusercontent.com/envoyproxy/gateway/v1.9.2/charts/gateway-addons-helm/dashboards/envoy-gateway-global.json",
         ]
       }
-      # https://github.com/adinhodovic/argo-cd-mixin
-      argocd = {
-        urls = [
-          "https://raw.githubusercontent.com/adinhodovic/argo-cd-mixin/main/dashboards_out/argo-cd-application-overview.json",
-          "https://raw.githubusercontent.com/adinhodovic/argo-cd-mixin/main/dashboards_out/argo-cd-notifications-overview.json",
-          "https://raw.githubusercontent.com/adinhodovic/argo-cd-mixin/main/dashboards_out/argo-cd-operational-overview.json",
-        ]
-      }
       cloudnative-pg = {
         urls = [
           "https://raw.githubusercontent.com/cloudnative-pg/grafana-dashboards/main/charts/cluster/grafana-dashboard.json",

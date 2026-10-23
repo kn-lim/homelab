@@ -17,5 +17,4 @@ data:
   PROMETHEUS_REMOTE_WRITE_URL: "http://prometheus-server.observability.svc.cluster.local:80/api/v1/write"
   TAILSCALE_NAMESERVER_IP: "10.96.0.53"
   TAILSCALE_TAILNET_NAME: "neon-wyrm"
-  VELERO_COLD_BACKUP_BUCKET: "velero-homelab"
   VELERO_S3_URL: "http://versitygw.storage.svc.cluster.local:7070"

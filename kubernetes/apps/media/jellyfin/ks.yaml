@@ -1,4 +1,4 @@
-# Jellyfin uses the GPU from the NVIDIA device plugin.
+# Jellyfin uses the GPU from the NVIDIA device plugin. The PVCs need the local-data StorageClass from democratic-csi-data.
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 
@@ -8,6 +8,7 @@ metadata:
 
 spec:
   dependsOn:
+    - name: democratic-csi-data
     - name: gpu-operator
   interval: 1h
   path: ./kubernetes/apps/media/jellyfin/app

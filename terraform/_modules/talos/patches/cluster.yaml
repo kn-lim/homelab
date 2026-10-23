@@ -9,7 +9,7 @@ apiVersion: v1alpha1
 kind: KubeProxyConfig
 enabled: false
 ---
-# ArgoCD deploys CoreDNS with a Helm chart. Cilium does not do this.
+# The bootstrap helmfile installs CoreDNS with a Helm chart, and Flux manages it after that.
 apiVersion: v1alpha1
 kind: KubeCoreDNSConfig
 enabled: false

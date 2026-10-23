@@ -1,4 +1,4 @@
-# The tsidp auth key comes from 1Password.
+# The tsidp auth key comes from 1Password. The PVCs need the local-data StorageClass from democratic-csi-data.
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 
@@ -8,6 +8,7 @@ metadata:
 
 spec:
   dependsOn:
+    - name: democratic-csi-data
     - name: onepassword
   interval: 1h
   path: ./kubernetes/apps/network/tsidp/app

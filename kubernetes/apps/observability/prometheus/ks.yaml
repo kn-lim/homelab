@@ -1,3 +1,4 @@
+# The PVCs need the local-data StorageClass from democratic-csi-data.
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 
@@ -6,6 +7,8 @@ metadata:
   namespace: flux-system
 
 spec:
+  dependsOn:
+    - name: democratic-csi-data
   interval: 1h
   path: ./kubernetes/apps/observability/prometheus/app
   targetNamespace: observability

@@ -16,5 +16,5 @@ spec:
   tcpKeepalive: {}
   timeout:
     http:
-      # Envoy ends requests after 15s by default. Traefik had no limit.
+      # Envoy ends requests after 15s by default. No limit, so long uploads and streams finish.
       requestTimeout: 0s
