@@ -3,7 +3,7 @@ KUBECONFIG = "{{config_root}}/henesys-local.kubeconfig:{{config_root}}/ellinia-l
 TALOSCONFIG = "{{config_root}}/henesys-local.talosconfig"
 
 [tools]
-"aqua:1password/cli" = "2.41.0"
+"aqua:1password/cli" = "2.41.1"
 "aqua:aws/aws-cli" = "2.38.5"
 "aqua:fluxcd/flux2" = "2.9.6"
 "aqua:gruntwork-io/terragrunt" = "1.1.6"
