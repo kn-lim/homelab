@@ -8,9 +8,8 @@
 
 ![Talos](https://img.shields.io/badge/talos-v1.14.1-FF7300?logo=talos&logoColor=white)
 ![Kubernetes](https://img.shields.io/badge/kubernetes-v1.37.0-326CE5?logo=kubernetes&logoColor=white)
-![Go](https://img.shields.io/badge/go-v1.27-0e7fbf?logo=go&logoColor=white)
 
-A definitely over-engineered, but good enough homelab that handles my home infrastructure and Kubernetes cluster.
+A definitely over-engineered, but good enough homelab that handles my home infrastructure and Kubernetes clusters.
 
 ## Purpose
 
@@ -21,11 +20,11 @@ I have two goals in mind for this homelab:
 
 ## Features
 
-A Kubernetes cluster deployed with [Talos Linux](https://github.com/siderolabs/talos) and [ArgoCD](https://github.com/argoproj/argo-cd) using [GitHub](https://github.com) as the Git provider, [1Password](https://1password.com) to manage secrets and [Tailscale](https://tailscale.com/) as the primary way for application access.
+Kubernetes clusters deployed with [Talos Linux](https://github.com/siderolabs/talos) and [Flux](https://github.com/fluxcd/flux2) using [GitHub](https://github.com) as the Git provider, [1Password](https://1password.com) to manage secrets and [Tailscale](https://tailscale.com/) as the primary way for application access.
 
 This repository is managed by [mise](https://github.com/jdx/mise) and [prek](https://github.com/j178/prek) to ensure a standardized environment, alongside [Renovate](https://github.com/apps/renovate) to automate dependency management.
 
-[Task](https://github.com/go-task/task) and [gomplate](https://github.com/hairyhenderson/gomplate) are used to generate Kubernetes manifests and Terragrunt HCL files for values to be centrally managed and easily modifiable.
+[mise tasks](https://mise.jdx.dev/tasks/) and [gomplate](https://github.com/hairyhenderson/gomplate) are used to generate files for values to be centrally managed and easily modifiable.
 
 ### Core Components
 
@@ -34,11 +33,10 @@ This repository is managed by [mise](https://github.com/jdx/mise) and [prek](htt
 <b>Services</b>
 </summary>
 
-- [argo events](https://github.com/argoproj/argo-events)
-- [argo workflows](https://github.com/argoproj/argo-workflows)
-- [argocd](https://github.com/argoproj/argo-cd)
 - [democratic-csi](https://github.com/democratic-csi/democratic-csi)
 - [external secrets](https://github.com/external-secrets/external-secrets)
+- [flux](https://github.com/fluxcd/flux2)
+- [flux-operator](https://github.com/controlplaneio-fluxcd/flux-operator)
 - [gpu-operator](https://github.com/nvidia/gpu-operator)
 - [kubelet-serving-cert-approver](https://github.com/alex1989hu/kubelet-serving-cert-approver)
 - [reloader](https://github.com/stakater/Reloader)
@@ -54,9 +52,8 @@ This repository is managed by [mise](https://github.com/jdx/mise) and [prek](htt
 - [coredns](https://github.com/coredns/coredns)
 - [cert-manager](https://github.com/cert-manager/cert-manager)
 - [cilium](https://github.com/cilium/cilium)
-- [gateway api](https://github.com/kubernetes-sigs/gateway-api)
+- [envoy gateway](https://github.com/envoyproxy/gateway)
 - [tailscale kubernetes operator](https://github.com/tailscale/tailscale/)
-- [traefik](https://github.com/traefik/traefik)
 </details>
 
 <details>
@@ -87,19 +84,13 @@ This repository is managed by [mise](https://github.com/jdx/mise) and [prek](htt
 - [tsidp](https://github.com/tailscale/tsidp)
 </details>
 
-### ArgoCD
+### Flux
 
-[ArgoCD](https://github.com/argoproj/argo-cd) is the GitOps platform for my homelab and is deployed using Kustomize and Helm.
-
-The ApplicationSets in [`kubernetes/overlays/homelab/argocd/`](https://github.com/kn-lim/homelab/tree/main/kubernetes/overlays/homelab/argocd) (`applicationset-platform.yaml` and `applicationset-apps.yaml`) discover all applications by scanning for `.app.yaml` files in each app's overlay directory.
-
-### CI/CD
-
-As the homelab cluster is not publicly available, the GitHub webhook points to an AWS API Gateway connected to an AWS Lambda function. The function validates the request and forwards it as a message to an AWS SQS queue. This way, [Argo Events](https://github.com/argoproj/argo-events) is able to read the message and runs the [ci.yaml workflow](https://github.com/kn-lim/homelab/blob/main/kubernetes/bases/workflows/ci.yaml) using [Argo Workflows](https://github.com/argoproj/argo-workflows) to apply the changes.
+[Flux](https://github.com/fluxcd/flux2) is the GitOps platform for my homelab and is managed by [flux-operator](https://github.com/controlplaneio-fluxcd/flux-operator). Each cluster runs its own Flux instance.
 
 ### Gateway API
 
-As some services require direct access rather than through Tailscale, [Traefik](https://github.com/traefik/traefik) and [Cilium](https://github.com/cilium/cilium) are used to create a gateway using the [gateway api](https://github.com/kubernetes-sigs/gateway-api) for routing to the individual services. This provides an alternative way of accessing services besides Tailscale while on the local network.
+As some services require direct access rather than through Tailscale, [Envoy Gateway](https://github.com/envoyproxy/gateway) and [Cilium](https://github.com/cilium/cilium) are used to create a gateway for routing to the individual services. This provides an alternative way of accessing services besides Tailscale while on the local network.
 
 ### Tailscale
 
@@ -113,7 +104,7 @@ Talos Linux is managed with [Terragrunt](https://github.com/gruntwork-io/terragr
 
 The [talos](https://github.com/kn-lim/homelab/tree/main/terraform/_modules/talos) Terraform module contains config patches that are taken from either the official [Talos Linux documentation](https://docs.siderolabs.com/talos/), [onedr0p/cluster-template](https://github.com/onedr0p/cluster-template), [ajaykumar4/cluster-template](https://github.com/ajaykumar4/cluster-template) or specifically added for my homelab.
 
-The [talos stack](https://github.com/kn-lim/homelab/blob/main/terraform/_stacks/talos/terragrunt.stack.hcl) bootstraps the Talos Linux instance, saves the `kubeconfig` and `talosconfig` files using [hooks](https://terragrunt.gruntwork.io/docs/features/hooks/), then creates resources to prepare the kubernetes cluster for deployments.
+The [talos stack](https://github.com/kn-lim/homelab/blob/main/terraform/_stacks/talos/terragrunt.stack.hcl) bootstraps the Talos Linux instance and saves the `kubeconfig` and `talosconfig` files using [hooks](https://terragrunt.gruntwork.io/docs/features/hooks/).
 
 ## Deploying the Cluster
 
@@ -136,46 +127,45 @@ The [talos stack](https://github.com/kn-lim/homelab/blob/main/terraform/_stacks/
 
 | Name | Description |
 | - | - |
-| `argocd-ssh` | ArgoCD SSH Credentials for GitHub Access |
+| `cloudflare-*` | Cloudflare API Token |
 | `discord` | Discord Configurations |
 | `op-sa-*` | 1Password Service Account Credentials |
 | `tailscale-kubernetes-operator` | Tailscale Kubernetes Operator Credentials |
 | `terraform-*` | Credentials for Terraform Providers |
 | `tsidp-*` | Tailscale IDP Client Credentials |
+| `velero-*` | Velero Credentials |
+| `versitygw` | Versity S3 Gateway Credentials |
 
 ### Procedure
 
-0. Fill out `clusters.yaml` and run `task template:generate` to generate all templated files.
-1. Run `terragrunt stack generate` in `terraform/homelab/local/talos` to generate the stack files.
-2. Run `terragrunt apply` in `terraform/homelab/local/talos/generated/.terragrunt-stack/talos/.terragrunt-stack/talos` once the Talos Linux instance is waiting to be bootstrapped.
-    - This will create a `homelab-local.kubeconfig` and `homelab-local.talosconfig` in the repository's root level.
-3. Run `terragrunt stack run apply` in `terraform/homelab/local/talos` to finish the rest of the Talos Linux deployment.
-4. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/coredns` to install CoreDNS.
-5. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/cilium` to install Cilium.
-6. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/kubelet-serving-cert-approver` to install kubelet-serving-cert-approver.
-7. Run `task kubernetes:build-apply-server-side DIR=kubernetes/overlays/homelab/external-secrets` to install External Secrets.
-8. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/democratic-csi-data` to install democratic-csi.
-9. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/tailscale-operator NAMESPACE=tailscale` to install Tailscale Kubernetes Operator.
-10. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/tsidp NAMESPACE=tsidp` to install tsidp.
-11. Update `clusters.yaml` with the new `ts-dns` nameserver IP address and run `task template:generate`
-12. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/coredns` to update CoreDNS.
-13. Run `task kubernetes:build-apply DIR=kubernetes/overlays/homelab/argocd NAMESPACE=argocd` to install ArgoCD and all other applications.
+1. Fill out `clusters.yaml` and run `mise run template:generate` to generate all templated files.
+2. Run `mise run terraform:apply terraform/<cluster>/local/talos/generated` to get the cluster ready for bootstrap.
+3. Run `mise run bootstrap <cluster>` to bootstrap the cluster.
+4. Run `flux get ks -A` to verify every Kustomization is ready.
 
 ## Directories
 
-This repository uses the following directory structure that are strictly followed:
+This repository uses the following directory structure that is strictly followed:
 
 ```
+.mise/                              # mise files
+bootstrap/                          # files to bootstrap new clusters
 configs/                            # reusable config files
-docs/                               # documentation
 kubernetes/
-├─ bases/                           # kustomize bases
-│  ├─ applications/
-│  ├─ workflows/                    # argo workflows manifests
-├─ overlays/                        # kustomize overlays
-│  ├─ cluster/
-│  │  ├─ applications/
-│  │  │  ├─ generated/              # generated files
+├─ apps/                            # one directory per namespace
+│  ├─ namespace/
+│  │  ├─ namespace/                 # namespace manifest and alerts component
+│  │  ├─ app/
+│  │  │  ├─ app/                    # app manifests
+│  │  │  ├─ db/                     # app database, if any
+│  │  │  ├─ ks.yaml                 # flux kustomization
+├─ clusters/
+│  ├─ cluster/                      # flux entry point
+│  │  ├─ apps/                      # cluster app list
+│  │  ├─ crds/                      # crd app list
+│  │  ├─ generated/                 # generated cluster-settings
+├─ components/
+│  ├─ alerts/                       # discord alerts for each namespace
 terraform/
 ├─ _modules/                        # terraform modules
 ├─ _stacks/                         # terragrunt stacks
@@ -184,21 +174,22 @@ terraform/
 │  ├─ region/                       # or environment/
 │  │  ├─ applications/
 │  │  │  ├─ generated/              # generated files
+clusters.yaml                       # single source of truth for each cluster
 ```
 
 ## Hardware
 
 | Device | Specs | OS | Function |
 | - | - | - | - |
-| PC - `homelab` | AMD Ryzen 5 5600X, 64GB RAM, NVIDIA GTX 1080 (8GB VRAM) | Unraid 7 | NAS with Talos Linux VM |
-| Laptop - `homelab-lenovo` | Lenovo IdeaPad 5 Pro 14ACN6, AMD Ryzen 5 5600U, 16GB RAM | Talos Linux | Standalone Kubernetes Cluster |
+| `kerning` (Desktop) | AMD Ryzen 5 5600X, 64GB RAM, NVIDIA GTX 1080 (8GB VRAM) | Unraid 7 | NAS with Talos Linux VM |
+| `ellinia` (Laptop) | Lenovo IdeaPad 5 Pro 14ACN6, AMD Ryzen 5 5600U, 16GB RAM | Talos Linux | Standalone Kubernetes Cluster |
 | Linksys Velop | - | - | Access Points |
 | UniFi Cloud Gateway Ultra | - | - | Router and Firewall |
 
 | Node | Specs | OS | Host | Function |
 | - | - | - | - | - |
-| VM - `homelab-talos` | 8 CPU, 36GB RAM | Talos Linux | `homelab` | Main Node |
-| Laptop - `homelab-lenovo` | 12 CPU, 16GB RAM | Talos Linux | `homelab-lenovo` | Node with Low Power Consumption |
+| `henesys` (Virtual Machine) | 8 CPU, 36GB RAM | Talos Linux | `kerning` | Main Node |
+| `ellinia` | 12 CPU, 16GB RAM | Talos Linux | `ellinia` | Node with Low Power Consumption |
 
 ## Cost
 
@@ -207,19 +198,8 @@ terraform/
 | Service | Cost per Month | Notes |
 | - | - | - |
 | 1Password | $6 | Family Plan |
-| AWS Lambda | $0 | Usage under Free Tier |
-| AWS SQS | $0 | Usage under Free Tier |
 
 **Total**: $6
-
-## Goals
-
-- [x] Use [Terragrunt Stacks](https://terragrunt.gruntwork.io/docs/features/stacks/)
-- [x] Setup a NAS with Unraid
-- [x] [Argo Events](https://github.com/argoproj/argo-events) to handle Webhooks
-- [x] [Argo Workflows](https://github.com/argoproj/argo-workflows) for CI/CD
-- [ ] Setup [Kargo](https://github.com/akuity/kargo) for custom apps
-- [ ] Setup Monitoring and Alerts for all Services
 
 ## Thanks
 
