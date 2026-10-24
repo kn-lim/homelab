@@ -23,7 +23,7 @@ variable "system_extensions" {
 variable "talos_version" {
   description = "Talos version for machine configuration schema"
   type        = string
-  default     = "v1.14.1"
+  default     = "v1.14.4"
 }
 
 variable "virtiofs_volumes" {

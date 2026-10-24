@@ -32,6 +32,11 @@ version=$(yq "${entry} | .talos_version" clusters.yaml)
 
 # Keep the installed image and change only its tag.
 image=$(talosctl --talosconfig "${talosconfig}" get machineconfig --nodes "${node_ip}" -o yaml \
-  | yq 'select(di == 0) | .spec | from_yaml | .machine.install.image')
+  | yq 'select(di == 0) | .spec' \
+  | yq 'select(.kind == "UnattendedInstallConfig") | .installer.image')
+if [[ -z "${image}" || "${image}" == "null" ]]; then
+  echo "ERROR: no installer image found in the UnattendedInstallConfig of ${cluster}" >&2
+  exit 1
+fi
 
 talosctl --talosconfig "${talosconfig}" upgrade --nodes "${node_ip}" --image "${image%:*}:${version}"

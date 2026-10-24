@@ -3,10 +3,10 @@ clusters:
   - name: "henesys"
 
     ## Talos Version
-    talos_version: "v1.14.1"
+    talos_version: "v1.14.4"
 
     ## Kubernetes Version
-    kubernetes_version: "v1.37.0"
+    kubernetes_version: "v1.37.1"
 
     ## NVIDIA GPU Support
     nvidia_gpu_enabled: true
@@ -93,10 +93,10 @@ clusters:
   - name: "ellinia"
 
     ## Talos Version
-    talos_version: "v1.14.1"
+    talos_version: "v1.14.4"
 
     ## Kubernetes Version
-    kubernetes_version: "v1.37.0"
+    kubernetes_version: "v1.37.1"
 
     ## NVIDIA GPU Support
     nvidia_gpu_enabled: false

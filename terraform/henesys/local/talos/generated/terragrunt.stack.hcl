@@ -12,9 +12,9 @@ stack "talos" {
 
       hardware_addr = "52:54:00:fe:bd:6a"
 
-      talos_version = "v1.14.1"
+      talos_version = "v1.14.4"
 
-      kubernetes_version = "v1.37.0"
+      kubernetes_version = "v1.37.1"
 
       nvidia_gpu_enabled = true
 
