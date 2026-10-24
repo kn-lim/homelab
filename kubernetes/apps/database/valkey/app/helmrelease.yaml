@@ -27,7 +27,7 @@ spec:
       exporter:
         image:
           # renovate: datasource=docker depName=ghcr.io/oliver006/redis_exporter
-          tag: "v1.94.0"
+          tag: "v1.96.0"
         resources:
           limits:
             memory: 128Mi
