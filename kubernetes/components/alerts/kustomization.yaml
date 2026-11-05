@@ -1,9 +1,12 @@
-# Sends the Flux error events of one namespace to Discord. Every apps/<namespace>/namespace/ includes it,
-# because an Alert matches only event sources in its own namespace.
+# Sends the Flux events of one namespace to Discord: errors to #alerts-error, deploys and change sets to #alerts-info.
+# Every apps/<namespace>/namespace/ includes it, because an Alert matches only event sources in its own namespace.
 apiVersion: kustomize.config.k8s.io/v1alpha1
 kind: Component
 
 resources:
   - ./alert.yaml
+  - ./alert-info.yaml
   - ./externalsecret.yaml
+  - ./externalsecret-info.yaml
   - ./provider.yaml
+  - ./provider-info.yaml

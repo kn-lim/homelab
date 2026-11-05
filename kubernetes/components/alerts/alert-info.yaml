@@ -1,0 +1,22 @@
+apiVersion: notification.toolkit.fluxcd.io/v1beta3
+kind: Alert
+
+metadata:
+  name: discord-info
+
+spec:
+  providerRef:
+    name: discord-info
+  eventSeverity: info
+  eventSources:
+    - kind: HelmRelease
+      name: "*"
+    - kind: Kustomization
+      name: "*"
+  # Info events include every no-op "Reconciliation finished" event, so only deploys and change sets pass
+  inclusionList:
+    - "^Helm (install|upgrade|rollback).*succeeded"
+    - "(?m)^\\S+/\\S+ (created|configured|deleted)$"
+  # Both clusters post to one channel
+  eventMetadata:
+    cluster: ${CLUSTER_NAME}

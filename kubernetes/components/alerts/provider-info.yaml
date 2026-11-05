@@ -1,0 +1,11 @@
+apiVersion: notification.toolkit.fluxcd.io/v1beta3
+kind: Provider
+
+metadata:
+  name: discord-info
+
+spec:
+  type: discord
+  username: flux-${CLUSTER_NAME}
+  secretRef:
+    name: discord-info-webhook

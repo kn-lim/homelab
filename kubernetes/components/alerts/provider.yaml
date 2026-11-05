@@ -6,5 +6,6 @@ metadata:
 
 spec:
   type: discord
+  username: flux-${CLUSTER_NAME}
   secretRef:
     name: discord-webhook
