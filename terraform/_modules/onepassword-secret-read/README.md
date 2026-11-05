@@ -36,5 +36,6 @@ No modules.
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_fields"></a> [fields](#output\_fields) | All fields from the 1Password item as a map |
+| <a name="output_fields"></a> [fields](#output\_fields) | All fields from the 1Password item as a map. If two sections have a field with the same label, the last one wins. Use sections for those fields. |
+| <a name="output_sections"></a> [sections](#output\_sections) | The fields of each labeled section of the 1Password item, as a map of section label to a map of field label to value |
 <!-- END_TF_DOCS -->

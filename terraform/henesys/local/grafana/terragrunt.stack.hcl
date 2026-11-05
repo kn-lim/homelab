@@ -107,7 +107,7 @@ unit "onepassword-secret-read" {
 
   values = {
     vault_name  = "Homelab"
-    secret_name = "grafana"
+    secret_name = "discord"
   }
 }
 
@@ -121,16 +121,20 @@ unit "alerting" {
       config_path = unit.onepassword-secret-read.path
 
       mock_outputs = {
-        fields = {
-          webhook_url = "https://discord.com/api/webhooks/mock"
+        sections = {
+          "alerts-error" = {
+            grafana_webhook_url = "https://discord.com/api/webhooks/mock"
+          }
         }
       }
 
       mock_outputs_allowed_terraform_commands = ["init", "import", "validate", "plan"]
+      # A plan before the first apply of onepassword-secret-read reads old state with no sections output
+      mock_outputs_merge_strategy_with_state = "shallow"
     }
 
     inputs = {
-      discord_webhook_url = dependency.onepassword-secret-read.outputs.fields["webhook_url"]
+      discord_webhook_url = dependency.onepassword-secret-read.outputs.sections["alerts-error"]["grafana_webhook_url"]
     }
   }
 }
