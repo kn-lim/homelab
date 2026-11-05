@@ -16,4 +16,4 @@ images:
   - name: ghcr.io/rommapp/romm
     newTag: 5.4.1
   - name: lscr.io/linuxserver/webstation
-    newTag: 0.15.1-romm
+    newTag: 0.15.3-romm
