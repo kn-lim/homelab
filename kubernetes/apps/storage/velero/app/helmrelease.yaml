@@ -40,6 +40,9 @@ spec:
         volumeMounts:
           - mountPath: /target
             name: plugins
+    metrics:
+      serviceMonitor:
+        enabled: true
     schedules:
       daily:
         disabled: false
