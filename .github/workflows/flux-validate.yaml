@@ -38,6 +38,9 @@ jobs:
     needs: filter
     name: Flux Validate - ${{ matrix.cluster }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read # authenticated GHCR pulls avoid the shared anonymous rate limit
     strategy:
       fail-fast: false
       matrix:
@@ -59,8 +62,17 @@ jobs:
             github:fluxcd/flux-schema
             github:home-operations/flate
 
+      - name: Log In to GHCR
+        uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+
       - name: Run Flux Validate
-        run: mise run flux:validate ${{ matrix.cluster }}
+        env:
+          MISE_TASK_RUN_AUTO_INSTALL: "false" # use only the tools from the Install Tools step
+        run: FLATE_REGISTRY_CONFIG="${HOME}/.docker/config.json" mise run flux:validate ${{ matrix.cluster }}
 
   success:
     if: ${{ !cancelled() }}
