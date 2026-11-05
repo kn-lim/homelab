@@ -2,15 +2,6 @@ locals {
   rule_groups = {
     node = [
       {
-        name      = "NodeCPUHigh"
-        expr      = "1 - avg by (cluster) (rate(node_cpu_seconds_total{mode=\"idle\"}[10m]))"
-        op        = "gt"
-        threshold = 0.9
-        for       = "15m"
-        severity  = "warning"
-        summary   = "Node CPU usage above 90% for 15 minutes."
-      },
-      {
         name      = "NodeMemoryHigh"
         expr      = "1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes"
         op        = "gt"
@@ -37,6 +28,16 @@ locals {
         severity      = "critical"
         summary       = "A node is not Ready."
         no_data_state = "Alerting"
+      },
+      {
+        name          = "NodePressure"
+        expr          = "max by (cluster, condition) (kube_node_status_condition{condition=~\"DiskPressure|MemoryPressure|PIDPressure\", status=\"true\"})"
+        op            = "gt"
+        threshold     = 0
+        for           = "5m"
+        severity      = "warning"
+        summary       = "A node reports disk, memory, or PID pressure."
+        no_data_state = "OK"
       },
     ]
 
@@ -92,6 +93,36 @@ locals {
         summary   = "Deployment has unavailable replicas for 15 minutes."
       },
       {
+        name          = "StatefulSetReplicasMismatch"
+        expr          = "max by (cluster, namespace, statefulset) (kube_statefulset_status_replicas - kube_statefulset_status_replicas_ready)"
+        op            = "gt"
+        threshold     = 0
+        for           = "15m"
+        severity      = "warning"
+        summary       = "StatefulSet has replicas that are not ready for 15 minutes."
+        no_data_state = "OK"
+      },
+      {
+        name          = "DaemonSetUnavailable"
+        expr          = "max by (cluster, namespace, daemonset) (kube_daemonset_status_number_unavailable)"
+        op            = "gt"
+        threshold     = 0
+        for           = "15m"
+        severity      = "warning"
+        summary       = "DaemonSet has unavailable pods for 15 minutes."
+        no_data_state = "OK"
+      },
+      {
+        name          = "KubeJobFailed"
+        expr          = "max by (cluster, namespace, job_name) (kube_job_status_failed)"
+        op            = "gt"
+        threshold     = 0
+        for           = "5m"
+        severity      = "warning"
+        summary       = "A Job has failed pods."
+        no_data_state = "OK"
+      },
+      {
         name      = "PVCAlmostFull"
         expr      = "max by (cluster, namespace, persistentvolumeclaim) (kubelet_volume_stats_used_bytes / kubelet_volume_stats_capacity_bytes)"
         op        = "gt"
@@ -134,6 +165,17 @@ locals {
         no_data_state = "OK"
       },
       {
+        # 50 hours allows one missed 03:00 backup while a machine is off, but not two
+        name          = "VeleroBackupMissing"
+        expr          = "time() - max by (cluster, schedule) (velero_backup_last_successful_timestamp{schedule!=\"\"})"
+        op            = "gt"
+        threshold     = 180000
+        for           = "15m"
+        severity      = "warning"
+        summary       = "No successful Velero backup in 50 hours."
+        no_data_state = "OK"
+      },
+      {
         # No 5xx samples yet (or no traffic) renders NoData: that is healthy
         # The prefix filter drops the admin, stats, and readiness listeners of the Envoy proxy
         name          = "EnvoyHigh5xxRate"
@@ -156,15 +198,6 @@ locals {
         for       = "10m"
         severity  = "warning"
         summary   = "GPU temperature above 85C for 10 minutes."
-      },
-      {
-        name      = "GPUMemoryAlmostFull"
-        expr      = "max by (cluster) (DCGM_FI_DEV_FB_USED / (DCGM_FI_DEV_FB_USED + DCGM_FI_DEV_FB_FREE))"
-        op        = "gt"
-        threshold = 0.95
-        for       = "15m"
-        severity  = "warning"
-        summary   = "GPU memory more than 95% used for 15 minutes."
       },
     ]
 
@@ -201,14 +234,15 @@ locals {
         },
       ],
       [
+        # The count guard keeps the rule quiet while the cluster is off and sends no metrics at all
         for cluster in var.clusters : {
           name          = "CriticalScrapeTargetsAbsent-${cluster}"
-          expr          = "(absent(up{job=\"kubelet\", cluster=\"${cluster}\"}) or absent(up{job=\"node-exporter\", cluster=\"${cluster}\"}) or absent(up{job=\"apiserver\", cluster=\"${cluster}\"}) or absent(up{job=\"etcd\", cluster=\"${cluster}\"}) or absent(up{job=\"kube-state-metrics\", cluster=\"${cluster}\"})) * 1"
+          expr          = "((absent(up{job=\"kubelet\", cluster=\"${cluster}\"}) or absent(up{job=\"node-exporter\", cluster=\"${cluster}\"}) or absent(up{job=\"apiserver\", cluster=\"${cluster}\"}) or absent(up{job=\"etcd\", cluster=\"${cluster}\"}) or absent(up{job=\"kube-state-metrics\", cluster=\"${cluster}\"})) * 1) and on() (count(up{cluster=\"${cluster}\"}) > 0)"
           op            = "gt"
           threshold     = 0
           for           = "15m"
           severity      = "critical"
-          summary       = "A critical scrape target (kubelet / node-exporter / apiserver / etcd / kube-state-metrics) is absent on ${cluster}."
+          summary       = "${cluster} sends metrics, but a critical scrape target (kubelet / node-exporter / apiserver / etcd / kube-state-metrics) is absent."
           no_data_state = "OK"
           labels        = { cluster = cluster }
         }

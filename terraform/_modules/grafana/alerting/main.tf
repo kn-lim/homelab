@@ -9,6 +9,9 @@ resource "grafana_message_template" "discord" {
     {{ define "discord.alert" -}}
     **Alert:** {{ .Labels.alertname }}
     **Severity:** {{ or .Labels.severity "n/a" }}
+    {{- with .Labels.cluster }}
+    **Cluster:** {{ . }}
+    {{- end }}
     {{- with .Labels.namespace }}
     **Namespace:** {{ . }}
     {{- end }}
