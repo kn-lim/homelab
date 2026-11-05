@@ -12,9 +12,9 @@ stack "talos" {
 
       hardware_addr = "a0:ce:c8:ce:86:1e"
 
-      talos_version = "v1.14.4"
+      talos_version = "v1.14.5"
 
-      kubernetes_version = "v1.37.1"
+      kubernetes_version = "v1.37.2"
 
       system_extensions = [
         "siderolabs/amd-ucode",
