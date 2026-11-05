@@ -113,13 +113,14 @@ locals {
         no_data_state = "OK"
       },
       {
+        # The Failed condition, not the failed pod count: a Job that succeeds on retry keeps failed pods until its TTL
         name          = "KubeJobFailed"
-        expr          = "max by (cluster, namespace, job_name) (kube_job_status_failed)"
+        expr          = "max by (cluster, namespace, job_name) (kube_job_failed{condition=\"true\"})"
         op            = "gt"
         threshold     = 0
         for           = "5m"
         severity      = "warning"
-        summary       = "A Job has failed pods."
+        summary       = "A Job has failed."
         no_data_state = "OK"
       },
       {
@@ -173,6 +174,17 @@ locals {
         for           = "15m"
         severity      = "warning"
         summary       = "No successful Velero backup in 50 hours."
+        no_data_state = "OK"
+      },
+      {
+        # Velero creates the success timestamp only after a success, so after a restart only the failure counters show a failed backup
+        name          = "VeleroBackupFailed"
+        expr          = "sum by (cluster, schedule) (increase(velero_backup_failure_total{schedule!=\"\"}[26h]) + increase(velero_backup_partial_failure_total{schedule!=\"\"}[26h]))"
+        op            = "gt"
+        threshold     = 0
+        for           = "5m"
+        severity      = "warning"
+        summary       = "A Velero backup failed or partly failed in the last 26 hours."
         no_data_state = "OK"
       },
       {
