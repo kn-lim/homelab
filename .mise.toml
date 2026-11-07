@@ -4,7 +4,7 @@ TALOSCONFIG = "{{config_root}}/henesys-local.talosconfig"
 
 [tools]
 "aqua:1password/cli" = "2.42.0"
-"aqua:aws/aws-cli" = "2.39.4"
+"aqua:aws/aws-cli" = "2.39.6"
 "aqua:fluxcd/flux2" = "2.10.0"
 "aqua:gruntwork-io/terragrunt" = "1.2.1"
 "aqua:hairyhenderson/gomplate" = "5.3.1"
