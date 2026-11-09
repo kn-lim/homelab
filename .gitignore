@@ -4,6 +4,7 @@
 *.talosconfig
 
 # Terraform
+.terraform/
 .terraform.lock.hcl
 
 # Terragrunt
