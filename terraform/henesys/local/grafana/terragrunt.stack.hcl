@@ -101,7 +101,7 @@ unit "dashboards" {
 }
 
 unit "onepassword-secret-read" {
-  source = "${find_in_parent_folders("_units/onepassword-secret-read")}"
+  source = "${find_in_parent_folders("_units/onepassword/read")}"
 
   path = "onepassword-secret-read"
 
