@@ -1,4 +1,4 @@
-terragrunt_version_constraint = ">= 0.99.0"
+terragrunt_version_constraint = ">= 1.2"
 
 locals {
   platform = read_terragrunt_config(find_in_parent_folders("platform.hcl")).locals.platform
