@@ -11,10 +11,8 @@ spec:
   interval: 1h
   timeout: 15m
   values:
-    # The chart reads existingClaim only for a Deployment. The StatefulSet always uses a volumeClaimTemplate.
     controller:
       type: Deployment
-    # The pod uses the host port 8123, so a second pod cannot start next to the old one.
     deploymentStrategy: Recreate
 
     hostNetwork: true
