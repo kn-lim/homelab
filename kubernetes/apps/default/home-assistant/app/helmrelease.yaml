@@ -9,7 +9,6 @@ spec:
     kind: OCIRepository
     name: home-assistant
   interval: 1h
-  # ellinia needs more than the default 5m to pull the Home Assistant image.
   timeout: 15m
   values:
     # The chart reads existingClaim only for a Deployment. The StatefulSet always uses a volumeClaimTemplate.

@@ -10,8 +10,6 @@ spec:
     name: valkey
   interval: 1h
   values:
-    # Chart 1.0.0 defaults to Recreate, which server-side apply cannot switch to from RollingUpdate.
-    # Valkey uses an emptyDir, so RollingUpdate is safe.
     deploymentStrategy: RollingUpdate
 
     image:
