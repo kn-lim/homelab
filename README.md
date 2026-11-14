@@ -121,7 +121,7 @@ The [talos stack](https://github.com/kn-lim/homelab/blob/main/terraform/_stacks/
 | `KUBECONFIG` | Kubernetes Config File Path |
 | `OP_SERVICE_ACCOUNT_TOKEN` | 1Password Service Account Token |
 | `TALOSCONFIG` | Talos Linux Config File Path |
-| `TG_BUCKET` | AWS S3 Bucket Name for Terraform Backend |
+| `TF_BUCKET` | AWS S3 Bucket Name for Terraform Backend |
 
 #### 1Password Secrets
 

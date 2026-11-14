@@ -6,8 +6,8 @@ locals {
   unit     = read_terragrunt_config("${get_terragrunt_dir()}/unit.hcl").locals.unit
 
   # Backend configuration
-  backend_bucket = "${get_env("TG_BUCKET", "")}"
-  backend_region = "us-west-2"
+  backend_bucket = "${get_env("TF_BUCKET", "")}"
+  backend_region = "${get_env("AWS_REGION", "us-west-2")}"
 }
 
 generate "provider" {

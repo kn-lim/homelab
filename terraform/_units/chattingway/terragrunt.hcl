@@ -5,7 +5,7 @@ locals {
 }
 
 inputs = {
-  s3_bucket       = get_env("TG_BUCKET", "")
+  s3_bucket       = get_env("TF_BUCKET", "")
   endpoint_s3_key = "lambda/${values.name}/endpoint/bootstrap.zip"
   task_s3_key     = "lambda/${values.name}/task/bootstrap.zip"
 
