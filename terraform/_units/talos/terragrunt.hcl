@@ -1,7 +1,4 @@
-locals {
-  platform = read_terragrunt_config(find_in_parent_folders("platform.hcl")).locals.platform
-  region   = read_terragrunt_config(find_in_parent_folders("region.hcl")).locals.region
-}
+locals {}
 
 inputs = merge(
   {
@@ -32,11 +29,11 @@ terraform {
 
   after_hook "write_kubeconfig" {
     commands = ["apply"]
-    execute  = ["bash", "-c", "\"$TG_CTX_TF_PATH\" output -raw kubeconfig > ${get_repo_root()}/${local.platform}-${local.region}.kubeconfig"]
+    execute  = ["bash", "-c", "\"$TG_CTX_TF_PATH\" output -raw kubeconfig > ${get_repo_root()}/${values.cluster_name}.kubeconfig"]
   }
 
   after_hook "write_talosconfig" {
     commands = ["apply"]
-    execute  = ["bash", "-c", "\"$TG_CTX_TF_PATH\" output -raw talosconfig > ${get_repo_root()}/${local.platform}-${local.region}.talosconfig"]
+    execute  = ["bash", "-c", "\"$TG_CTX_TF_PATH\" output -raw talosconfig > ${get_repo_root()}/${values.cluster_name}.talosconfig"]
   }
 }

@@ -1,6 +1,6 @@
 [env]
-KUBECONFIG = "{{config_root}}/henesys-local.kubeconfig:{{config_root}}/ellinia-local.kubeconfig"
-TALOSCONFIG = "{{config_root}}/henesys-local.talosconfig"
+KUBECONFIG = "{{config_root}}/henesys.kubeconfig:{{config_root}}/ellinia.kubeconfig"
+TALOSCONFIG = "{{config_root}}/henesys.talosconfig"
 
 [tools]
 "aqua:1password/cli" = "2.42.0"
