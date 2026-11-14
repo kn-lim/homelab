@@ -22,7 +22,7 @@ TALOSCONFIG = "{{config_root}}/henesys-local.talosconfig"
 "aqua:trufflesecurity/trufflehog" = "3.99.8"
 "aqua:vmware-tanzu/velero" = "1.18.4"
 "github:fluxcd/flux-schema" = "0.17.0"
-"github:home-operations/flate" = "0.6.5"
+"github:home-operations/flate" = "0.7.3"
 
 [tasks."flux:reconcile"]
 description = "Reconcile a Flux Kustomization with its source. Default: flux-system"
