@@ -1,0 +1,46 @@
+deploy:
+  run:
+    - application: apps/webhook
+      lambda:
+        functionName: webhook-lambda
+        s3Key: lambda/webhook/bootstrap.zip
+
+terraform:
+  run:
+    - application: dreamingway-bot
+      whenModified:
+        - terraform/_modules/onepassword/read
+        - terraform/_stacks/dreamingway-bot
+        - terraform/_units/chattingway
+        - terraform/_units/onepassword/read
+    - application: grafana
+      whenModified:
+        - terraform/_modules/grafana
+        - terraform/_modules/onepassword/read
+        - terraform/_units/grafana
+        - terraform/_units/onepassword/read
+    # - application: lplaziv-bot
+    #   whenModified:
+    #     - terraform/_modules/onepassword-secret-read
+    #     - terraform/_stacks/lplaziv-bot
+    #     - terraform/_units/chattingway
+    #     - terraform/_units/onepassword-secret-read
+    - application: talos
+      whenModified:
+        - terraform/_modules/onepassword/read
+        - terraform/_modules/talos
+        - terraform/_stacks/talos
+        - terraform/_units/onepassword/read
+        - terraform/_units/talos
+    - application: webhook
+      whenModified:
+        - terraform/_modules/aws/lambda-permission
+        - terraform/_modules/onepassword/read
+        - terraform/_modules/onepassword/write
+        - terraform/_stacks/webhook
+        - terraform/_units/aws/apigateway
+        - terraform/_units/aws/lambda
+        - terraform/_units/aws/lambda-permission
+        - terraform/_units/aws/sqs
+        - terraform/_units/onepassword/read
+        - terraform/_units/onepassword/write
