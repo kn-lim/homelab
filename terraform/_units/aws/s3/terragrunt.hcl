@@ -12,5 +12,5 @@ include "root" {
 
 terraform {
   # https://github.com/terraform-aws-modules/terraform-aws-s3-bucket
-  source = "tfr:///terraform-aws-modules/s3-bucket/aws?version=5.16.1"
+  source = "tfr:///terraform-aws-modules/s3-bucket/aws?version=5.17.0"
 }
