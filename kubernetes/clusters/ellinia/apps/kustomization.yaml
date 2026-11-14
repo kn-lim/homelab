@@ -8,7 +8,6 @@ resources:
   - ../../../apps/default/home-assistant/ks.yaml
   - ../../../apps/external-secrets
   - ../../../apps/flux-system
-  - ../../../apps/flux-system/tofu-controller/ks.yaml
   - ../../../apps/kube-system
   - ../../../apps/network
   - ../../../apps/network/adguardhome/ks.yaml
