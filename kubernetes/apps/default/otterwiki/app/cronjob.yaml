@@ -18,7 +18,7 @@ spec:
           restartPolicy: OnFailure
           containers:
             - name: git-sync
-              image: alpine/git:v2.54.0
+              image: alpine/git:v2.54.1
               command: ["sh", "-c"]
               args:
                 - |
