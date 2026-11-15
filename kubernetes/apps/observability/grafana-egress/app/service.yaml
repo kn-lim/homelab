@@ -1,0 +1,15 @@
+# Lets the CI workflows on ellinia apply the Grafana Terraform stack to the Grafana on henesys.
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: grafana-egress
+  annotations:
+    # The operator rewrites spec.externalName. Flux creates the Service once and does not reset it.
+    kustomize.toolkit.fluxcd.io/ssa: IfNotPresent
+    tailscale.com/tailnet-fqdn: grafana.${TAILSCALE_TAILNET_NAME}.ts.net
+    tailscale.com/hostname: grafana-egress-${CLUSTER_NAME}
+
+spec:
+  externalName: placeholder   # will be overwritten by operator
+  type: ExternalName

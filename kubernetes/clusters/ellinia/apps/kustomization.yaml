@@ -18,5 +18,6 @@ resources:
   - ../../../apps/network
   - ../../../apps/network/adguardhome/ks.yaml
   - ../../../apps/observability
+  - ../../../apps/observability/grafana-egress/ks.yaml
   - ../../../apps/observability/prometheus-egress/ks.yaml
   - ../../../apps/storage
