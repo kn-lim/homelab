@@ -1,0 +1,39 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+
+metadata:
+  name: argo-workflows
+
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: argo-workflows
+  interval: 1h
+  values:
+    controller:
+      podAnnotations:
+        secret.reloader.stakater.com/auto: "true"
+        configmap.reloader.stakater.com/auto: "true"
+      metricsConfig:
+        enabled: true
+      serviceMonitor:
+        enabled: true
+      workflowDefaults:
+        spec:
+          ttlStrategy:
+            secondsAfterCompletion: 259200
+            secondsAfterSuccess: 259200
+            secondsAfterFailure: 604800
+      workflowNamespaces:
+        - ci
+
+    server:
+      authModes: ["server"]
+      podAnnotations:
+        secret.reloader.stakater.com/auto: "true"
+        configmap.reloader.stakater.com/auto: "true"
+
+    workflow:
+      serviceAccount:
+        create: true
+        name: argo-workflows
