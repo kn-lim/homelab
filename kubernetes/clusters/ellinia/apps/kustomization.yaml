@@ -8,6 +8,7 @@ resources:
   - ../../../apps/argo/argo-workflows/ks.yaml
   - ../../../apps/cert-manager
   - ../../../apps/ci
+  - ../../../apps/ci/webhook/ks.yaml
   - ../../../apps/ci/workflows/ks.yaml
   - ../../../apps/default
   - ../../../apps/default/home-assistant/ks.yaml

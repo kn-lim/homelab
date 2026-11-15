@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: EventSource
+
+metadata:
+  name: webhook
+
+spec:
+  eventBusName: webhook
+
+  sqs:
+    homelab-ci:
+      region: us-west-2
+      queue: webhook-sqs
+      waitTimeSeconds: 20
+      jsonBody: true
+      accessKey:
+        name: webhook-aws-credentials
+        key: AWS_ACCESS_KEY_ID
+      secretKey:
+        name: webhook-aws-credentials
+        key: AWS_SECRET_ACCESS_KEY

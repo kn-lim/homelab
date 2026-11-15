@@ -1,0 +1,16 @@
+# The EventSource and Sensor need the Argo Events CRDs. The Sensor submits the ci WorkflowTemplate. The SQS credentials come from 1Password.
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+
+metadata:
+  name: ci-webhook
+  namespace: flux-system
+
+spec:
+  dependsOn:
+    - name: argo-events
+    - name: ci-workflows
+    - name: onepassword
+  interval: 1h
+  path: ./kubernetes/apps/ci/webhook/app
+  targetNamespace: ci
