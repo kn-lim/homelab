@@ -7,6 +7,8 @@ resources:
   - ../../../apps/argo/argo-events/ks.yaml
   - ../../../apps/argo/argo-workflows/ks.yaml
   - ../../../apps/cert-manager
+  - ../../../apps/ci
+  - ../../../apps/ci/workflows/ks.yaml
   - ../../../apps/default
   - ../../../apps/default/home-assistant/ks.yaml
   - ../../../apps/external-secrets

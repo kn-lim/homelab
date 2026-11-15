@@ -1,0 +1,103 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+
+metadata:
+  name: command
+  annotations:
+    # Flux must not replace the ${VAR} references in the shell scripts.
+    kustomize.toolkit.fluxcd.io/substitute: disabled
+
+spec:
+  templates:
+    - name: setup
+      inputs:
+        parameters:
+          - name: repo
+          - name: branch
+      # Only one workflow at a time writes to the shared mise PVC.
+      synchronization:
+        mutexes:
+          - name: mise-setup
+      container:
+        image: debian
+        command: [bash, -c]
+        args:
+          - |
+            set -euo pipefail
+            apt-get update -qq
+            apt-get install -qq -y --no-install-recommends ca-certificates curl git
+
+            # Pass the token without saving it in .git/config.
+            git -c credential.helper='!f() { echo username=x-access-token; echo "password=$GITHUB_TOKEN"; }; f' \
+              clone --depth 1 --branch "$BRANCH" "https://github.com/$REPO.git" /workdir/src
+
+            if ! mise --version 2>/dev/null | grep -q "^$MISE_VERSION "; then
+              curl -fsSL https://mise.run | MISE_INSTALL_PATH=/mise/bin/mise sh
+            fi
+            cd /workdir/src
+            mise install
+        workingDir: /workdir
+        env:
+          - name: MISE_VERSION
+            # renovate: datasource=github-releases depName=jdx/mise
+            value: "2026.10.14"
+          - name: REPO
+            value: "{{inputs.parameters.repo}}"
+          - name: BRANCH
+            value: "{{inputs.parameters.branch}}"
+          - name: GITHUB_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: environment-variables
+                key: GITHUB_TOKEN
+        envFrom:
+          - configMapRef:
+              name: mise
+        volumeMounts:
+          - name: workdir
+            mountPath: /workdir
+          - name: mise
+            mountPath: /mise
+
+    - name: run
+      inputs:
+        parameters:
+          - name: command
+          - name: workdir
+            default: /workdir/src
+      container:
+        image: debian
+        command: [bash, -c]
+        args:
+          - |
+            set -efuo pipefail
+            # $CMD is only word-split, never evaluated, so shell syntax in it has no effect.
+            case "$CMD" in
+              "mise run "*) ;;
+              *) echo "Rejected command: $CMD" >&2; exit 1 ;;
+            esac
+
+            # Terragrunt needs git for git:: sources. Lambda deploys need zip.
+            apt-get update -qq
+            apt-get install -qq -y --no-install-recommends ca-certificates git zip
+
+            $CMD
+        workingDir: "{{inputs.parameters.workdir}}"
+        env:
+          - name: CMD
+            value: "{{inputs.parameters.command}}"
+          - name: AWS_REGION
+            value: "us-west-2"
+          # Answers the confirm prompt of terraform:apply.
+          - name: MISE_YES
+            value: "1"
+        envFrom:
+          - configMapRef:
+              name: mise
+          - secretRef:
+              name: environment-variables
+        volumeMounts:
+          - name: workdir
+            mountPath: /workdir
+          - name: mise
+            mountPath: /mise

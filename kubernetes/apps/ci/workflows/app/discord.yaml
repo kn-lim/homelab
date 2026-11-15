@@ -1,0 +1,125 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+
+metadata:
+  name: discord
+  annotations:
+    # Flux must not replace the ${VAR} references in the shell script.
+    kustomize.toolkit.fluxcd.io/substitute: disabled
+
+spec:
+  templates:
+    - name: status
+      inputs:
+        parameters:
+          - name: status
+            default: "{{workflow.status}}"
+          - name: workflow-name
+            default: "{{workflow.name}}"
+          - name: duration
+            default: "{{workflow.duration}}"
+          - name: failures
+            default: "{{workflow.failures}}"
+          - name: commit
+            default: ""
+          - name: targets
+            default: ""
+          - name: repo
+      container:
+        image: alpine/curl
+        command: [sh, -c]
+        args:
+          - |
+            set -eu
+            # The PVC has no jq when the workflow fails before setup finishes.
+            JQ=/mise/data/installs/aqua-jqlang-jq/latest/jq
+            if [ ! -x "$JQ" ]; then
+              apk add --no-cache jq
+              JQ=jq
+            fi
+
+            case "$TARGETS" in *'{{'*) TARGETS="" ;; esac
+            case "$FAILURES" in *'{{'*) FAILURES="" ;; esac
+
+            D=$(printf '%s' "$DURATION" | cut -d. -f1)
+            case "$D" in ''|*[!0-9]*) D=0 ;; esac
+            if [ "$D" -ge 3600 ]; then
+              DUR="$((D / 3600))h$(((D % 3600) / 60))m$((D % 60))s"
+            elif [ "$D" -ge 60 ]; then
+              DUR="$((D / 60))m$((D % 60))s"
+            else
+              DUR="${D}s"
+            fi
+
+            if [ "$STATUS" = "Succeeded" ]; then
+              COLOR=5025616
+              THUMBNAIL="https://raw.githubusercontent.com/kn-lim/kn-lim/refs/heads/main/homelab/success.png"
+              WEBHOOK_URL="$DISCORD_INFO_WEBHOOK_URL"
+            else
+              COLOR=16007990
+              THUMBNAIL="https://raw.githubusercontent.com/kn-lim/kn-lim/refs/heads/main/homelab/error.png"
+              WEBHOOK_URL="$DISCORD_ERROR_WEBHOOK_URL"
+            fi
+
+            "$JQ" -n \
+              --arg status "$STATUS" --arg name "$WORKFLOW_NAME" --arg duration "$DUR" \
+              --arg repo "$REPO" --arg commit "$COMMIT" --arg targets "$TARGETS" \
+              --arg failures "$FAILURES" --arg url "$ARGO_WORKFLOWS_URL" \
+              --arg thumbnail "$THUMBNAIL" --argjson color "$COLOR" '
+              def field($n; $v; $i): {name: $n, value: $v, inline: $i};
+              ($targets | try (fromjson | join("\n")) catch $targets) as $t
+              | ($failures | try (fromjson | [.[] | select(.message | length > 0)
+                  | "\(.displayName) (\(.templateName))\n\(.message)"] | join("\n\n")) catch "") as $f
+              | {embeds: [{
+                  title: "Workflow \($status)",
+                  url: "\($url)/workflows/ci/\($name)",
+                  color: $color,
+                  thumbnail: {url: $thumbnail},
+                  fields: (
+                    [ field("Workflow"; $name; true),
+                      field("Status"; $status; true),
+                      field("Duration"; $duration; true),
+                      field("Repo"; "[\($repo)](https://github.com/\($repo))"; true) ]
+                    + (if $commit != "" then [field("Commit"; "[\($commit[0:7])](https://github.com/\($repo)/commit/\($commit))"; true)] else [] end)
+                    + (if $t != "" then [field("Targets"; $t[0:1000]; false)] else [] end)
+                    + (if $status != "Succeeded" and $f != "" then [field("Failures"; $f[0:1000]; false)] else [] end)
+                  )
+                }]}' > /tmp/payload.json
+
+            curl -fsS -X POST "$WEBHOOK_URL" \
+              -H "Content-Type: application/json" \
+              --data @/tmp/payload.json
+        env:
+          - name: STATUS
+            value: "{{inputs.parameters.status}}"
+          - name: WORKFLOW_NAME
+            value: "{{inputs.parameters.workflow-name}}"
+          - name: DURATION
+            value: "{{inputs.parameters.duration}}"
+          - name: FAILURES
+            value: "{{inputs.parameters.failures}}"
+          - name: COMMIT
+            value: "{{inputs.parameters.commit}}"
+          - name: TARGETS
+            value: "{{inputs.parameters.targets}}"
+          - name: REPO
+            value: "{{inputs.parameters.repo}}"
+          - name: ARGO_WORKFLOWS_URL
+            valueFrom:
+              secretKeyRef:
+                name: environment-variables
+                key: ARGO_WORKFLOWS_URL
+          - name: DISCORD_INFO_WEBHOOK_URL
+            valueFrom:
+              secretKeyRef:
+                name: environment-variables
+                key: DISCORD_INFO_WEBHOOK_URL
+          - name: DISCORD_ERROR_WEBHOOK_URL
+            valueFrom:
+              secretKeyRef:
+                name: environment-variables
+                key: DISCORD_ERROR_WEBHOOK_URL
+        volumeMounts:
+          - name: mise
+            mountPath: /mise
+            readOnly: true

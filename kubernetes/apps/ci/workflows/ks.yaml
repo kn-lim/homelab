@@ -1,0 +1,21 @@
+# The WorkflowTemplates need the Argo Workflows CRDs. The secrets come from 1Password. The PVCs need the local-data-delete StorageClass from democratic-csi-data.
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+
+metadata:
+  name: ci-workflows
+  namespace: flux-system
+
+spec:
+  dependsOn:
+    - name: argo-workflows
+    - name: democratic-csi-data
+    - name: onepassword
+  # The mise PVC stays Pending until the first workflow mounts it.
+  healthCheckExprs:
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      current: status.phase in ['Pending', 'Bound']
+  interval: 1h
+  path: ./kubernetes/apps/ci/workflows/app
+  targetNamespace: ci

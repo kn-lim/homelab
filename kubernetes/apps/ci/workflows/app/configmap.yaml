@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: mise
+
+data:
+  PATH: /mise/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+  MISE_DATA_DIR: /mise/data
+  MISE_CACHE_DIR: /mise/cache
+  MISE_TRUSTED_CONFIG_PATHS: /workdir/src
