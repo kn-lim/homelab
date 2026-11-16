@@ -12,6 +12,9 @@ spec:
       - name: "ci-{{workflow.parameters.repo}}"
   volumeClaimGC:
     strategy: OnWorkflowCompletion
+  podMetadata:
+    labels:
+      velero.io/exclude-from-backup: "true"
   activeDeadlineSeconds: 3600
   serviceAccountName: argo-workflows
   workflowMetadata:
