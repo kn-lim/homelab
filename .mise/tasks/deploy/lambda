@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+#MISE description="Build a Go Lambda function and deploy its code from S3"
+#USAGE arg "<dir>" help="The Go package directory, for example apps/webhook"
+#USAGE arg "<function>" help="The Lambda function name, for example webhook-lambda"
+#USAGE arg "<s3_key>" help="The S3 key of the zip in TF_BUCKET, for example lambda/webhook/bootstrap.zip"
+set -euo pipefail
+
+cd "${usage_dir}"
+trap 'rm -f bootstrap bootstrap.zip' EXIT
+
+export GOOS=linux GOARCH=arm64 CGO_ENABLED=0
+go vet ./...
+go build -o bootstrap .
+zip -q bootstrap.zip bootstrap
+
+aws s3 cp bootstrap.zip "s3://${TF_BUCKET}/${usage_s3_key}"
+aws lambda update-function-code --function-name "${usage_function}" \
+  --s3-bucket "${TF_BUCKET}" --s3-key "${usage_s3_key}" \
+  --query LastUpdateStatus --output text
+aws lambda wait function-updated-v2 --function-name "${usage_function}"
