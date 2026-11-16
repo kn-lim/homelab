@@ -8,6 +8,7 @@
 
 ![Talos](https://img.shields.io/badge/talos-v1.14.5-FF7300?logo=talos&logoColor=white)
 ![Kubernetes](https://img.shields.io/badge/kubernetes-v1.37.2-326CE5?logo=kubernetes&logoColor=white)
+![Go](https://img.shields.io/badge/go-v1.27-0e7fbf?logo=go&logoColor=white)
 
 A definitely over-engineered, but good enough homelab that handles my home infrastructure and Kubernetes clusters.
 
@@ -33,6 +34,8 @@ This repository is managed by [mise](https://github.com/jdx/mise) and [prek](htt
 <b>Services</b>
 </summary>
 
+- [argo events](https://github.com/argoproj/argo-events)
+- [argo workflows](https://github.com/argoproj/argo-workflows)
 - [democratic-csi](https://github.com/democratic-csi/democratic-csi)
 - [external secrets](https://github.com/external-secrets/external-secrets)
 - [flux](https://github.com/fluxcd/flux2)
@@ -83,6 +86,10 @@ This repository is managed by [mise](https://github.com/jdx/mise) and [prek](htt
 
 - [tsidp](https://github.com/tailscale/tsidp)
 </details>
+
+### CI/CD
+
+As the homelab cluster is not publicly available, the GitHub webhook points to an AWS API Gateway connected to an AWS Lambda function. The function validates the request and forwards it as a message to an AWS SQS queue. This way, [Argo Events](https://github.com/argoproj/argo-events) is able to read the message and runs the [ci.yaml workflow](https://github.com/kn-lim/homelab/blob/main/kubernetes/apps/ci/workflows/app/ci.yaml) using [Argo Workflows](https://github.com/argoproj/argo-workflows) to apply the changes.
 
 ### Flux
 
