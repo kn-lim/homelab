@@ -24,5 +24,5 @@ include "root" {
 
 terraform {
   # https://github.com/terraform-aws-modules/terraform-aws-vpc
-  source = "tfr:///terraform-aws-modules/vpc/aws?version=6.7.3"
+  source = "tfr:///terraform-aws-modules/vpc/aws?version=6.8.0"
 }
