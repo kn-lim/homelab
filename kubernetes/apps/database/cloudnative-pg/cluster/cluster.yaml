@@ -19,7 +19,7 @@ spec:
   storage:
     size: 50Gi
     storageClass: local-data
-  imageName: ghcr.io/cloudnative-pg/postgresql:18-standard-trixie
+  imageName: ghcr.io/cloudnative-pg/postgresql:19-standard-trixie
   postgresql:
     shared_preload_libraries:
       - "vchord.so"
