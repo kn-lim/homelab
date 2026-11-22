@@ -1,3 +1,20 @@
+# Repositories that load units, modules and/or stacks from this repository
+downstream:
+  - kn-lim/infrastructure
+
+# Path groups for whenModified
+groups:
+  onepassword-read: &onepassword-read
+    - terraform/_modules/onepassword/read
+    - terraform/_units/onepassword/read
+  onepassword-write: &onepassword-write
+    - terraform/_modules/onepassword/write
+    - terraform/_units/onepassword/write
+  talos: &talos
+    - terraform/_modules/talos
+    - terraform/_stacks/talos
+    - terraform/_units/talos
+
 deploy:
   run:
     - application: apps/webhook
@@ -7,40 +24,37 @@ deploy:
 
 terraform:
   run:
-    - application: dreamingway-bot
+    - stack: terraform/aws/us-west-2/dreamingway-bot
       whenModified:
-        - terraform/_modules/onepassword/read
+        - *onepassword-read
         - terraform/_stacks/dreamingway-bot
         - terraform/_units/chattingway
-        - terraform/_units/onepassword/read
-    - application: grafana
+    - stack: terraform/homelab/grafana
       whenModified:
+        - *onepassword-read
         - terraform/_modules/grafana
-        - terraform/_modules/onepassword/read
         - terraform/_units/grafana
-        - terraform/_units/onepassword/read
-    # - application: lplaziv-bot
+    # - stack: terraform/aws/us-west-2/lplaziv-bot
     #   whenModified:
-    #     - terraform/_modules/onepassword-secret-read
-    #     - terraform/_stacks/lplaziv-bot
+    #     - *onepassword-read
+    #     - terraform/_stacks/dreamingway-bot
     #     - terraform/_units/chattingway
-    #     - terraform/_units/onepassword-secret-read
-    - application: talos
+    - stack: terraform/homelab/talos/ellinia
       whenModified:
-        - terraform/_modules/onepassword/read
-        - terraform/_modules/talos
-        - terraform/_stacks/talos
-        - terraform/_units/onepassword/read
-        - terraform/_units/talos
-    - application: webhook
+        - *onepassword-read
+        - *talos
+    - stack: terraform/homelab/talos/henesys
       whenModified:
+        - *onepassword-read
+        - *talos
+    - stack: terraform/aws/us-west-2/webhook
+      whenModified:
+        - *onepassword-read
+        - *onepassword-write
         - terraform/_modules/aws/lambda-permission
-        - terraform/_modules/onepassword/read
-        - terraform/_modules/onepassword/write
         - terraform/_stacks/webhook
         - terraform/_units/aws/apigateway
+        - terraform/_units/aws/iam-user
         - terraform/_units/aws/lambda
         - terraform/_units/aws/lambda-permission
         - terraform/_units/aws/sqs
-        - terraform/_units/onepassword/read
-        - terraform/_units/onepassword/write
