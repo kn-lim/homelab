@@ -104,6 +104,7 @@ unit "lambda" {
       mock_outputs = {
         fields = {
           credential = "mock-credential"
+          token      = "mock-token"
         }
       }
 
@@ -123,9 +124,9 @@ unit "lambda" {
 
     inputs = {
       environment_variables = {
-        AWS_SQS_URL = dependency.sqs.outputs.queue_url
-        # TODO: Replace with custom label when possible
+        AWS_SQS_URL           = dependency.sqs.outputs.queue_url
         GITHUB_WEBHOOK_SECRET = dependency.onepassword-secret-read.outputs.fields["credential"]
+        GITHUB_TOKEN          = dependency.onepassword-secret-read.outputs.fields["token"]
       }
 
       policy_json = jsonencode({

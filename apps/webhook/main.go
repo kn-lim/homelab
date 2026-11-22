@@ -16,6 +16,8 @@ import (
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
 	"github.com/google/go-github/v93/github"
+
+	"github.com/kn-lim/homelab/apps/webhook/pkg/ci"
 )
 
 const delay int32 = 5 // seconds
@@ -24,14 +26,8 @@ var (
 	client        *sqs.Client
 	webhookSecret []byte
 	sqsURL        string
+	source        ci.Source
 )
-
-type Message struct {
-	Repo   string `json:"repo"`
-	Ref    string `json:"ref"`
-	Before string `json:"before"`
-	After  string `json:"after"`
-}
 
 func init() {
 	slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stderr, nil)))
@@ -48,6 +44,20 @@ func init() {
 		slog.Error("AWS_SQS_URL is not set")
 		os.Exit(1)
 	}
+
+	token := os.Getenv("GITHUB_TOKEN")
+	if token == "" {
+		slog.Error("GITHUB_TOKEN is not set")
+		os.Exit(1)
+	}
+	gh, err := github.NewClient(github.WithAuthToken(token))
+	if err != nil {
+		slog.Error("failed to create GitHub client",
+			"error", err,
+		)
+		os.Exit(1)
+	}
+	source = ci.GitHubSource{Client: gh}
 
 	cfg, err := config.LoadDefaultConfig(context.Background())
 	if err != nil {
@@ -120,7 +130,7 @@ func handler(ctx context.Context, request events.APIGatewayV2HTTPRequest) (event
 		"type", github.WebHookType(httpRequest),
 	)
 
-	var msg Message
+	var push ci.Push
 	switch event := event.(type) {
 	case *github.PingEvent:
 		return events.APIGatewayV2HTTPResponse{
@@ -144,11 +154,12 @@ func handler(ctx context.Context, request events.APIGatewayV2HTTPRequest) (event
 			}, nil
 		}
 
-		msg = Message{
-			Repo:   event.Repo.GetFullName(),
-			Ref:    ref,
-			Before: event.GetBefore(),
-			After:  event.GetAfter(),
+		push = ci.Push{
+			Repo:    event.Repo.GetFullName(),
+			Ref:     ref,
+			Before:  event.GetBefore(),
+			After:   event.GetAfter(),
+			Changed: ci.ChangedPaths(event.Commits),
 		}
 	default:
 		logger.Info("unsupported event type",
@@ -159,17 +170,49 @@ func handler(ctx context.Context, request events.APIGatewayV2HTTPRequest) (event
 		}, nil
 	}
 
-	body, err := json.Marshal(msg)
-	if err != nil {
-		logger.Error("failed to marshal message",
-			"error", err,
+	msgs, planErr := ci.Plan(ctx, source, push)
+	if planErr != nil {
+		logger.Error("failed to plan CI commands",
+			"error", planErr,
 		)
+	}
+	if len(msgs) == 0 && planErr == nil {
+		logger.Info("no commands for push",
+			"repo", push.Repo,
+			"ref", push.Ref,
+		)
+		return events.APIGatewayV2HTTPResponse{
+			StatusCode: http.StatusOK,
+		}, nil
+	}
+
+	sendFailed := false
+	for _, msg := range msgs {
+		if err := send(ctx, logger, msg); err != nil {
+			sendFailed = true
+		}
+	}
+	if planErr != nil || sendFailed {
 		return events.APIGatewayV2HTTPResponse{
 			StatusCode: http.StatusInternalServerError,
 		}, nil
 	}
 
-	// Send message to SQS
+	return events.APIGatewayV2HTTPResponse{
+		StatusCode: http.StatusOK,
+	}, nil
+}
+
+// send sends one message to SQS and logs the result.
+func send(ctx context.Context, logger *slog.Logger, msg ci.Message) error {
+	body, err := json.Marshal(msg)
+	if err != nil {
+		logger.Error("failed to marshal message",
+			"error", err,
+		)
+		return err
+	}
+
 	result, err := client.SendMessage(ctx, &sqs.SendMessageInput{
 		DelaySeconds: delay,
 		MessageBody:  aws.String(string(body)),
@@ -179,18 +222,13 @@ func handler(ctx context.Context, request events.APIGatewayV2HTTPRequest) (event
 		logger.Error("failed to send SQS message",
 			"error", err,
 		)
-		return events.APIGatewayV2HTTPResponse{
-			StatusCode: http.StatusInternalServerError,
-		}, nil
+		return err
 	}
 	logger.Info("sent SQS message",
 		"messageId", aws.ToString(result.MessageId),
 		"payload", msg,
 	)
-
-	return events.APIGatewayV2HTTPResponse{
-		StatusCode: http.StatusOK,
-	}, nil
+	return nil
 }
 
 func main() {
