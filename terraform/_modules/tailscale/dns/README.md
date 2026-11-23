@@ -6,13 +6,13 @@
 | Name | Version |
 | ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.15 |
-| <a name="requirement_tailscale"></a> [tailscale](#requirement\_tailscale) | 0.29.3 |
+| <a name="requirement_tailscale"></a> [tailscale](#requirement\_tailscale) | 0.30.0 |
 
 ## Providers
 
 | Name | Version |
 | ---- | ------- |
-| <a name="provider_tailscale"></a> [tailscale](#provider\_tailscale) | 0.29.3 |
+| <a name="provider_tailscale"></a> [tailscale](#provider\_tailscale) | 0.30.0 |
 
 ## Modules
 
@@ -22,7 +22,7 @@ No modules.
 
 | Name | Type |
 | ---- | ---- |
-| [tailscale_dns_configuration.default](https://registry.terraform.io/providers/tailscale/tailscale/0.29.3/docs/resources/dns_configuration) | resource |
+| [tailscale_dns_configuration.default](https://registry.terraform.io/providers/tailscale/tailscale/0.30.0/docs/resources/dns_configuration) | resource |
 
 ## Inputs
 
