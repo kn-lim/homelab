@@ -58,7 +58,7 @@ func (p *Paths) UnmarshalYAML(value *yaml.Node) error {
 		case yaml.AliasNode:
 			return walk(n.Alias)
 		default:
-			return fmt.Errorf("expected a path or a list of paths")
+			return fmt.Errorf("line %d: expected a path or a list of paths", n.Line)
 		}
 		return nil
 	}
