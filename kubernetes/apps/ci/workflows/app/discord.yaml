@@ -22,7 +22,10 @@ spec:
             default: "{{workflow.failures}}"
           - name: commit
             default: ""
-          - name: targets
+          - name: commands
+            default: ""
+          # The workflow description. The sensor sets it to "Triggered by ..." for a downstream run.
+          - name: trigger
             default: ""
           - name: repo
       container:
@@ -38,8 +41,9 @@ spec:
               JQ=jq
             fi
 
-            case "$TARGETS" in *'{{'*) TARGETS="" ;; esac
+            case "$COMMANDS" in *'{{'*) COMMANDS="" ;; esac
             case "$FAILURES" in *'{{'*) FAILURES="" ;; esac
+            case "$TRIGGER" in "Triggered by "*) TRIGGER="${TRIGGER#Triggered by }" ;; *) TRIGGER="" ;; esac
 
             D=$(printf '%s' "$DURATION" | cut -d. -f1)
             case "$D" in ''|*[!0-9]*) D=0 ;; esac
@@ -63,11 +67,11 @@ spec:
 
             "$JQ" -n \
               --arg status "$STATUS" --arg name "$WORKFLOW_NAME" --arg duration "$DUR" \
-              --arg repo "$REPO" --arg commit "$COMMIT" --arg targets "$TARGETS" \
+              --arg repo "$REPO" --arg commit "$COMMIT" --arg commands "$COMMANDS" --arg trigger "$TRIGGER" \
               --arg failures "$FAILURES" --arg url "$ARGO_WORKFLOWS_URL" \
               --arg thumbnail "$THUMBNAIL" --argjson color "$COLOR" '
               def field($n; $v; $i): {name: $n, value: $v, inline: $i};
-              ($targets | try (fromjson | join("\n")) catch $targets) as $t
+              ($commands | try (fromjson | map("`\(sub("^mise run "; ""))`") | join("\n")) catch $commands) as $t
               | ($failures | try (fromjson | [.[] | select(.message | length > 0)
                   | "\(.displayName) (\(.templateName))\n\(.message)"] | join("\n\n")) catch "") as $f
               | {embeds: [{
@@ -81,7 +85,8 @@ spec:
                       field("Duration"; $duration; true),
                       field("Repo"; "[\($repo)](https://github.com/\($repo))"; true) ]
                     + (if $commit != "" then [field("Commit"; "[\($commit[0:7])](https://github.com/\($repo)/commit/\($commit))"; true)] else [] end)
-                    + (if $t != "" then [field("Targets"; $t[0:1000]; false)] else [] end)
+                    + (if $trigger != "" then [field("Trigger"; $trigger; true)] else [] end)
+                    + (if $t != "" then [field("Commands"; $t[0:1000]; false)] else [] end)
                     + (if $status != "Succeeded" and $f != "" then [field("Failures"; $f[0:1000]; false)] else [] end)
                   )
                 }]}' > /tmp/payload.json
@@ -100,8 +105,10 @@ spec:
             value: "{{inputs.parameters.failures}}"
           - name: COMMIT
             value: "{{inputs.parameters.commit}}"
-          - name: TARGETS
-            value: "{{inputs.parameters.targets}}"
+          - name: COMMANDS
+            value: "{{inputs.parameters.commands}}"
+          - name: TRIGGER
+            value: "{{inputs.parameters.trigger}}"
           - name: REPO
             value: "{{inputs.parameters.repo}}"
           - name: ARGO_WORKFLOWS_URL

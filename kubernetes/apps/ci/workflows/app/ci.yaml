@@ -90,5 +90,7 @@ spec:
                   value: "{{workflow.parameters.after}}"
                 - name: repo
                   value: "{{workflow.parameters.repo}}"
-                - name: targets
+                - name: commands
                   value: "{{workflow.parameters.commands}}"
+                - name: trigger
+                  value: "{{workflow.annotations.workflows.argoproj.io/description}}"

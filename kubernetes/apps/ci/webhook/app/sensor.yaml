@@ -75,7 +75,7 @@ spec:
               dest: metadata.annotations.workflows\.argoproj\.io/title
             - src:
                 dependencyName: sqs-dep
-                dataTemplate: 'Commit range `{{ .Input.body.before | default "" | trunc 7 }}..{{ .Input.body.after | default "" | trunc 7 }}`'
+                dataTemplate: '{{ with .Input.body.trigger }}Triggered by **{{ .repo }}** @ {{ .commit | trunc 7 }}{{ else }}Commit range `{{ .Input.body.before | default "" | trunc 7 }}..{{ .Input.body.after | default "" | trunc 7 }}`{{ end }}'
               dest: metadata.annotations.workflows\.argoproj\.io/description
       # The SQS message is already deleted, so a failed submit would lose the push.
       retryStrategy:

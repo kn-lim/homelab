@@ -19,6 +19,14 @@ type Message struct {
 	Before   string   `json:"before"`
 	After    string   `json:"after"`
 	Commands []string `json:"commands"`
+	// Trigger is set only for a downstream repository.
+	Trigger *Trigger `json:"trigger,omitempty"`
+}
+
+// Trigger is the push in the upstream repository that caused a downstream run.
+type Trigger struct {
+	Repo   string `json:"repo"`
+	Commit string `json:"commit"`
 }
 
 // Push describes one push event. Repo is "owner/name", and Ref is the branch.
@@ -54,7 +62,7 @@ func Plan(ctx context.Context, src Source, push Push) ([]Message, error) {
 
 	var errs []error
 	for _, repo := range cfg.Downstream {
-		msg, err := planDownstream(ctx, src, repo, push.Changed)
+		msg, err := planDownstream(ctx, src, repo, push)
 		if err != nil {
 			errs = append(errs, err)
 			continue
@@ -66,7 +74,7 @@ func Plan(ctx context.Context, src Source, push Push) ([]Message, error) {
 	return msgs, errors.Join(errs...)
 }
 
-func planDownstream(ctx context.Context, src Source, repo string, changed []string) (*Message, error) {
+func planDownstream(ctx context.Context, src Source, repo string, push Push) (*Message, error) {
 	head, err := src.HeadCommit(ctx, repo, downstreamBranch)
 	if err != nil {
 		return nil, fmt.Errorf("head of %s@%s: %w", repo, downstreamBranch, err)
@@ -75,11 +83,14 @@ func planDownstream(ctx context.Context, src Source, repo string, changed []stri
 	if err != nil {
 		return nil, err
 	}
-	cmds := DownstreamCommands(cfg, changed)
+	cmds := DownstreamCommands(cfg, push.Changed)
 	if len(cmds) == 0 {
 		return nil, nil
 	}
-	return &Message{Repo: repo, Ref: downstreamBranch, Before: head, After: head, Commands: cmds}, nil
+	return &Message{
+		Repo: repo, Ref: downstreamBranch, After: head, Commands: cmds,
+		Trigger: &Trigger{Repo: push.Repo, Commit: push.After},
+	}, nil
 }
 
 // load reads and parses ci.yaml.
