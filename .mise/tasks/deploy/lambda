@@ -11,7 +11,7 @@ trap 'rm -f bootstrap bootstrap.zip' EXIT
 export GOOS=linux GOARCH=arm64 CGO_ENABLED=0
 go vet ./...
 go build -o bootstrap .
-zip -q bootstrap.zip bootstrap
+build-lambda-zip -o bootstrap.zip bootstrap
 
 aws s3 cp bootstrap.zip "s3://${TF_BUCKET}/${usage_s3_key}"
 aws lambda update-function-code --function-name "${usage_function}" \

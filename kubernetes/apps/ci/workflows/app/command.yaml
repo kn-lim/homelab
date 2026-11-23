@@ -19,14 +19,11 @@ spec:
         mutexes:
           - name: mise-setup
       container:
-        image: debian
+        image: buildpack-deps:trixie-scm
         command: [bash, -c]
         args:
           - |
             set -euo pipefail
-            apt-get update -qq
-            apt-get install -qq -y --no-install-recommends ca-certificates curl git
-
             # Pass the token without saving it in .git/config.
             git -c credential.helper='!f() { echo username=x-access-token; echo "password=$GITHUB_TOKEN"; }; f' \
               clone --depth 1 --branch "$BRANCH" "https://github.com/$REPO.git" /workdir/src
@@ -66,7 +63,7 @@ spec:
           - name: workdir
             default: /workdir/src
       container:
-        image: debian
+        image: buildpack-deps:trixie-scm
         command: [bash, -c]
         args:
           - |
@@ -76,10 +73,6 @@ spec:
               "mise run "*) ;;
               *) echo "Rejected command: $CMD" >&2; exit 1 ;;
             esac
-
-            # Terragrunt needs git for git:: sources. Lambda deploys need zip.
-            apt-get update -qq
-            apt-get install -qq -y --no-install-recommends ca-certificates git zip
 
             $CMD
         workingDir: "{{inputs.parameters.workdir}}"
