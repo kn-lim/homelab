@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"go.yaml.in/yaml/v3"
+	"go.yaml.in/yaml/v4"
 )
 
 // Config is a parsed ci.yaml file.
@@ -58,7 +58,7 @@ func (p *Paths) UnmarshalYAML(value *yaml.Node) error {
 		case yaml.AliasNode:
 			return walk(n.Alias)
 		default:
-			return fmt.Errorf("line %d: expected a path or a list of paths", n.Line)
+			return fmt.Errorf("expected a path or a list of paths")
 		}
 		return nil
 	}
