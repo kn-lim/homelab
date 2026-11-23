@@ -15,5 +15,6 @@ configurations:
 images:
   - name: alpine/curl
     newTag: "8.23.0"
-  - name: debian
-    newTag: "13.7-slim"
+  - name: buildpack-deps
+    newTag: "trixie-scm"
+    digest: "sha256:4f34e1d673fdb65371de9f88bdd32c4e30152fe692b35604aef5c0b3c0e6da10"
