@@ -7,5 +7,4 @@ resources:
   - ./coredns/ks.yaml
   - ./kubelet-serving-cert-approver/ks.yaml
   - ./metrics-server/ks.yaml
-  - ./pod-cleanup/ks.yaml
   - ./reloader/ks.yaml
