@@ -20,6 +20,9 @@ spec:
         enabled: true
       workflowDefaults:
         spec:
+          podGC:
+            strategy: OnWorkflowSuccess
+            deleteDelayDuration: 1h
           ttlStrategy:
             secondsAfterCompletion: 259200
             secondsAfterSuccess: 259200
