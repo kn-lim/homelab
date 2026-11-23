@@ -14,7 +14,7 @@ case "${cluster}" in
     ;;
 esac
 
-talosconfig="${cluster}-local.talosconfig"
+talosconfig="${cluster}.talosconfig"
 if [[ ! -f "${talosconfig}" ]]; then
   echo "ERROR: the talosconfig ${talosconfig} does not exist" >&2
   exit 1
