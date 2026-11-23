@@ -6,7 +6,7 @@
 
 # Homelab
 
-![Talos](https://img.shields.io/badge/talos-v1.14.5-FF7300?logo=talos&logoColor=white)
+![Talos](https://img.shields.io/badge/talos-v1.14.6-FF7300?logo=talos&logoColor=white)
 ![Kubernetes](https://img.shields.io/badge/kubernetes-v1.37.2-326CE5?logo=kubernetes&logoColor=white)
 ![Go](https://img.shields.io/badge/go-v1.27-0e7fbf?logo=go&logoColor=white)
 
