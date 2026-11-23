@@ -12,7 +12,7 @@ stack "talos" {
 
       hardware_addr = "a0:ce:c8:ce:86:1e"
 
-      talos_version = "v1.14.5"
+      talos_version = "v1.14.6"
 
       kubernetes_version = "v1.37.2"
 
