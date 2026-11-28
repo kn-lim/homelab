@@ -37,7 +37,7 @@ spec:
         env:
           - name: MISE_VERSION
             # renovate: datasource=github-releases depName=jdx/mise
-            value: "2026.11.12"
+            value: "2026.11.14"
           - name: REPO
             value: "{{inputs.parameters.repo}}"
           - name: BRANCH
