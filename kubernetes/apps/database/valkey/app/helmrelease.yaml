@@ -14,7 +14,7 @@ spec:
 
     image:
       # renovate: datasource=docker depName=valkey/valkey
-      tag: "9.2.0"
+      tag: "9.2.1"
 
     resources:
       limits:
